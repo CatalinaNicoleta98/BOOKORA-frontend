@@ -1,10 +1,11 @@
 import { BrowserRouter } from "react-router-dom";
+import AppRouter from "./app/router/AppRouter";
 
 const App = () => {
     return (
         <BrowserRouter>
             <div className="min-h-screen bg-gray-50">
-                <h1 className="text-3xl font-bold p-6">Bookora</h1>
+                <AppRouter />
             </div>
         </BrowserRouter>
     );

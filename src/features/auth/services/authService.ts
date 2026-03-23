@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { LoginResponse, RegisterResponse } from "../types/auth.types";
+import type { AuthUser } from "../types/auth.types";
 
 const API_BASE_URL = "http://localhost:4000/api";
 
@@ -28,5 +29,18 @@ export const authService = {
         );
 
         return response.data;
+    },
+
+    getCurrentUser: async (token: string): Promise<AuthUser> => {
+        const response = await axios.get(
+            `${API_BASE_URL}/auth/me`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        return response.data.data.user;
     }
 };

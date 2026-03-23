@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../features/auth/context/AuthContext";
-import { authStorage } from "../features/auth/services/authStorage";
+import { useAuth } from "../../auth/context/AuthContext";
+import { authStorage } from "../../auth/services/authStorage";
 
 const HomePage = () => {
     const navigate = useNavigate();

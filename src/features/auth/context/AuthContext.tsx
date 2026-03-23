@@ -1,7 +1,7 @@
-
-
-import { createContext, useContext, useReducer, type ReactNode } from "react";
+import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react";
 import type { AuthState, AuthUser } from "../types/auth.types";
+import { authStorage } from "../services/authStorage";
+import { authService } from "../services/authService";
 
 // --------------------
 // State
@@ -19,6 +19,9 @@ const initialState: AuthState = {
 // --------------------
 
 type AuthAction =
+    | { type: "INIT_START" }
+    | { type: "INIT_SUCCESS"; payload: { token: string; user: AuthUser } }
+    | { type: "INIT_FAIL" }
     | { type: "LOGIN_START" }
     | { type: "LOGIN_SUCCESS"; payload: { token: string; user: AuthUser } }
     | { type: "LOGOUT" };
@@ -29,6 +32,25 @@ type AuthAction =
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
     switch (action.type) {
+        case "INIT_START":
+            return {
+                ...state,
+                isLoading: true
+            };
+
+        case "INIT_SUCCESS":
+            return {
+                isAuthenticated: true,
+                token: action.payload.token,
+                user: action.payload.user,
+                isLoading: false
+            };
+
+        case "INIT_FAIL":
+            return {
+                ...initialState
+            };
+
         case "LOGIN_START":
             return {
                 ...state,
@@ -74,6 +96,33 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, initialState);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = authStorage.getToken();
+
+            if (!token) {
+                dispatch({ type: "INIT_FAIL" });
+                return;
+            }
+
+            dispatch({ type: "INIT_START" });
+
+            try {
+                const user = await authService.getCurrentUser(token);
+
+                dispatch({
+                    type: "INIT_SUCCESS",
+                    payload: { token, user }
+                });
+            } catch (error) {
+                authStorage.removeToken();
+                dispatch({ type: "INIT_FAIL" });
+            }
+        };
+
+        initAuth();
+    }, []);
 
     const loginSuccess = (token: string, user: AuthUser) => {
         dispatch({ type: "LOGIN_SUCCESS", payload: { token, user } });

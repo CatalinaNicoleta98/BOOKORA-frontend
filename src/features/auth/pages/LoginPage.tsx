@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoginForm from "../components/LoginForm";
+import AuthCard from "../components/AuthCard";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -197,17 +198,30 @@ const LoginPage = () => {
                                 </p>
                             </div>
 
-                            <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.74)_0%,rgba(11,16,30,0.7)_100%)] p-7 shadow-[0_24px_70px_rgba(0,0,0,0.4)] backdrop-blur-2xl transition duration-300 hover:border-white/15 sm:p-9 xl:p-11">
-                                <div className="space-y-3">
-                                    <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Sign in</p>
-                                    <h2 className="text-[2.1rem] font-semibold leading-[1] tracking-[-0.04em] text-white sm:text-[2.4rem]">
-                                        Welcome back to Bookora
-                                    </h2>
-                                    <p className="max-w-md text-[0.98rem] leading-7 text-slate-300/90">
-                                        Continue where you left off, from your shelves to your current reads.
-                                    </p>
-                                </div>
+                            <AuthCard
+                                eyebrow="Sign in"
+                                title="Welcome back to Bookora"
+                                description="Continue where you left off, from your shelves to your current reads."
+                                footer={(
+                                    <>
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-px flex-1 bg-white/10" />
+                                            <span className="text-xs uppercase tracking-[0.24em] text-slate-500">New to Bookora</span>
+                                            <div className="h-px flex-1 bg-white/10" />
+                                        </div>
 
+                                        <div className="mt-7 text-center text-sm leading-7 text-slate-300">
+                                            Don&apos;t have an account yet?{" "}
+                                            <Link
+                                                to="/register"
+                                                className="font-medium text-amber-100 transition hover:text-white"
+                                            >
+                                                Create one
+                                            </Link>
+                                        </div>
+                                    </>
+                                )}
+                            >
                                 <LoginForm
                                     email={email}
                                     password={password}
@@ -217,23 +231,7 @@ const LoginPage = () => {
                                     onPasswordChange={setPassword}
                                     onSubmit={handleSubmit}
                                 />
-
-                                <div className="mt-10 flex items-center gap-4">
-                                    <div className="h-px flex-1 bg-white/10" />
-                                    <span className="text-xs uppercase tracking-[0.24em] text-slate-500">New to Bookora</span>
-                                    <div className="h-px flex-1 bg-white/10" />
-                                </div>
-
-                                <div className="mt-7 text-center text-sm leading-7 text-slate-300">
-                                    Don&apos;t have an account yet?{" "}
-                                    <Link
-                                        to="/register"
-                                        className="font-medium text-amber-100 transition hover:text-white"
-                                    >
-                                        Create one
-                                    </Link>
-                                </div>
-                            </div>
+                            </AuthCard>
                         </div>
                     </section>
                 </div>

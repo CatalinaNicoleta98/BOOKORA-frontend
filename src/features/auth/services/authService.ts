@@ -1,25 +1,32 @@
 import axios from "axios";
-import type { LoginResponse, RegisterResponse } from "../types/auth.types";
-import type { AuthUser } from "../types/auth.types";
+import type {
+    AuthSession,
+    AuthUser,
+    CurrentUserResponseDTO,
+    LoginCredentials,
+    LoginResponseDTO,
+    RegisterPayload,
+    RegisterResponseDTO
+} from "../types/auth.types";
 
 const API_BASE_URL = "http://localhost:4000/api";
 
 export const authService = {
-    login: async (email: string, password: string): Promise<LoginResponse> => {
-        const response = await axios.post<LoginResponse>(
+    login: async ({ email, password }: LoginCredentials): Promise<AuthSession> => {
+        const response = await axios.post<LoginResponseDTO>(
             `${API_BASE_URL}/auth/login`,
             { email, password }
         );
 
-        return response.data;
+        const {
+            data: { token, user }
+        } = response.data;
+
+        return { token, user };
     },
 
-    register: async (
-        name: string,
-        email: string,
-        password: string
-    ): Promise<RegisterResponse> => {
-        const response = await axios.post<RegisterResponse>(
+    register: async ({ name, email, password }: RegisterPayload): Promise<RegisterResponseDTO["data"]> => {
+        const response = await axios.post<RegisterResponseDTO>(
             `${API_BASE_URL}/auth/register`,
             {
                 name,
@@ -28,11 +35,11 @@ export const authService = {
             }
         );
 
-        return response.data;
+        return response.data.data;
     },
 
     getCurrentUser: async (token: string): Promise<AuthUser> => {
-        const response = await axios.get(
+        const response = await axios.get<CurrentUserResponseDTO>(
             `${API_BASE_URL}/auth/me`,
             {
                 headers: {

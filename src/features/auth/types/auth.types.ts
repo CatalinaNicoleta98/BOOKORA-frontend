@@ -8,16 +8,38 @@ export type AuthUser = {
     role?: string;
 };
 
-export type LoginResponse = {
+export type AuthState = {
+    isAuthenticated: boolean;
+    token: string | null;
+    user: AuthUser | null;
+    isLoading: boolean;
+};
+
+export type AuthSession = {
+    token: string;
+    user: AuthUser;
+};
+
+export type LoginCredentials = {
+    email: string;
+    password: string;
+};
+
+export type RegisterPayload = {
+    name: string;
+    email: string;
+    password: string;
+};
+
+export type LoginResponseDTO = {
     error: string | null;
     data: {
-        userId: string;
         token: string;
         user: AuthUser;
     };
 };
 
-export type RegisterResponse = {
+export type RegisterResponseDTO = {
     error: string | null;
     data: {
         id: string;
@@ -25,9 +47,9 @@ export type RegisterResponse = {
     };
 };
 
-export type AuthState = {
-    isAuthenticated: boolean;
-    token: string | null;
-    user: AuthUser | null;
-    isLoading: boolean;
+export type CurrentUserResponseDTO = {
+    error: string | null;
+    data: {
+        user: AuthUser;
+    };
 };

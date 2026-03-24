@@ -1,5 +1,10 @@
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react";
-import type { AuthState, AuthUser } from "../types/auth.types";
+import type {
+    AuthSession,
+    AuthState,
+    AuthUser,
+    LoginCredentials
+} from "../types/auth.types";
 import { authStorage } from "../services/authStorage";
 import { authService } from "../services/authService";
 
@@ -11,7 +16,7 @@ const initialState: AuthState = {
     isAuthenticated: false,
     token: null,
     user: null,
-    isLoading: false
+    isLoading: true
 };
 
 // --------------------
@@ -84,7 +89,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 
 type AuthContextType = {
     state: AuthState;
-    loginSuccess: (token: string, user: AuthUser) => void;
+    login: (credentials: LoginCredentials) => Promise<void>;
     logout: () => void;
 };
 
@@ -124,11 +129,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         initAuth();
     }, []);
 
-    const loginSuccess = (token: string, user: AuthUser) => {
-        dispatch({ type: "LOGIN_SUCCESS", payload: { token, user } });
+    const login = async (credentials: LoginCredentials): Promise<void> => {
+        dispatch({ type: "LOGIN_START" });
+
+        const session: AuthSession = await authService.login(credentials);
+
+        authStorage.setToken(session.token);
+
+        dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: {
+                token: session.token,
+                user: session.user
+            }
+        });
     };
 
     const logout = () => {
+        authStorage.removeToken();
         dispatch({ type: "LOGOUT" });
     };
 
@@ -136,7 +154,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         <AuthContext.Provider
             value={{
                 state,
-                loginSuccess,
+                login,
                 logout
             }}
         >

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/context/AuthContext";
-import { authStorage } from "../../auth/services/authStorage";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -17,7 +16,6 @@ const HomePage = () => {
     }, [state.user?.name]);
 
     const handleLogout = () => {
-        authStorage.removeToken();
         logout();
         navigate("/login");
     };

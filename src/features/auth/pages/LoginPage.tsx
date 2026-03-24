@@ -1,12 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
-import { authStorage } from "../services/authStorage";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { loginSuccess } = useAuth();
+    const { login } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,18 +18,7 @@ const LoginPage = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await authService.login(email, password);
-
-            if (response.error) {
-                setError(response.error);
-                return;
-            }
-
-            const { token, user } = response.data;
-
-            authStorage.setToken(token);
-            loginSuccess(token, user);
-
+            await login({ email, password });
             navigate("/");
         } catch (err: unknown) {
             const fallbackMessage = "Login failed. Please check your details and try again.";

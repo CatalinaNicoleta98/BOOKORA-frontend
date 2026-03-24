@@ -36,7 +36,7 @@ const LoginPage = () => {
         }
     };
 
-    const LoginForm = () => (
+    const loginForm = (
         <form onSubmit={handleSubmit} className="mt-10 space-y-6 sm:space-y-7">
             <div className="space-y-2">
                 <label htmlFor="email" className="block text-sm font-medium text-slate-200">Email</label>
@@ -252,7 +252,7 @@ const LoginPage = () => {
                                     </p>
                                 </div>
 
-                                <LoginForm />
+                                {loginForm}
 
                                 <div className="mt-10 flex items-center gap-4">
                                     <div className="h-px flex-1 bg-white/10" />

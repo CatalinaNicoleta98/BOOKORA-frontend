@@ -53,7 +53,10 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 
         case "INIT_FAIL":
             return {
-                ...initialState
+                isAuthenticated: false,
+                token: null,
+                user: null,
+                isLoading: false
             };
 
         case "LOGIN_START":

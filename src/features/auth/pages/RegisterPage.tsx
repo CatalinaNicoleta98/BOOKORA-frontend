@@ -27,12 +27,7 @@ const RegisterPage = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await authService.register(name, email, password);
-
-            if (response.error) {
-                setError(response.error);
-                return;
-            }
+            await authService.register({ name, email, password });
 
             setSuccessMessage("Account created successfully. You can now sign in.");
 

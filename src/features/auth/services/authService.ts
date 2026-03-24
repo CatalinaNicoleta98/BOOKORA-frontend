@@ -1,4 +1,3 @@
-import axios from "axios";
 import type {
     AuthSession,
     AuthUser,
@@ -8,13 +7,12 @@ import type {
     RegisterPayload,
     RegisterResponseDTO
 } from "../types/auth.types";
-
-const API_BASE_URL = "http://localhost:4000/api";
+import { httpClient } from "../../../shared/api/httpClient";
 
 export const authService = {
     login: async ({ email, password }: LoginCredentials): Promise<AuthSession> => {
-        const response = await axios.post<LoginResponseDTO>(
-            `${API_BASE_URL}/auth/login`,
+        const response = await httpClient.post<LoginResponseDTO>(
+            "/auth/login",
             { email, password }
         );
 
@@ -26,8 +24,8 @@ export const authService = {
     },
 
     register: async ({ name, email, password }: RegisterPayload): Promise<RegisterResponseDTO["data"]> => {
-        const response = await axios.post<RegisterResponseDTO>(
-            `${API_BASE_URL}/auth/register`,
+        const response = await httpClient.post<RegisterResponseDTO>(
+            "/auth/register",
             {
                 name,
                 email,
@@ -39,8 +37,8 @@ export const authService = {
     },
 
     getCurrentUser: async (token: string): Promise<AuthUser> => {
-        const response = await axios.get<CurrentUserResponseDTO>(
-            `${API_BASE_URL}/auth/me`,
+        const response = await httpClient.get<CurrentUserResponseDTO>(
+            "/auth/me",
             {
                 headers: {
                     Authorization: `Bearer ${token}`

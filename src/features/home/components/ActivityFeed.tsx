@@ -29,9 +29,9 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                         {data.continueItems.map((item, index) => (
                             <div
                                 key={index}
-                                className="min-w-[140px] group cursor-pointer"
+                                className="min-w-[160px] group cursor-pointer"
                             >
-                                <div className="aspect-[2/3] rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-md group-hover:scale-[1.04] transition duration-300">
+                                <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-white/10 border border-white/10 shadow-md transition duration-300 group-hover:scale-[1.05] group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
                                     {item.coverUrl ? (
                                         <img
                                             src={item.coverUrl}
@@ -43,7 +43,42 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                             No cover
                                         </div>
                                     )}
+
+                                    {/* Gradient overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80" />
+
+                                    {/* Format badge */}
+                                    {item.format && (
+                                        <span className="absolute top-2 left-2 text-[10px] px-2 py-1 rounded-full bg-black/60 border border-white/10 text-white backdrop-blur-sm">
+                                            {item.format === "physical"
+                                                ? "Print"
+                                                : item.format === "ebook"
+                                                ? "Ebook"
+                                                : "Audio"}
+                                        </span>
+                                    )}
+
+                                    {/* Progress bar */}
+                                    {item.progressMax > 0 && (
+                                        <div className="absolute bottom-0 left-0 w-full px-2 pb-2">
+                                            <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-[linear-gradient(135deg,#f1dfb1_0%,#d8c494_48%,#bba3ff_100%)]"
+                                                    style={{
+                                                        width: `${Math.min(
+                                                            100,
+                                                            Math.max(
+                                                                0,
+                                                                (item.progressValue / item.progressMax) * 100
+                                                            )
+                                                        )}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
+
                                 <p className="mt-2 text-sm text-white font-medium line-clamp-1">
                                     {item.title}
                                 </p>

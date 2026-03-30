@@ -1,5 +1,5 @@
 import { httpClient } from "../../../shared/api/httpClient";
-import type { HomePageData } from "../types/home.types";
+import type { HomeContinueItem, HomePageData, HomeReadingStatus } from "../types/home.types";
 
 // Backend library entry shape (based on your controller)
 type LibraryEntry = {
@@ -19,14 +19,18 @@ type LibraryEntry = {
     progressUnit?: "pages" | "percent" | "minutes" | "hours";
 };
 
+const isContinueReadingStatus = (status: string): status is HomeReadingStatus => {
+    return [
+        "currently_reading",
+        "currently_listening",
+        "currently_on_ebook",
+    ].includes(status);
+};
+
 const mapContinueItems = (entries: LibraryEntry[]): HomePageData["continueItems"] => {
     return entries
-        .filter((entry) =>
-            [
-                "currently_reading",
-                "currently_listening",
-                "currently_on_ebook",
-            ].includes(entry.status)
+        .filter((entry): entry is LibraryEntry & { status: HomeContinueItem["status"] } =>
+            isContinueReadingStatus(entry.status)
         )
         .slice(0, 6)
         .map((entry) => ({
@@ -35,6 +39,7 @@ const mapContinueItems = (entries: LibraryEntry[]): HomePageData["continueItems"
             author: entry.author ?? "Unknown author",
             coverUrl: entry.cover ?? "",
             format: entry.format,
+            status: entry.status,
             progressValue: entry.progressValue ?? 0,
             progressMax: entry.progressMax ?? 100,
             progressUnit: entry.progressUnit ?? "percent",

@@ -62,12 +62,13 @@ const getShelfPreview = (shelfSummary: HomeShelfSummaryItem[]): HomeShelfSummary
 
 const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
     const shelfPreview = getShelfPreview(data.shelfSummary);
-    const challengeProgress = data.challenge.target > 0
-        ? Math.max(0, Math.min(100, (data.challenge.current / data.challenge.target) * 100))
-        : 0;
+    const challengeProgress =
+        data.challenge.target > 0
+            ? Math.max(0, Math.min(100, (data.challenge.current / data.challenge.target) * 100))
+            : 0;
 
     return (
-        <aside className="col-span-12 space-y-5 md:col-span-6 xl:col-span-3">
+        <aside className="col-span-12 space-y-5">
             <section className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.82)_0%,rgba(10,14,26,0.76)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
                 <div className="border-b border-white/10 px-5 py-4 sm:px-6">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading now</p>
@@ -75,7 +76,8 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                         Pick up where you left off
                     </h2>
                     <p className="mt-2 text-sm leading-6 text-slate-300">
-                        Keep physical books, ebooks, and audiobooks clearly separated without losing the full picture.
+                        Keep physical books, ebooks, and audiobooks clearly separated without losing the
+                        full picture.
                     </p>
                 </div>
 
@@ -96,7 +98,8 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                         {section.emptyLabel}
                                     </p>
                                     <p className="mt-2 text-sm leading-6 text-slate-400">
-                                        Add a title to your library and mark it as in progress to keep it here.
+                                        Add a title to your library and mark it as in progress to keep it
+                                        here.
                                     </p>
                                 </article>
                             );
@@ -110,7 +113,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                 className="group rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.85)_0%,rgba(12,16,30,0.8)_100%)] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-[linear-gradient(180deg,rgba(24,34,58,0.92)_0%,rgba(12,16,30,0.85)_100%)]"
                             >
                                 <div className="flex gap-4">
-                                    <div className="flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.04] text-[0.7rem] text-slate-500 shadow-md group-hover:shadow-[0_8px_25px_rgba(0,0,0,0.35)] transition">
+                                    <div className="flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.04] text-[0.7rem] text-slate-500 shadow-md transition group-hover:shadow-[0_8px_25px_rgba(0,0,0,0.35)]">
                                         {item.coverUrl ? (
                                             <img
                                                 src={item.coverUrl}
@@ -143,7 +146,9 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                                 />
                                             </div>
                                             {item.secondaryLabel ? (
-                                                <p className="text-xs text-slate-500">{item.secondaryLabel}</p>
+                                                <p className="text-xs text-slate-500">
+                                                    {item.secondaryLabel}
+                                                </p>
                                             ) : null}
                                         </div>
                                     </div>
@@ -208,7 +213,8 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                 </div>
 
                 <p className="mt-4 text-sm leading-6 text-slate-400">
-                    Keep momentum across print, ebook, and audio, while still tracking each format in the way that fits it best.
+                    Keep momentum across print, ebook, and audio, while still tracking each format in
+                    the way that fits it best.
                 </p>
             </section>
         </aside>

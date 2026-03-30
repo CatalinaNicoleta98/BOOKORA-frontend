@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_CONFIG } from "./apiConfig";
+import { authStorage } from "../../features/auth/services/authStorage";
 
 export const httpClient = axios.create({
     baseURL: API_CONFIG.BASE_URL,
@@ -9,6 +10,14 @@ export const httpClient = axios.create({
     withCredentials: false
 });
 
-// Future improvement point:
-// Here we will later add request / response interceptors
-// for automatic token attachment, global error handling, etc.ªß
+httpClient.interceptors.request.use((config) => {
+    const token = authStorage.getToken();
+
+    if (token) {
+        config.headers = config.headers ?? {};
+        config.headers["auth-token"] = token;
+    }
+
+    return config;
+});
+

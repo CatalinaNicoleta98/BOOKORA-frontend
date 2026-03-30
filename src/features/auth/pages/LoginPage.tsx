@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import LoginForm from "../components/LoginForm";
 import AuthCard from "../components/AuthCard";
 import AuthShowcase from "../components/AuthShowcase";
+import AuthMobileIntro from "../components/AuthMobileIntro";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -125,23 +126,10 @@ const LoginPage = () => {
 
                     <section className="relative flex min-h-[640px] items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,rgba(255,255,255,0.01)_100%)] px-5 py-10 sm:px-8 sm:py-12 lg:min-h-[820px] lg:px-10 xl:px-14">
                         <div className="mx-auto w-full max-w-lg">
-                            <div className="mb-10 space-y-5 lg:hidden">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-lg font-semibold text-amber-100 shadow-inner shadow-white/10">
-                                        B
-                                    </div>
-                                    <div>
-                                        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Bookora</p>
-                                        <p className="text-sm text-slate-300">Personal reading sanctuary</p>
-                                    </div>
-                                </div>
-                                <h1 className="max-w-md text-[2.5rem] font-semibold leading-[0.98] tracking-[-0.05em] text-white">
-                                    Welcome back.
-                                </h1>
-                                <p className="text-sm leading-6 text-slate-300">
-                                    Sign in to continue your library, reading goals, notes, and reviews.
-                                </p>
-                            </div>
+                            <AuthMobileIntro
+                                title="Welcome back."
+                                subtitle="Sign in to continue your library, reading goals, notes, and reviews."
+                            />
 
                             <AuthCard
                                 eyebrow="Sign in"

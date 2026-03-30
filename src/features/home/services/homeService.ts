@@ -1,27 +1,106 @@
-
-
+import { httpClient } from "../../../shared/api/httpClient";
 import type { HomePageData } from "../types/home.types";
 
-// Temporary mock data builder
-// This will later be replaced with real API calls
+// Backend library entry shape (based on your controller)
+type LibraryEntry = {
+    _id: string;
+    title: string;
+    author?: string;
+    cover?: string;
+    status: string;
+    format: "physical" | "ebook" | "audiobook";
+    rating?: number;
+    notes?: string;
+    createdAt: string;
+};
+
+const mapContinueItems = (entries: LibraryEntry[]): HomePageData["continueItems"] => {
+    return entries
+        .filter((entry) =>
+            [
+                "currently_reading",
+                "currently_listening",
+                "currently_on_ebook",
+            ].includes(entry.status)
+        )
+        .slice(0, 6)
+        .map((entry) => ({
+            id: entry._id,
+            title: entry.title,
+            author: entry.author ?? "Unknown author",
+            coverUrl: entry.cover ?? "",
+            format: entry.format,
+            progressValue: 0, // no backend support yet
+            progressMax: 100,
+            progressUnit: "percent",
+            progressLabel: "In progress",
+        }));
+};
+
+const mapActivity = (entries: LibraryEntry[]): HomePageData["recentActivity"] => {
+    return entries.slice(0, 8).map((entry) => {
+        let title = "Updated a book";
+        let subtitle = entry.title;
+
+        if (entry.status === "finished") {
+            title = "Finished a book";
+        } else if (entry.rating) {
+            title = "Rated a book";
+            subtitle = `${entry.title} • ${entry.rating}★`;
+        } else if (entry.status.startsWith("currently")) {
+            title = "Started reading";
+        }
+
+        return {
+            id: entry._id,
+            type: "progress_updated",
+            title,
+            subtitle,
+            createdAt: new Date(entry.createdAt).toLocaleDateString(),
+            book: {
+                id: entry._id,
+                title: entry.title,
+                author: entry.author ?? "Unknown author",
+                coverUrl: entry.cover ?? "",
+            },
+        };
+    });
+};
+
+const mapShelves = (entries: LibraryEntry[]) => {
+    const counts: Record<string, number> = {};
+
+    entries.forEach((entry) => {
+        counts[entry.status] = (counts[entry.status] || 0) + 1;
+    });
+
+    return Object.entries(counts).map(([status, count]) => ({
+        id: status,
+        label: status.replace(/_/g, " "),
+        count,
+    }));
+};
 
 export const getHomePageData = async (): Promise<HomePageData> => {
-    // TODO: replace with real API integration
+    const response = await httpClient.get("/library");
+
+    const entries: LibraryEntry[] = response.data.data;
 
     return {
         userName: "Reader",
 
-        continueItems: [],
-        recentActivity: [],
+        continueItems: mapContinueItems(entries),
+        recentActivity: mapActivity(entries),
 
+        // still mocked for now
         recommendations: [],
         trendingBooks: [],
         newReleases: [],
 
-        shelfSummary: [],
+        shelfSummary: mapShelves(entries),
 
         challenge: {
-            current: 0,
+            current: entries.filter((e) => e.status === "finished").length,
             target: 20,
             label: "2026 Reading Goal",
         },

@@ -1,6 +1,7 @@
 
 
 import type { HomePageData } from "../types/home.types";
+import ReadingSidebar from "./ReadingSidebar";
 
 type HomeLayoutProps = {
     data: HomePageData;
@@ -9,18 +10,7 @@ type HomeLayoutProps = {
 const HomeLayout = ({ data }: HomeLayoutProps) => {
     return (
         <main className="grid grid-cols-12 gap-6 p-6">
-            {/* Left sidebar */}
-            <aside className="col-span-3 space-y-4">
-                <div className="p-4 border border-white/10 rounded-xl bg-white/5">
-                    <p className="text-sm text-slate-400">Currently reading</p>
-                    <p className="text-white mt-2">{data.continueItems.length} items</p>
-                </div>
-
-                <div className="p-4 border border-white/10 rounded-xl bg-white/5">
-                    <p className="text-sm text-slate-400">Your shelves</p>
-                    <p className="text-white mt-2">{data.shelfSummary.length} shelves</p>
-                </div>
-            </aside>
+            <ReadingSidebar data={data} />
 
             {/* Center */}
             <section className="col-span-6 space-y-4">

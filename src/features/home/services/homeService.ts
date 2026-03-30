@@ -59,13 +59,34 @@ const mapActivity = (entries: LibraryEntry[]): HomePageData["recentActivity"] =>
         let title = "Updated a book";
         let subtitle = entry.title;
 
+        // Finished
         if (entry.status === "finished") {
             title = "Finished a book";
-        } else if (entry.rating) {
+            subtitle = entry.title;
+        }
+        // Rating
+        else if (entry.rating) {
             title = "Rated a book";
             subtitle = `${entry.title} • ${entry.rating}★`;
-        } else if (entry.status.startsWith("currently")) {
+        }
+        // Progress updates (more interesting than just "started")
+        else if (entry.progressValue && entry.progressUnit) {
+            title = "Progress updated";
+
+            if (entry.progressUnit === "pages") {
+                subtitle = `${entry.title} • ${entry.progressValue}/${entry.progressMax ?? 0} pages`;
+            } else if (entry.progressUnit === "minutes") {
+                subtitle = `${entry.title} • ${entry.progressValue} min listened`;
+            } else if (entry.progressUnit === "hours") {
+                subtitle = `${entry.title} • ${entry.progressValue} h listened`;
+            } else {
+                subtitle = `${entry.title} • ${entry.progressValue}%`;
+            }
+        }
+        // Fallback: started reading/listening
+        else if (entry.status.startsWith("currently")) {
             title = "Started reading";
+            subtitle = entry.title;
         }
 
         return {

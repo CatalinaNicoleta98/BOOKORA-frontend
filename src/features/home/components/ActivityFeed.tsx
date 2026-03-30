@@ -1,5 +1,3 @@
-
-
 import type { HomePageData } from "../types/home.types";
 
 type ActivityFeedProps = {
@@ -105,37 +103,59 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                     </p>
                 ) : (
                     <div className="space-y-4">
-                        {data.recentActivity.map((activity, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition"
-                            >
-                                <div className="h-12 w-12 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center text-xs text-slate-400">
-                                    {activity.book.coverUrl ? (
-                                        <img
-                                            src={activity.book.coverUrl}
-                                            alt={activity.book.title}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        "—"
-                                    )}
-                                </div>
+                        {data.recentActivity.map((activity, index) => {
+                            const isFinished = activity.title.toLowerCase().includes("finished");
+                            const isRated = activity.title.toLowerCase().includes("rated");
 
-                                <div className="flex-1">
-                                    <p className="text-sm text-white font-medium">
-                                        {activity.title}
-                                    </p>
-                                    <p className="text-xs text-slate-400">
-                                        {activity.subtitle}
-                                    </p>
-                                </div>
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex items-center gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition"
+                                >
+                                    {/* Cover */}
+                                    <div className="h-12 w-12 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center text-xs text-slate-400">
+                                        {activity.book.coverUrl ? (
+                                            <img
+                                                src={activity.book.coverUrl}
+                                                alt={activity.book.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </div>
 
-                                <span className="text-xs text-slate-500">
-                                    {activity.createdAt}
-                                </span>
-                            </div>
-                        ))}
+                                    {/* Content */}
+                                    <div className="flex-1">
+                                        <p className="text-sm text-white font-medium">
+                                            {activity.title}
+                                        </p>
+
+                                        <p className="text-xs text-slate-400">
+                                            {activity.subtitle}
+                                        </p>
+
+                                        {/* Extra context */}
+                                        {isFinished && (
+                                            <p className="text-[11px] text-emerald-300 mt-1">
+                                                Completed
+                                            </p>
+                                        )}
+
+                                        {isRated && (
+                                            <p className="text-[11px] text-amber-300 mt-1">
+                                                Your rating saved
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Time */}
+                                    <span className="text-xs text-slate-500 whitespace-nowrap">
+                                        {activity.createdAt}
+                                    </span>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
             </div>

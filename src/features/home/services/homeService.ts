@@ -12,6 +12,11 @@ type LibraryEntry = {
     rating?: number;
     notes?: string;
     createdAt: string;
+
+    // progress
+    progressValue?: number;
+    progressMax?: number;
+    progressUnit?: "pages" | "percent" | "minutes" | "hours";
 };
 
 const mapContinueItems = (entries: LibraryEntry[]): HomePageData["continueItems"] => {
@@ -30,10 +35,17 @@ const mapContinueItems = (entries: LibraryEntry[]): HomePageData["continueItems"
             author: entry.author ?? "Unknown author",
             coverUrl: entry.cover ?? "",
             format: entry.format,
-            progressValue: 0, // no backend support yet
-            progressMax: 100,
-            progressUnit: "percent",
-            progressLabel: "In progress",
+            progressValue: entry.progressValue ?? 0,
+            progressMax: entry.progressMax ?? 100,
+            progressUnit: entry.progressUnit ?? "percent",
+            progressLabel:
+                entry.progressUnit === "pages"
+                    ? `${entry.progressValue ?? 0}/${entry.progressMax ?? 0} pages`
+                    : entry.progressUnit === "minutes"
+                    ? `${entry.progressValue ?? 0} min`
+                    : entry.progressUnit === "hours"
+                    ? `${entry.progressValue ?? 0} h`
+                    : `${entry.progressValue ?? 0}%`,
         }));
 };
 

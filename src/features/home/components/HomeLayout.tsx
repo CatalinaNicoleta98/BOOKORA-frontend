@@ -1,7 +1,6 @@
-
-
 import type { HomePageData } from "../types/home.types";
 import ReadingSidebar from "./ReadingSidebar";
+import ActivityFeed from "./ActivityFeed";
 
 type HomeLayoutProps = {
     data: HomePageData;
@@ -12,22 +11,7 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
         <main className="grid grid-cols-12 gap-6 p-6">
             <ReadingSidebar data={data} />
 
-            {/* Center */}
-            <section className="col-span-6 space-y-4">
-                <div className="p-6 border border-white/10 rounded-xl bg-white/5">
-                    <h2 className="text-lg font-semibold">Your activity</h2>
-                    <p className="text-sm text-slate-400 mt-2">
-                        {data.recentActivity.length} recent actions
-                    </p>
-                </div>
-
-                <div className="p-6 border border-white/10 rounded-xl bg-white/5">
-                    <h2 className="text-lg font-semibold">Continue</h2>
-                    <p className="text-sm text-slate-400 mt-2">
-                        {data.continueItems.length} in progress
-                    </p>
-                </div>
-            </section>
+            <ActivityFeed data={data} />
 
             {/* Right sidebar */}
             <aside className="col-span-3 space-y-4">

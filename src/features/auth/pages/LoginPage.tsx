@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoginForm from "../components/LoginForm";
 import AuthCard from "../components/AuthCard";
+import AuthShowcase from "../components/AuthShowcase";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -120,63 +121,7 @@ const LoginPage = () => {
 
             <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1400px] items-center px-4 py-6 sm:px-6 sm:py-10 lg:px-10 lg:py-14 xl:px-14">
                 <div className="grid w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.05] shadow-[0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.06),transparent_28%,transparent_72%,rgba(255,255,255,0.03))] before:content-[''] lg:min-h-[820px] lg:grid-cols-[1.18fr_0.82fr] xl:rounded-[2.25rem]">
-                    <section className="relative hidden min-h-[820px] overflow-hidden border-r border-white/10 lg:block">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_30%),linear-gradient(180deg,_rgba(13,18,34,0.65)_0%,_rgba(9,11,20,0.82)_100%)]" />
-                        <div className="absolute inset-x-10 top-10 flex items-center justify-between xl:inset-x-12 xl:top-12">
-                            <div className="flex items-center gap-3">
-                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-lg font-semibold text-amber-100 shadow-inner shadow-white/10">
-                                    B
-                                </div>
-                                <div>
-                                    <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Bookora</p>
-                                    <p className="text-sm text-slate-300">Personal reading sanctuary</p>
-                                </div>
-                            </div>
-                            <div className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.24em] text-slate-200 shadow-[0_0_30px_rgba(255,255,255,0.04)] backdrop-blur-md">
-                                Read beautifully
-                            </div>
-                        </div>
-
-                        <div className="relative flex h-full flex-col justify-between px-10 pb-10 pt-36 xl:px-14 xl:pb-14 xl:pt-40">
-                            <div className="max-w-2xl space-y-10">
-                                <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/15 bg-amber-100/8 px-4 py-2 text-xs uppercase tracking-[0.25em] text-amber-100/80">
-                                    Literary midnight edition
-                                </div>
-
-                                <div className="space-y-7">
-                                    <h1 className="max-w-2xl text-[3.6rem] font-semibold leading-[0.98] tracking-[-0.05em] text-white xl:text-[4.5rem]">
-                                        Return to your reading world, quietly curated and beautifully kept.
-                                    </h1>
-                                    <p className="max-w-xl text-lg leading-8 text-slate-300/90 xl:max-w-xl">
-                                        Track books, shape shelves, follow goals, and keep every review in one calm, elegant place designed for serious readers.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="grid gap-5 pt-4 xl:grid-cols-3">
-                                <article className="rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/15 hover:bg-white/[0.07]">
-                                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Current focus</p>
-                                    <p className="mt-4 text-lg font-medium text-white">2 active reads</p>
-                                    <p className="mt-2 text-sm leading-6 text-slate-300">Keep reading and listening progress separate, without losing the full picture.</p>
-                                </article>
-
-                                <article className="rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/15 hover:bg-white/[0.07]">
-                                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Yearly goal</p>
-                                    <p className="mt-4 text-lg font-medium text-white">32 of 50 books</p>
-                                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-                                        <div className="h-full w-[64%] rounded-full bg-gradient-to-r from-amber-200 via-violet-300 to-indigo-300" />
-                                    </div>
-                                    <p className="mt-3 text-sm text-slate-300">A clearer view of progress, momentum, and what comes next.</p>
-                                </article>
-
-                                <article className="rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/15 hover:bg-white/[0.07]">
-                                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Recent note</p>
-                                    <p className="mt-4 text-base font-medium text-white">“A beautifully strange atmosphere, impossible to put down.”</p>
-                                    <p className="mt-3 text-sm text-slate-300">Save thoughts, half-star ratings, and reviews with a layout that feels intentional.</p>
-                                </article>
-                            </div>
-                        </div>
-                    </section>
+                    <AuthShowcase />
 
                     <section className="relative flex min-h-[640px] items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,rgba(255,255,255,0.01)_100%)] px-5 py-10 sm:px-8 sm:py-12 lg:min-h-[820px] lg:px-10 xl:px-14">
                         <div className="mx-auto w-full max-w-lg">

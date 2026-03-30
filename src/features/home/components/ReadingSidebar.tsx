@@ -1,5 +1,3 @@
-
-
 import type {
     HomeContinueItem,
     HomePageData,
@@ -69,7 +67,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
         : 0;
 
     return (
-        <aside className="col-span-12 space-y-4 md:col-span-6 xl:col-span-3">
+        <aside className="col-span-12 space-y-5 md:col-span-6 xl:col-span-3">
             <section className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.82)_0%,rgba(10,14,26,0.76)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
                 <div className="border-b border-white/10 px-5 py-4 sm:px-6">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading now</p>
@@ -109,10 +107,10 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                         return (
                             <article
                                 key={section.id}
-                                className="rounded-[1.35rem] border border-white/8 bg-white/[0.04] p-4 transition duration-300 hover:border-white/15 hover:bg-white/[0.06]"
+                                className="group rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.85)_0%,rgba(12,16,30,0.8)_100%)] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-[linear-gradient(180deg,rgba(24,34,58,0.92)_0%,rgba(12,16,30,0.85)_100%)]"
                             >
                                 <div className="flex gap-4">
-                                    <div className="flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.04] text-[0.7rem] text-slate-500">
+                                    <div className="flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.04] text-[0.7rem] text-slate-500 shadow-md group-hover:shadow-[0_8px_25px_rgba(0,0,0,0.35)] transition">
                                         {item.coverUrl ? (
                                             <img
                                                 src={item.coverUrl}
@@ -138,7 +136,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                                 <span>{item.progressLabel}</span>
                                                 <span>{Math.round(progressPercentage)}%</span>
                                             </div>
-                                            <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                                            <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
                                                 <div
                                                     className="h-full rounded-full bg-[linear-gradient(135deg,#f1dfb1_0%,#d8c494_48%,#bba3ff_100%)]"
                                                     style={{ width: `${progressPercentage}%` }}
@@ -174,7 +172,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                         shelfPreview.map((shelf) => (
                             <div
                                 key={shelf.id}
-                                className="flex items-center justify-between rounded-[1rem] border border-white/8 bg-white/[0.035] px-4 py-3"
+                                className="flex items-center justify-between rounded-[1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.75)_0%,rgba(12,16,30,0.7)_100%)] px-4 py-3 transition hover:border-white/15"
                             >
                                 <span className="text-sm text-slate-200">{shelf.label}</span>
                                 <span className="text-sm font-medium text-white">{shelf.count}</span>
@@ -190,7 +188,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
 
             <section className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.72)_0%,rgba(10,14,26,0.68)_100%)] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur-2xl sm:p-6">
                 <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading goal</p>
-                <div className="mt-4 flex items-end justify-between gap-4">
+                <div className="mt-5 flex items-end justify-between gap-4">
                     <div>
                         <h2 className="text-lg font-semibold tracking-[-0.03em] text-white">
                             {data.challenge.current} / {data.challenge.target}

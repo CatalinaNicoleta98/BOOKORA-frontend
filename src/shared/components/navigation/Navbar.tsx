@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { searchBooks } from "../../../features/search/services/searchService";
+import type { SearchResult } from "../../../features/search/services/searchService";
 import { useAuth } from "../../../features/auth/context/AuthContext";
 import { authStorage } from "../../../features/auth/services/authStorage";
 import NavLogo from "./NavLogo";
@@ -38,6 +40,11 @@ const Navbar = (_props: NavbarProps) => {
     const navigate = useNavigate();
     const { state, logout } = useAuth();
 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchError, setSearchError] = useState<string | null>(null);
+
     const userDisplayName = useMemo(() => {
         if (!state.user?.name) {
             return "Reader";
@@ -54,6 +61,38 @@ const Navbar = (_props: NavbarProps) => {
 
     const closeMobileMenu = () => {
         setIsMobileMenuOpen(false);
+    };
+
+    const handleSearchChange = async (value: string) => {
+        setSearchQuery(value);
+
+        const normalized = value.trim();
+
+        if (!normalized) {
+            setSearchResults([]);
+            setSearchError(null);
+            return;
+        }
+
+        try {
+            setIsSearching(true);
+            setSearchError(null);
+
+            const response = await searchBooks({ q: normalized, limit: 6 });
+
+            setSearchResults(response.results);
+        } catch (error) {
+            setSearchResults([]);
+            setSearchError("Search failed");
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    const handleResultClick = (result: SearchResult) => {
+        setSearchQuery("");
+        setSearchResults([]);
+        navigate(`/book/${result.externalBookId}`);
     };
 
     const handleLogout = () => {
@@ -79,12 +118,77 @@ const Navbar = (_props: NavbarProps) => {
                 <DesktopNavLinks />
 
                 <div className="ml-auto hidden items-center gap-3 lg:flex">
-                    <button
-                        type="button"
-                        className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/8 bg-white/6 px-4 text-sm font-medium text-slate-200 transition-all duration-300 hover:border-white/14 hover:bg-white/10 hover:text-white"
-                    >
-                        Search books
-                    </button>
+                    <div className="relative w-full max-w-md">
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                            placeholder="Search books"
+                            className="h-12 w-full rounded-2xl border border-white/8 bg-white/6 pl-4 pr-10 text-sm text-white outline-none"
+                        />
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                aria-label="Clear search"
+                                onClick={() => {
+                                    setSearchQuery("");
+                                    setSearchResults([]);
+                                    setSearchError(null);
+                                }}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-300 hover:bg-white/10 hover:text-white"
+                            >
+                                <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                </svg>
+                            </button>
+                        )}
+
+                        {(searchQuery.trim().length > 0 || isSearching) && (
+                          <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] rounded-xl border border-white/10 bg-[#0b1020]">
+                            {isSearching && (
+                              <div className="px-4 py-3 text-sm text-slate-300">Searching...</div>
+                            )}
+
+                            {!isSearching && searchError && (
+                              <div className="px-4 py-3 text-sm text-red-300">{searchError}</div>
+                            )}
+
+                            {!isSearching && !searchError && searchResults.length === 0 && (
+                              <div className="px-4 py-3 text-sm text-slate-300">No results</div>
+                            )}
+
+                            {!isSearching && searchResults.length > 0 && (
+                              <div>
+                                {searchResults.map((result) => (
+                                  <button
+                                    key={result.externalBookId}
+                                    onClick={() => handleResultClick(result)}
+                                    className="w-full text-left px-4 py-3 hover:bg-white/10"
+                                  >
+                                    <div className="text-sm text-white">{result.title}</div>
+                                    <div className="text-xs text-slate-400">{result.author ?? "Unknown"}</div>
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+
+                            {!isSearching && !searchError && searchResults.length > 0 && (
+                                <div className="border-t border-white/10 px-4 py-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                                            setSearchResults([]);
+                                        }}
+                                        className="w-full text-left text-sm font-medium text-amber-200 hover:text-amber-100"
+                                    >
+                                        View all results
+                                    </button>
+                                </div>
+                            )}
+                          </div>
+                        )}
+                    </div>
 
                     <ProfileMenu
                         userDisplayName={userDisplayName}

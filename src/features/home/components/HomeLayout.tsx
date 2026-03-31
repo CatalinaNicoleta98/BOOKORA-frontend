@@ -9,7 +9,7 @@ type HomeLayoutProps = {
 
 const HomeLayout = ({ data }: HomeLayoutProps) => {
     return (
-        <main className="mx-auto w-full max-w-[1400px] grid grid-cols-12 gap-6 px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+        <div className="grid grid-cols-12 gap-6 py-6 lg:py-10">
             {/* Left sidebar */}
             <div className="order-2 col-span-12 md:col-span-6 xl:order-1 xl:col-span-3">
                 <ReadingSidebar data={data} />
@@ -24,7 +24,7 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
             <div className="order-3 col-span-12 md:col-span-6 xl:col-span-3">
                 <RecommendationsSidebar data={data} />
             </div>
-        </main>
+        </div>
     );
 };
 

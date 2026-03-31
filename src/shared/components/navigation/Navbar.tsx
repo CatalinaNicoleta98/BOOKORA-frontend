@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../features/auth/context/AuthContext";
+import { authStorage } from "../../../features/auth/services/authStorage";
 
 interface NavbarUser {
     id?: string;
@@ -51,18 +53,21 @@ const getInitials = (name?: string) => {
     return initials || "BK";
 };
 
-const Navbar = ({ user }: NavbarProps) => {
+const Navbar = (_props: NavbarProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const { state, logout } = useAuth();
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const userDisplayName = useMemo(() => {
-        if (!user?.name) {
+        if (!state.user?.name) {
             return "Reader";
         }
 
-        return user.name;
-    }, [user?.name]);
+        return state.user.name;
+    }, [state.user?.name]);
 
-    const userInitials = useMemo(() => getInitials(user?.name), [user?.name]);
+    const userInitials = useMemo(() => getInitials(state.user?.name), [state.user?.name]);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen((currentValue) => !currentValue);
@@ -70,6 +75,12 @@ const Navbar = ({ user }: NavbarProps) => {
 
     const closeMobileMenu = () => {
         setIsMobileMenuOpen(false);
+    };
+
+    const handleLogout = () => {
+        authStorage.removeToken();
+        logout();
+        navigate("/login");
     };
 
     const navLinkClassName = ({ isActive }: { isActive: boolean }) => {
@@ -133,29 +144,53 @@ const Navbar = ({ user }: NavbarProps) => {
                         Search books
                     </button>
 
-                    <button
-                        type="button"
-                        className="group inline-flex items-center gap-3 rounded-2xl border border-white/8 bg-white/6 px-3 py-2 text-left transition-all duration-300 hover:border-white/14 hover:bg-white/10"
-                    >
-                        {user?.avatarUrl ? (
-                            <img
-                                src={user.avatarUrl}
-                                alt={`${userDisplayName} avatar`}
-                                className="h-10 w-10 rounded-2xl object-cover"
-                            />
-                        ) : (
-                            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-sm font-semibold text-slate-950 shadow-[0_12px_32px_rgba(96,165,250,0.18)]">
-                                {userInitials}
+                    <div className="relative">
+                        <button
+                            type="button"
+                            className="group inline-flex items-center gap-3 rounded-2xl border border-white/8 bg-white/6 px-3 py-2 text-left transition-all duration-300 hover:border-white/14 hover:bg-white/10"
+                            onClick={() => setIsProfileOpen((v) => !v)}
+                        >
+                            {(state.user as any)?.avatarUrl ? (
+                                <img
+                                    src={(state.user as any).avatarUrl}
+                                    alt={`${userDisplayName} avatar`}
+                                    className="h-10 w-10 rounded-2xl object-cover"
+                                />
+                            ) : (
+                                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-sm font-semibold text-slate-950 shadow-[0_12px_32px_rgba(96,165,250,0.18)]">
+                                    {userInitials}
+                                </div>
+                            )}
+
+                            <div className="min-w-0">
+                                <p className="truncate text-sm font-medium text-white">{userDisplayName}</p>
+                                <p className="truncate text-xs text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
+                                    View profile
+                                </p>
+                            </div>
+                        </button>
+                        {isProfileOpen && (
+                            <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-white/10 bg-[rgba(12,17,31,0.96)] shadow-[0_20px_40px_rgba(0,0,0,0.28)] backdrop-blur-lg">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsProfileOpen(false);
+                                        navigate('/profile');
+                                    }}
+                                    className="w-full px-4 py-2 text-left text-sm text-slate-200 hover:bg-white/10"
+                                >
+                                    Profile
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleLogout}
+                                    className="w-full px-4 py-2 text-left text-sm text-red-300 hover:bg-white/10"
+                                >
+                                    Logout
+                                </button>
                             </div>
                         )}
-
-                        <div className="min-w-0">
-                            <p className="truncate text-sm font-medium text-white">{userDisplayName}</p>
-                            <p className="truncate text-xs text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                                View profile
-                            </p>
-                        </div>
-                    </button>
+                    </div>
                 </div>
 
                 <button
@@ -229,10 +264,11 @@ const Navbar = ({ user }: NavbarProps) => {
                     <button
                         type="button"
                         className="group inline-flex items-center gap-3 rounded-2xl border border-white/8 bg-white/6 px-3 py-3 text-left transition-all duration-300 hover:border-white/14 hover:bg-white/10"
+                        onClick={() => navigate('/profile')}
                     >
-                        {user?.avatarUrl ? (
+                        {(state.user as any)?.avatarUrl ? (
                             <img
-                                src={user.avatarUrl}
+                                src={(state.user as any).avatarUrl}
                                 alt={`${userDisplayName} avatar`}
                                 className="h-11 w-11 rounded-2xl object-cover"
                             />
@@ -248,6 +284,14 @@ const Navbar = ({ user }: NavbarProps) => {
                                 Open profile
                             </p>
                         </div>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/8 bg-white/6 px-4 text-sm font-medium text-red-300 transition-all duration-300 hover:border-white/14 hover:bg-white/10"
+                    >
+                        Logout
                     </button>
                 </div>
             </div>

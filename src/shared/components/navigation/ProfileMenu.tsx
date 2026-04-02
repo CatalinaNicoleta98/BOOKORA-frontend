@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -24,28 +22,19 @@ const ProfileMenu = ({
             <button
                 type="button"
                 onClick={() => setIsOpen((v) => !v)}
-                className="group inline-flex items-center gap-3 rounded-2xl border border-white/8 bg-white/6 px-3 py-2 text-left transition-all duration-300 hover:border-white/14 hover:bg-white/10"
+                className="group inline-flex items-center justify-center rounded-2xl border border-white/8 bg-white/6 p-2 transition-all duration-300 hover:border-white/14 hover:bg-white/10"
             >
                 {avatarUrl ? (
                     <img
                         src={avatarUrl}
                         alt={`${userDisplayName} avatar`}
-                        className="h-10 w-10 rounded-2xl object-cover"
+                        className="h-10 w-10 rounded-xl object-cover"
                     />
                 ) : (
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-sm font-semibold text-slate-950 shadow-[0_12px_32px_rgba(96,165,250,0.18)]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-sm font-semibold text-slate-950 shadow-[0_12px_32px_rgba(96,165,250,0.18)]">
                         {userInitials}
                     </div>
                 )}
-
-                <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-white">
-                        {userDisplayName}
-                    </p>
-                    <p className="truncate text-xs text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                        View profile
-                    </p>
-                </div>
             </button>
 
             {isOpen && (

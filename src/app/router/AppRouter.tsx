@@ -4,6 +4,7 @@ import { useAuth } from "../../features/auth/context/AuthContext";
 import LoginPage from "../../features/auth/pages/LoginPage";
 import RegisterPage from "../../features/auth/pages/RegisterPage";
 import HomePage from "../../features/home/pages/HomePage";
+import ProfilePage from "../../features/profile/pages/ProfilePage";
 import AppShell from "../../shared/components/layout/AppShell";
 
 const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: ReactElement }) => {
@@ -39,6 +40,7 @@ const AppRouter = () => {
                 }
             >
                 <Route path="/" element={<HomePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
             </Route>
 
             <Route

@@ -1,5 +1,3 @@
-
-
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchBooks } from "../services/searchService";
@@ -49,6 +47,16 @@ const NavbarSearch = () => {
         setSearchResults([]);
         setSearchError(null);
         setIsSearching(false);
+    };
+
+    const navigateToSearch = (query: string) => {
+        const normalizedQuery = query.trim();
+
+        if (!normalizedQuery) {
+            return;
+        }
+
+        navigate(`/search?q=${encodeURIComponent(normalizedQuery)}`);
     };
 
     const handleSearchChange = (value: string) => {
@@ -104,18 +112,18 @@ const NavbarSearch = () => {
     }, [searchQuery]);
 
     const handleResultClick = (result: SearchResult) => {
+        navigate(`/books/${result.externalBookId}`);
         clearSearch();
-        navigate(`/book/${result.externalBookId}`);
     };
 
     const handleViewAllResults = () => {
-        const normalized = searchQuery.trim();
+        const normalizedQuery = searchQuery.trim();
 
-        if (!normalized) {
+        if (!normalizedQuery) {
             return;
         }
 
-        navigate(`/search?q=${encodeURIComponent(normalized)}`);
+        navigateToSearch(normalizedQuery);
         clearSearch();
     };
 

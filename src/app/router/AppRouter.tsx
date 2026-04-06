@@ -5,6 +5,7 @@ import LoginPage from "../../features/auth/pages/LoginPage";
 import RegisterPage from "../../features/auth/pages/RegisterPage";
 import HomePage from "../../features/home/pages/HomePage";
 import ProfilePage from "../../features/profile/pages/ProfilePage";
+import SearchPage from "../../features/search/pages/SearchPage";
 import AppShell from "../../shared/components/layout/AppShell";
 
 const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: ReactElement }) => {
@@ -41,6 +42,7 @@ const AppRouter = () => {
             >
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/search" element={<SearchPage />} />
             </Route>
 
             <Route

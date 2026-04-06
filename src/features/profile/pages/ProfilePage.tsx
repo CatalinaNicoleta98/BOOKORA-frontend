@@ -1,5 +1,9 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { useAuth } from "../../auth/context/AuthContext";
+
+import { getMyProfile, updateMyProfile } from "../services/profileService";
+import type { ProfileUser } from "../types/profile.types";
 
 interface ProfileStatItem {
     label: string;
@@ -195,26 +199,216 @@ const getInitials = (name?: string) => {
     return initials || "BK";
 };
 
+const getImageSource = (imagePath?: string) => {
+    if (!imagePath) {
+        return undefined;
+    }
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+
+    return `http://localhost:4000${imagePath}`;
+};
+
+const buildProfileFallback = (user: ProfileUser | null, authUser: { name?: string; email?: string; avatarUrl?: string; coverImageUrl?: string; bio?: string } | null) => {
+    if (user) {
+        return user;
+    }
+
+    return {
+        id: "",
+        name: authUser?.name ?? "Bookora Reader",
+        email: authUser?.email ?? "reader@bookora.app",
+        avatarUrl: authUser?.avatarUrl,
+        coverImageUrl: authUser?.coverImageUrl,
+        bio: authUser?.bio ?? "",
+        isProfilePublic: true,
+        role: "user"
+    } satisfies ProfileUser;
+};
+
 const ProfilePage = () => {
     const { state } = useAuth();
+    const avatarInputRef = useRef<HTMLInputElement | null>(null);
+    const coverInputRef = useRef<HTMLInputElement | null>(null);
+
+    const [profile, setProfile] = useState<ProfileUser | null>(null);
+    const [isProfileLoading, setIsProfileLoading] = useState(true);
+    const [profileError, setProfileError] = useState<string | null>(null);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
+    const [isSavingProfile, setIsSavingProfile] = useState(false);
+    const [saveSuccessMessage, setSaveSuccessMessage] = useState<string | null>(null);
+    const [editName, setEditName] = useState("");
+    const [editBio, setEditBio] = useState("");
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [coverFile, setCoverFile] = useState<File | null>(null);
+    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
+    const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        const loadProfile = async () => {
+            try {
+                setIsProfileLoading(true);
+                setProfileError(null);
+
+                const currentProfile = await getMyProfile();
+
+                setProfile(currentProfile);
+                setEditName(currentProfile.name ?? "");
+                setEditBio(currentProfile.bio ?? "");
+            } catch (error) {
+                const fallbackMessage = error instanceof Error ? error.message : "Unable to load your profile right now.";
+                setProfileError(fallbackMessage);
+            } finally {
+                setIsProfileLoading(false);
+            }
+        };
+
+        loadProfile();
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (avatarPreviewUrl) {
+                URL.revokeObjectURL(avatarPreviewUrl);
+            }
+
+            if (coverPreviewUrl) {
+                URL.revokeObjectURL(coverPreviewUrl);
+            }
+        };
+    }, [avatarPreviewUrl, coverPreviewUrl]);
+
+    const fallbackProfile = buildProfileFallback(profile, state.user ?? null);
+
+    const handleAvatarFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0] ?? null;
+
+        if (avatarPreviewUrl) {
+            URL.revokeObjectURL(avatarPreviewUrl);
+        }
+
+        setAvatarFile(selectedFile);
+        setAvatarPreviewUrl(selectedFile ? URL.createObjectURL(selectedFile) : null);
+        setSaveSuccessMessage(null);
+    };
+
+    const handleCoverFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0] ?? null;
+
+        if (coverPreviewUrl) {
+            URL.revokeObjectURL(coverPreviewUrl);
+        }
+
+        setCoverFile(selectedFile);
+        setCoverPreviewUrl(selectedFile ? URL.createObjectURL(selectedFile) : null);
+        setSaveSuccessMessage(null);
+    };
+
+    const handleStartEditing = () => {
+        setIsEditingProfile(true);
+        setSaveSuccessMessage(null);
+        setProfileError(null);
+        setEditName(fallbackProfile.name ?? "");
+        setEditBio(fallbackProfile.bio ?? "");
+    };
+
+    const handleCancelEditing = () => {
+        if (avatarPreviewUrl) {
+            URL.revokeObjectURL(avatarPreviewUrl);
+        }
+
+        if (coverPreviewUrl) {
+            URL.revokeObjectURL(coverPreviewUrl);
+        }
+
+        setIsEditingProfile(false);
+        setAvatarFile(null);
+        setCoverFile(null);
+        setAvatarPreviewUrl(null);
+        setCoverPreviewUrl(null);
+        setEditName(fallbackProfile.name ?? "");
+        setEditBio(fallbackProfile.bio ?? "");
+        setSaveSuccessMessage(null);
+        setProfileError(null);
+    };
+
+    const handleSaveProfile = async () => {
+        try {
+            setIsSavingProfile(true);
+            setProfileError(null);
+            setSaveSuccessMessage(null);
+
+            const updatedProfile = await updateMyProfile({
+                name: editName.trim(),
+                bio: editBio.trim(),
+                avatarFile,
+                coverFile
+            });
+
+            if (avatarPreviewUrl) {
+                URL.revokeObjectURL(avatarPreviewUrl);
+            }
+
+            if (coverPreviewUrl) {
+                URL.revokeObjectURL(coverPreviewUrl);
+            }
+
+            setProfile(updatedProfile);
+            setEditName(updatedProfile.name ?? "");
+            setEditBio(updatedProfile.bio ?? "");
+            setAvatarFile(null);
+            setCoverFile(null);
+            setAvatarPreviewUrl(null);
+            setCoverPreviewUrl(null);
+            setIsEditingProfile(false);
+            setSaveSuccessMessage("Profile updated successfully.");
+        } catch (error) {
+            const fallbackMessage = error instanceof Error ? error.message : "Unable to save your profile right now.";
+            setProfileError(fallbackMessage);
+        } finally {
+            setIsSavingProfile(false);
+        }
+    };
 
     const profileName = useMemo(() => {
-        if (!state.user?.name) {
-            return "Bookora Reader";
+        if (isEditingProfile) {
+            return editName.trim() || "Bookora Reader";
         }
 
-        return state.user.name;
-    }, [state.user?.name]);
+        return fallbackProfile.name || "Bookora Reader";
+    }, [editName, fallbackProfile.name, isEditingProfile]);
 
     const profileEmail = useMemo(() => {
-        if (!state.user?.email) {
-            return "reader@bookora.app";
-        }
-
-        return state.user.email;
-    }, [state.user?.email]);
+        return fallbackProfile.email || "reader@bookora.app";
+    }, [fallbackProfile.email]);
 
     const profileInitials = useMemo(() => getInitials(profileName), [profileName]);
+
+    const profileBio = useMemo(() => {
+        if (isEditingProfile) {
+            return editBio;
+        }
+
+        return fallbackProfile.bio?.trim() || "Curating fantasy worlds, cozy reads, and future obsessions, all in one place.";
+    }, [editBio, fallbackProfile.bio, isEditingProfile]);
+
+    const profileAvatarUrl = useMemo(() => {
+        if (avatarPreviewUrl) {
+            return avatarPreviewUrl;
+        }
+
+        return getImageSource(fallbackProfile.avatarUrl);
+    }, [avatarPreviewUrl, fallbackProfile.avatarUrl]);
+
+    const profileCoverUrl = useMemo(() => {
+        if (coverPreviewUrl) {
+            return coverPreviewUrl;
+        }
+
+        return getImageSource(fallbackProfile.coverImageUrl);
+    }, [coverPreviewUrl, fallbackProfile.coverImageUrl]);
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-[#070a12] text-slate-100">
@@ -222,8 +416,29 @@ const ProfilePage = () => {
             <div className="absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_center,_rgba(255,255,255,0.08)_0.8px,_transparent_0.8px)] [background-size:28px_28px]" />
 
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+                <input
+                    ref={avatarInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={handleAvatarFileChange}
+                />
+                <input
+                    ref={coverInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={handleCoverFileChange}
+                />
                 <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
                     <div className="relative h-[16rem] overflow-hidden sm:h-[19rem] lg:h-[22rem]">
+                        {profileCoverUrl ? (
+                            <img
+                                src={profileCoverUrl}
+                                alt={`${profileName} cover`}
+                                className="absolute inset-0 h-full w-full object-cover"
+                            />
+                        ) : null}
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,_rgba(250,204,21,0.22),_transparent_22%),radial-gradient(circle_at_80%_22%,_rgba(192,132,252,0.28),_transparent_26%),radial-gradient(circle_at_50%_72%,_rgba(56,189,248,0.16),_transparent_30%),linear-gradient(135deg,_rgba(12,18,35,0.8),_rgba(22,12,41,0.72),_rgba(6,10,18,0.94))]" />
                         <div className="absolute inset-0 opacity-55 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:72px_72px]" />
                         <div className="absolute left-6 top-6 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-200 backdrop-blur-lg sm:left-8 sm:top-8">
@@ -237,24 +452,63 @@ const ProfilePage = () => {
                             <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
                                 <div className="relative shrink-0">
                                     <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-amber-200/40 via-fuchsia-200/30 to-sky-200/30 blur-xl" />
-                                    <div className="relative flex h-28 w-28 items-center justify-center rounded-[2rem] border border-white/14 bg-gradient-to-br from-sky-300/90 via-indigo-300/85 to-fuchsia-300/85 text-4xl font-semibold text-slate-950 shadow-[0_24px_80px_rgba(96,165,250,0.28)] sm:h-32 sm:w-32 sm:text-5xl">
-                                        {profileInitials}
+                                    <div className="relative h-28 w-28 overflow-hidden rounded-[2rem] border border-white/14 shadow-[0_24px_80px_rgba(96,165,250,0.28)] sm:h-32 sm:w-32">
+                                        {profileAvatarUrl ? (
+                                            <img
+                                                src={profileAvatarUrl}
+                                                alt={profileName}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-300/90 via-indigo-300/85 to-fuchsia-300/85 text-4xl font-semibold text-slate-950 sm:text-5xl">
+                                                {profileInitials}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
                                 <div className="min-w-0">
                                     <div className="flex flex-wrap items-center gap-3">
-                                        <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem]">
-                                            {profileName}
-                                        </h1>
+                                        {isEditingProfile ? (
+                                            <div className="min-w-[min(100%,28rem)]">
+                                                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                                                    Display name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={editName}
+                                                    onChange={(event) => setEditName(event.target.value)}
+                                                    className="w-full rounded-[1.4rem] border border-white/12 bg-[#0b1020]/76 px-4 py-3 text-lg font-semibold text-white outline-none transition-colors duration-300 placeholder:text-slate-500 focus:border-amber-200/30 sm:text-xl"
+                                                    placeholder="Your display name"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem]">
+                                                {profileName}
+                                            </h1>
+                                        )}
                                         <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
                                             @{profileName.toLowerCase().replace(/\s+/g, "")}
                                         </span>
                                     </div>
-                                    <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-[15px]">
-                                        Curating fantasy worlds, cozy reads, and future obsessions, all in one place. This profile is where
-                                        shelves, goals, and reading energy should feel personal, visual, and alive.
-                                    </p>
+                                    {isEditingProfile ? (
+                                        <div className="mt-4 max-w-3xl">
+                                            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                                                Bio
+                                            </label>
+                                            <textarea
+                                                value={editBio}
+                                                onChange={(event) => setEditBio(event.target.value)}
+                                                rows={4}
+                                                className="w-full rounded-[1.4rem] border border-white/12 bg-[#0b1020]/76 px-4 py-3 text-sm leading-7 text-slate-100 outline-none transition-colors duration-300 placeholder:text-slate-500 focus:border-amber-200/30"
+                                                placeholder="Tell readers a little about your reading taste."
+                                            />
+                                        </div>
+                                    ) : (
+                                        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-[15px]">
+                                            {profileBio}
+                                        </p>
+                                    )}
                                     <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-400">
                                         <span>{profileEmail}</span>
                                         <span className="h-1 w-1 rounded-full bg-slate-500" />
@@ -268,16 +522,45 @@ const ProfilePage = () => {
                             <div className="flex flex-wrap gap-3 lg:justify-end">
                                 <button
                                     type="button"
+                                    onClick={() => coverInputRef.current?.click()}
                                     className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
                                 >
                                     Edit cover
                                 </button>
-                                <button
-                                    type="button"
-                                    className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
-                                >
-                                    Edit profile
-                                </button>
+                                {isEditingProfile ? (
+                                    <>
+                                        <button
+                                            type="button"
+                                            onClick={() => avatarInputRef.current?.click()}
+                                            className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                        >
+                                            Change avatar
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleCancelEditing}
+                                            className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleSaveProfile}
+                                            disabled={isSavingProfile}
+                                            className="inline-flex h-11 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/10 px-4 text-sm font-medium text-emerald-100 transition-all duration-300 hover:border-emerald-300/30 hover:bg-emerald-300/14 disabled:cursor-not-allowed disabled:opacity-60"
+                                        >
+                                            {isSavingProfile ? "Saving..." : "Save profile"}
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={handleStartEditing}
+                                        className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                    >
+                                        Edit profile
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     className="inline-flex h-11 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/10 px-4 text-sm font-medium text-amber-100 transition-all duration-300 hover:border-amber-200/30 hover:bg-amber-200/14"
@@ -285,6 +568,26 @@ const ProfilePage = () => {
                                     Share profile
                                 </button>
                             </div>
+
+                        {(isProfileLoading || profileError || saveSuccessMessage) ? (
+                            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+                                {isProfileLoading ? (
+                                    <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1.5 text-slate-300">
+                                        Loading profile...
+                                    </span>
+                                ) : null}
+                                {profileError ? (
+                                    <span className="rounded-full border border-rose-300/20 bg-rose-300/10 px-3 py-1.5 text-rose-100">
+                                        {profileError}
+                                    </span>
+                                ) : null}
+                                {saveSuccessMessage ? (
+                                    <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-emerald-100">
+                                        {saveSuccessMessage}
+                                    </span>
+                                ) : null}
+                            </div>
+                        ) : null}
                         </div>
 
                         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

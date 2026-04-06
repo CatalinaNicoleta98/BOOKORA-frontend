@@ -8,22 +8,9 @@ import ProfileStatsGrid, { type ProfileStatItem } from "../components/ProfileSta
 import ProfileReadingGoals from "../components/ProfileReadingGoals";
 import ProfileRecentActivity, { type ProfileActivityItem } from "../components/ProfileRecentActivity";
 import ProfileHeader from "../components/ProfileHeader";
+import ProfileShelvesSection, { type ProfileShelfItem } from "../components/ProfileShelvesSection";
 
 
-interface ProfileShelfPreviewBook {
-    id: string;
-    title: string;
-    coverUrl: string;
-}
-
-interface ProfileShelfItem {
-    label: string;
-    value: number;
-    helperText: string;
-    accent: string;
-    ctaLabel: string;
-    books: ProfileShelfPreviewBook[];
-}
 
 
 const profileStats: ProfileStatItem[] = [
@@ -51,101 +38,23 @@ const profileStats: ProfileStatItem[] = [
 
 const profileShelves: ProfileShelfItem[] = [
     {
-        label: "Want to read",
-        value: 12,
-        helperText: "A dreamy stack of books waiting for their turn.",
-        accent: "from-amber-200/30 via-orange-200/20 to-pink-200/25",
-        ctaLabel: "Open shelf",
-        books: [
-            {
-                id: "shelf-wtr-1",
-                title: "Fourth Wing",
-                coverUrl: "https://covers.openlibrary.org/b/id/12883814-M.jpg",
-            },
-            {
-                id: "shelf-wtr-2",
-                title: "The Priory of the Orange Tree",
-                coverUrl: "https://covers.openlibrary.org/b/id/10521270-M.jpg",
-            },
-            {
-                id: "shelf-wtr-3",
-                title: "Divine Rivals",
-                coverUrl: "https://covers.openlibrary.org/b/id/14637495-M.jpg",
-            },
-        ],
+        id: "shelf-1",
+        name: "Want to read",
+        count: 12,
+        description: "A dreamy stack of books waiting for their turn."
     },
     {
-        label: "Finished",
-        value: 8,
-        helperText: "Stories that already made it into your reading history.",
-        accent: "from-emerald-200/25 via-teal-200/15 to-sky-200/20",
-        ctaLabel: "View history",
-        books: [
-            {
-                id: "shelf-finished-1",
-                title: "Harry Potter and the Philosopher's Stone",
-                coverUrl: "https://covers.openlibrary.org/b/id/10523338-M.jpg",
-            },
-            {
-                id: "shelf-finished-2",
-                title: "Caraval",
-                coverUrl: "https://covers.openlibrary.org/b/id/10586792-M.jpg",
-            },
-            {
-                id: "shelf-finished-3",
-                title: "The Cruel Prince",
-                coverUrl: "https://covers.openlibrary.org/b/id/9259256-M.jpg",
-            },
-        ],
+        id: "shelf-2",
+        name: "Finished",
+        count: 8,
+        description: "Stories that already made it into your reading history."
     },
     {
-        label: "On break",
-        value: 2,
-        helperText: "Books paused for now, but not forgotten.",
-        accent: "from-indigo-200/25 via-violet-200/20 to-fuchsia-200/20",
-        ctaLabel: "Resume later",
-        books: [
-            {
-                id: "shelf-break-1",
-                title: "The Name of the Wind",
-                coverUrl: "https://covers.openlibrary.org/b/id/8231856-M.jpg",
-            },
-            {
-                id: "shelf-break-2",
-                title: "A Court of Silver Flames",
-                coverUrl: "https://covers.openlibrary.org/b/id/11153238-M.jpg",
-            },
-            {
-                id: "shelf-break-3",
-                title: "Lore",
-                coverUrl: "https://covers.openlibrary.org/b/id/11119857-M.jpg",
-            },
-        ],
-    },
-    {
-        label: "Did not finish",
-        value: 1,
-        helperText: "Even unfinished books are part of the journey.",
-        accent: "from-rose-200/20 via-pink-200/15 to-slate-200/10",
-        ctaLabel: "Review notes",
-        books: [
-            {
-                id: "shelf-dnf-1",
-                title: "Crescent City",
-                coverUrl: "https://covers.openlibrary.org/b/id/11148691-M.jpg",
-            },
-            {
-                id: "shelf-dnf-2",
-                title: "Lore Olympus",
-                coverUrl: "https://covers.openlibrary.org/b/id/12616312-M.jpg",
-            },
-            {
-                id: "shelf-dnf-3",
-                title: "Belladonna",
-                coverUrl: "https://covers.openlibrary.org/b/id/12874473-M.jpg",
-            },
-        ],
-    },
+        id: "shelf-3",
+        name: "On break",
+        count: 2,
+        description: "Books paused for now, but not forgotten."
+    }
 ];
 
 const recentActivity: ProfileActivityItem[] = [
@@ -437,67 +346,7 @@ const ProfilePage = () => {
 
                 <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
                     <div className="space-y-6">
-                        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:p-8">
-                            <div className="flex items-center justify-between gap-4">
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
-                                        Featured shelves
-                                    </p>
-                                    <h2 className="mt-2 text-2xl font-semibold text-white">A more visual library view</h2>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="text-sm font-medium text-amber-100 transition-colors duration-300 hover:text-amber-50"
-                                >
-                                    Open library
-                                </button>
-                            </div>
-
-                            <div className="mt-8 grid gap-4 xl:grid-cols-2">
-                                {profileShelves.map((item) => (
-                                    <article
-                                        key={item.label}
-                                        className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0b1020]/74 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.24)]"
-                                    >
-                                        <div className={`absolute inset-x-0 top-0 h-28 bg-gradient-to-r ${item.accent}`} />
-                                        <div className="relative">
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div>
-                                                    <p className="text-sm font-medium text-slate-200">{item.label}</p>
-                                                    <p className="mt-3 text-4xl font-semibold text-white">{item.value}</p>
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    className="rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-xs font-medium text-slate-200 transition-colors duration-300 hover:bg-white/12"
-                                                >
-                                                    {item.ctaLabel}
-                                                </button>
-                                            </div>
-
-                                            <p className="mt-4 max-w-md text-sm leading-6 text-slate-400">{item.helperText}</p>
-
-                                            <div className="mt-6 flex items-end gap-3 overflow-hidden">
-                                                {item.books.map((book, index) => (
-                                                    <div
-                                                        key={book.id}
-                                                        className={`group relative shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/6 shadow-[0_12px_28px_rgba(15,23,42,0.26)] ${
-                                                            index === 0 ? "mt-0 h-28 w-20" : index === 1 ? "mt-4 h-24 w-[4.3rem]" : "mt-7 h-20 w-[3.85rem]"
-                                                        }`}
-                                                        title={book.title}
-                                                    >
-                                                        <img
-                                                            src={book.coverUrl}
-                                                            alt={book.title}
-                                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
-                        </div>
+                        <ProfileShelvesSection shelves={profileShelves} />
                     </div>
 
                     <div className="space-y-6">

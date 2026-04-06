@@ -6,6 +6,7 @@ import { getMyProfile, updateMyProfile } from "../services/profileService";
 import type { ProfileUser } from "../types/profile.types";
 import ProfileStatsGrid, { type ProfileStatItem } from "../components/ProfileStatsGrid";
 import ProfileReadingGoals from "../components/ProfileReadingGoals";
+import ProfileRecentActivity, { type ProfileActivityItem } from "../components/ProfileRecentActivity";
 
 
 interface ProfileShelfPreviewBook {
@@ -23,13 +24,6 @@ interface ProfileShelfItem {
     books: ProfileShelfPreviewBook[];
 }
 
-interface ProfileActivityItem {
-    id: string;
-    title: string;
-    description: string;
-    meta: string;
-    badge: string;
-}
 
 const profileStats: ProfileStatItem[] = [
     {
@@ -158,22 +152,19 @@ const recentActivity: ProfileActivityItem[] = [
         id: "activity-1",
         title: "Progress updated on Harry Potter and the Philosopher's Stone",
         description: "You moved forward to page 50 and kept the reading streak alive.",
-        meta: "Today",
-        badge: "Reading session",
+        timestamp: "Today",
     },
     {
         id: "activity-2",
         title: "A new title was added to Want to Read",
         description: "Your future TBR stack is starting to look like a real fantasy tower.",
-        meta: "Yesterday",
-        badge: "Shelf update",
+        timestamp: "Yesterday",
     },
     {
         id: "activity-3",
         title: "Profile challenge progress increased",
         description: "You are now 30% of the way toward your yearly reading target.",
-        meta: "This week",
-        badge: "Goal milestone",
+        timestamp: "This week",
     },
 ];
 
@@ -661,44 +652,7 @@ const ProfilePage = () => {
                             current={readingGoalCurrent}
                         />
 
-                        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:p-8">
-                            <div className="flex items-center justify-between gap-4">
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
-                                        Recent activity
-                                    </p>
-                                    <h2 className="mt-2 text-2xl font-semibold text-white">What you have been doing lately</h2>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="text-sm font-medium text-amber-100 transition-colors duration-300 hover:text-amber-50"
-                                >
-                                    View full activity
-                                </button>
-                            </div>
-
-                            <div className="mt-8 space-y-4">
-                                {recentActivity.map((item) => (
-                                    <article
-                                        key={item.id}
-                                        className="rounded-[1.6rem] border border-white/10 bg-[#0b1020]/76 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.24)]"
-                                    >
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="min-w-0">
-                                                <span className="inline-flex rounded-full border border-white/10 bg-white/7 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                                                    {item.badge}
-                                                </span>
-                                                <h3 className="mt-4 text-base font-medium text-white">{item.title}</h3>
-                                                <p className="mt-2 text-sm leading-7 text-slate-400">{item.description}</p>
-                                            </div>
-                                            <span className="shrink-0 rounded-full border border-white/10 bg-white/6 px-3 py-1 text-xs font-medium text-slate-400">
-                                                {item.meta}
-                                            </span>
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
-                        </div>
+                        <ProfileRecentActivity items={recentActivity} />
                     </div>
                 </section>
             </div>

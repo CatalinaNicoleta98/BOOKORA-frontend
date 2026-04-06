@@ -4,12 +4,8 @@ import { useAuth } from "../../auth/context/AuthContext";
 
 import { getMyProfile, updateMyProfile } from "../services/profileService";
 import type { ProfileUser } from "../types/profile.types";
+import ProfileStatsGrid, { type ProfileStatItem } from "../components/ProfileStatsGrid";
 
-interface ProfileStatItem {
-    label: string;
-    value: string;
-    helperText: string;
-}
 
 interface ProfileShelfPreviewBook {
     id: string;
@@ -590,20 +586,7 @@ const ProfilePage = () => {
                         ) : null}
                         </div>
 
-                        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                            {profileStats.map((item) => (
-                                <article
-                                    key={item.label}
-                                    className="rounded-[1.6rem] border border-white/10 bg-[#0b1020]/76 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.24)]"
-                                >
-                                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                                        {item.label}
-                                    </p>
-                                    <p className="mt-3 text-3xl font-semibold text-white">{item.value}</p>
-                                    <p className="mt-3 text-sm leading-6 text-slate-400">{item.helperText}</p>
-                                </article>
-                            ))}
-                        </div>
+                        <ProfileStatsGrid stats={profileStats} />
                     </div>
                 </section>
 

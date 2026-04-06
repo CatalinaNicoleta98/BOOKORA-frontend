@@ -7,8 +7,6 @@ export type AuthUser = {
     avatarUrl?: string;
     coverImageUrl?: string;
 
-    // Backward compatibility
-    profilePicture?: string;
 
     bio?: string;
     isProfilePublic?: boolean;

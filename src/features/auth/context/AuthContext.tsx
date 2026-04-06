@@ -29,7 +29,8 @@ type AuthAction =
     | { type: "INIT_FAIL" }
     | { type: "LOGIN_START" }
     | { type: "LOGIN_SUCCESS"; payload: { token: string; user: AuthUser } }
-    | { type: "LOGOUT" };
+    | { type: "LOGOUT" }
+    | { type: "UPDATE_USER"; payload: { user: AuthUser } };
 
 // --------------------
 // Reducer
@@ -81,6 +82,12 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
                 isLoading: false
             };
 
+        case "UPDATE_USER":
+            return {
+                ...state,
+                user: action.payload.user
+            };
+
         default:
             return state;
     }
@@ -94,6 +101,7 @@ type AuthContextType = {
     state: AuthState;
     login: (credentials: LoginCredentials) => Promise<void>;
     logout: () => void;
+    updateUser: (user: AuthUser) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -153,12 +161,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         dispatch({ type: "LOGOUT" });
     };
 
+    const updateUser = (user: AuthUser) => {
+        dispatch({
+            type: "UPDATE_USER",
+            payload: { user }
+        });
+    };
+
     return (
         <AuthContext.Provider
             value={{
                 state,
                 login,
-                logout
+                logout,
+                updateUser
             }}
         >
             {children}

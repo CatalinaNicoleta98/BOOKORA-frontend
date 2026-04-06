@@ -2,7 +2,14 @@ export type AuthUser = {
     id: string;
     name: string;
     email: string;
+
+    // Profile visuals
+    avatarUrl?: string;
+    coverImageUrl?: string;
+
+    // Backward compatibility
     profilePicture?: string;
+
     bio?: string;
     isProfilePublic?: boolean;
     role?: string;

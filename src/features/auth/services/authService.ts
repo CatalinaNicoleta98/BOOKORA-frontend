@@ -47,5 +47,27 @@ export const authService = {
         );
 
         return response.data.data.user;
+    },
+
+    updateProfile: async (
+        payload: {
+            name?: string;
+            avatarUrl?: string;
+            coverImageUrl?: string;
+            bio?: string;
+        },
+        token: string
+    ): Promise<AuthUser> => {
+        const response = await httpClient.patch(
+            "/auth/profile",
+            payload,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        return response.data.data.user;
     }
 };

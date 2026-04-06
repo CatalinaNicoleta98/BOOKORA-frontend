@@ -126,7 +126,7 @@ const buildProfileFallback = (user: ProfileUser | null, authUser: { name?: strin
 };
 
 const ProfilePage = () => {
-    const { state } = useAuth();
+    const { state, updateUser } = useAuth();
     const avatarInputRef = useRef<HTMLInputElement | null>(null);
     const coverInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -253,6 +253,7 @@ const ProfilePage = () => {
             }
 
             setProfile(updatedProfile);
+            updateUser(updatedProfile);
             setEditName(updatedProfile.name ?? "");
             setEditBio(updatedProfile.bio ?? "");
             setAvatarFile(null);

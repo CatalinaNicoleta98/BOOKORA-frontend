@@ -1,5 +1,3 @@
-
-
 import { httpClient } from "../../../shared/api/httpClient";
 import type {
     GetMyProfileResponse,
@@ -54,12 +52,16 @@ export const updateMyProfile = async (
         formData.append("cover", input.coverFile);
     }
 
+    for (const [key, value] of formData.entries()) {
+        console.log("FormData entry:", key, value);
+    }
+
     const response = await httpClient.patch<UpdateMyProfileResponse>(
         `${PROFILE_BASE_PATH}/me`,
         formData,
         {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": undefined
             }
         }
     );

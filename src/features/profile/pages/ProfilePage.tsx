@@ -220,6 +220,14 @@ const ProfilePage = () => {
             URL.revokeObjectURL(coverPreviewUrl);
         }
 
+        if (avatarInputRef.current) {
+            avatarInputRef.current.value = "";
+        }
+
+        if (coverInputRef.current) {
+            coverInputRef.current.value = "";
+        }
+
         setIsEditingProfile(false);
         setAvatarFile(null);
         setCoverFile(null);
@@ -237,11 +245,17 @@ const ProfilePage = () => {
             setProfileError(null);
             setSaveSuccessMessage(null);
 
+            const selectedAvatarFile = avatarInputRef.current?.files?.[0] ?? avatarFile;
+            const selectedCoverFile = coverInputRef.current?.files?.[0] ?? coverFile;
+
+            console.log("Selected avatar file:", selectedAvatarFile);
+            console.log("Selected cover file:", selectedCoverFile);
+
             const updatedProfile = await updateMyProfile({
                 name: editName.trim(),
                 bio: editBio.trim(),
-                avatarFile,
-                coverFile
+                avatarFile: selectedAvatarFile,
+                coverFile: selectedCoverFile
             });
 
             if (avatarPreviewUrl) {
@@ -262,6 +276,13 @@ const ProfilePage = () => {
             setCoverPreviewUrl(null);
             setIsEditingProfile(false);
             setSaveSuccessMessage("Profile updated successfully.");
+            if (avatarInputRef.current) {
+                avatarInputRef.current.value = "";
+            }
+
+            if (coverInputRef.current) {
+                coverInputRef.current.value = "";
+            }
         } catch (error) {
             const fallbackMessage = error instanceof Error ? error.message : "Unable to save your profile right now.";
             setProfileError(fallbackMessage);

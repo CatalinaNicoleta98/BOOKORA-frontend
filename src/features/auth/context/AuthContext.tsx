@@ -7,6 +7,7 @@ import type {
 } from "../types/auth.types";
 import { authStorage } from "../services/authStorage";
 import { authService } from "../services/authService";
+import { getMyProfile } from "../../profile/services/profileService";
 
 // --------------------
 // State
@@ -63,7 +64,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         case "LOGIN_START":
             return {
                 ...state,
-                isLoading: true
+                isLoading: false
             };
 
         case "LOGIN_SUCCESS":
@@ -125,7 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             dispatch({ type: "INIT_START" });
 
             try {
-                const user = await authService.getCurrentUser(token);
+                const user = await getMyProfile();
 
                 dispatch({
                     type: "INIT_SUCCESS",

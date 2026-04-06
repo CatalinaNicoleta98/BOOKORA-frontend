@@ -5,6 +5,7 @@ import { useAuth } from "../../auth/context/AuthContext";
 import { getMyProfile, updateMyProfile } from "../services/profileService";
 import type { ProfileUser } from "../types/profile.types";
 import ProfileStatsGrid, { type ProfileStatItem } from "../components/ProfileStatsGrid";
+import ProfileReadingGoals from "../components/ProfileReadingGoals";
 
 
 interface ProfileShelfPreviewBook {
@@ -178,7 +179,6 @@ const recentActivity: ProfileActivityItem[] = [
 
 const readingGoalTarget = 20;
 const readingGoalCurrent = 6;
-const readingGoalProgress = Math.min((readingGoalCurrent / readingGoalTarget) * 100, 100);
 
 const getInitials = (name?: string) => {
     if (!name) {
@@ -656,43 +656,10 @@ const ProfilePage = () => {
                     </div>
 
                     <div className="space-y-6">
-                        <aside className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:p-8">
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
-                                        Reading goal
-                                    </p>
-                                    <h2 className="mt-2 text-2xl font-semibold text-white">2026 challenge</h2>
-                                </div>
-                                <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
-                                    Active
-                                </span>
-                            </div>
-
-                            <div className="mt-8 rounded-[1.6rem] border border-white/10 bg-[#0b1020]/76 p-5">
-                                <div className="flex items-end justify-between gap-4">
-                                    <div>
-                                        <p className="text-sm text-slate-400">Books completed</p>
-                                        <p className="mt-2 text-4xl font-semibold text-white">{readingGoalCurrent}</p>
-                                    </div>
-                                    <p className="text-right text-sm text-slate-400">
-                                        Goal: <span className="font-medium text-slate-200">{readingGoalTarget}</span>
-                                    </p>
-                                </div>
-
-                                <div className="mt-6 h-3 overflow-hidden rounded-full bg-white/8">
-                                    <div
-                                        className="h-full rounded-full bg-gradient-to-r from-amber-200 via-orange-200 to-pink-200"
-                                        style={{ width: `${readingGoalProgress}%` }}
-                                    />
-                                </div>
-
-                                <p className="mt-4 text-sm leading-6 text-slate-400">
-                                    You have completed {readingGoalCurrent} out of {readingGoalTarget} books so far this year.
-                                    Separate reading and listening goals can be added later once the full goal system is live.
-                                </p>
-                            </div>
-                        </aside>
+                        <ProfileReadingGoals
+                            target={readingGoalTarget}
+                            current={readingGoalCurrent}
+                        />
 
                         <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:p-8">
                             <div className="flex items-center justify-between gap-4">

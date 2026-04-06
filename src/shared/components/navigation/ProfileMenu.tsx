@@ -1,6 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const getImageSource = (imagePath?: string | null) => {
+    if (!imagePath) {
+        return undefined;
+    }
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+
+    return `http://localhost:4000${imagePath}`;
+};
+
 interface ProfileMenuProps {
     userDisplayName: string;
     userInitials: string;
@@ -16,22 +28,23 @@ const ProfileMenu = ({
 }: ProfileMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const avatarSource = getImageSource(avatarUrl);
 
     return (
         <div className="relative">
             <button
                 type="button"
                 onClick={() => setIsOpen((v) => !v)}
-                className="group inline-flex items-center justify-center rounded-2xl border border-white/8 bg-white/6 p-2 transition-all duration-300 hover:border-white/14 hover:bg-white/10"
+                className="group inline-flex items-center justify-center rounded-xl p-0 transition-transform duration-200 hover:scale-105"
             >
-                {avatarUrl ? (
+                {avatarSource ? (
                     <img
-                        src={avatarUrl}
+                        src={avatarSource}
                         alt={`${userDisplayName} avatar`}
-                        className="h-10 w-10 rounded-xl object-cover"
+                        className="h-11 w-11 rounded-xl object-cover"
                     />
                 ) : (
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-sm font-semibold text-slate-950 shadow-[0_12px_32px_rgba(96,165,250,0.18)]">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-base font-semibold text-slate-950">
                         {userInitials}
                     </div>
                 )}

@@ -34,6 +34,18 @@ const getInitials = (name?: string) => {
     return initials || "BK";
 };
 
+const getImageSource = (imagePath?: string | null) => {
+    if (!imagePath) {
+        return undefined;
+    }
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+
+    return `http://localhost:4000${imagePath}`;
+};
+
 const Navbar = (_props: NavbarProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -48,6 +60,10 @@ const Navbar = (_props: NavbarProps) => {
     }, [state.user?.name]);
 
     const userInitials = useMemo(() => getInitials(state.user?.name), [state.user?.name]);
+
+    const mobileAvatarSource = useMemo(() => {
+        return getImageSource((state.user as any)?.avatarUrl ?? null);
+    }, [(state.user as any)?.avatarUrl]);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen((currentValue) => !currentValue);
@@ -108,25 +124,24 @@ const Navbar = (_props: NavbarProps) => {
                         aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                         aria-expanded={isMobileMenuOpen}
                         onClick={toggleMobileMenu}
-                        className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/8 bg-white/6 text-slate-200 transition-all duration-300 hover:border-white/14 hover:bg-white/10 hover:text-white"
+                        className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-slate-200 transition-all duration-300 hover:text-white"
                     >
-                        <div className="relative h-4 w-5">
-                            <span
-                                className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-                                    isMobileMenuOpen ? "translate-y-[7px] rotate-45" : "translate-y-0"
-                                }`}
+                        {isMobileMenuOpen ? (
+                            <div className="relative h-5 w-5">
+                                <span className="absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-current rotate-45" />
+                                <span className="absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-current -rotate-45" />
+                            </div>
+                        ) : mobileAvatarSource ? (
+                            <img
+                                src={mobileAvatarSource}
+                                alt={`${userDisplayName} avatar`}
+                                className="h-11 w-11 rounded-xl object-cover"
                             />
-                            <span
-                                className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-                                    isMobileMenuOpen ? "opacity-0" : "opacity-100"
-                                }`}
-                            />
-                            <span
-                                className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-                                    isMobileMenuOpen ? "-translate-y-[7px] -rotate-45" : "translate-y-0"
-                                }`}
-                            />
-                        </div>
+                        ) : (
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-base font-semibold text-slate-950">
+                                {userInitials}
+                            </div>
+                        )}
                     </button>
                 </div>
             </div>

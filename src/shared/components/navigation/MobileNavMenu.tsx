@@ -1,6 +1,16 @@
-
-
 import { NavLink, useNavigate } from "react-router-dom";
+
+const getImageSource = (imagePath?: string | null) => {
+    if (!imagePath) {
+        return undefined;
+    }
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+
+    return `http://localhost:4000${imagePath}`;
+};
 
 interface NavigationItem {
     label: string;
@@ -38,6 +48,7 @@ const MobileNavMenu = ({
     avatarUrl,
 }: MobileNavMenuProps) => {
     const navigate = useNavigate();
+    const avatarSource = getImageSource(avatarUrl);
 
     return (
         <div
@@ -55,9 +66,9 @@ const MobileNavMenu = ({
                         }}
                         className="group flex w-full items-center gap-3 rounded-2xl px-1 py-1 text-left transition-all duration-300"
                     >
-                        {avatarUrl ? (
+                        {avatarSource ? (
                             <img
-                                src={avatarUrl}
+                                src={avatarSource}
                                 alt={`${userDisplayName} avatar`}
                                 className="h-12 w-12 rounded-2xl object-cover"
                             />

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import SearchFilters, { type SearchMode } from "../components/SearchFilters";
 import { searchBooks } from "../services/searchService";
 
 interface SearchResultItem {
@@ -235,6 +236,10 @@ const SearchPage = () => {
             : 1;
     const searchPageLimit = 20;
 
+    const modeParam = searchParams.get("mode");
+    const mode: SearchMode =
+        modeParam === "author" || modeParam === "title" ? modeParam : "all";
+
     const [searchInput, setSearchInput] = useState(initialQuery);
     const [results, setResults] = useState<SearchResultItem[]>([]);
     const [pagination, setPagination] = useState<SearchPagination>({
@@ -272,7 +277,8 @@ const SearchPage = () => {
                 setErrorMessage(null);
 
                 const rawResponse = await searchBooks({
-                    q: trimmedQuery,
+                    q: mode === "author" ? undefined : trimmedQuery,
+                    author: mode === "author" ? trimmedQuery : undefined,
                     page: initialPage,
                     limit: searchPageLimit
                 });
@@ -306,7 +312,7 @@ const SearchPage = () => {
         };
 
         loadResults();
-    }, [initialPage, initialQuery]);
+    }, [initialPage, initialQuery, mode]);
 
     const resultCountLabel = useMemo(() => {
         const trimmedQuery = initialQuery.trim();
@@ -339,7 +345,7 @@ const SearchPage = () => {
 
         const trimmedQuery = searchInput.trim();
         const nextUrl = trimmedQuery
-            ? `/search?q=${encodeURIComponent(trimmedQuery)}&page=1`
+            ? `/search?q=${encodeURIComponent(trimmedQuery)}&page=1&mode=${mode}`
             : "/search";
 
         navigate(nextUrl);
@@ -353,7 +359,17 @@ const SearchPage = () => {
         }
 
         const normalizedPage = Math.max(1, nextPage);
-        navigate(`/search?q=${encodeURIComponent(trimmedQuery)}&page=${normalizedPage}`);
+        navigate(`/search?q=${encodeURIComponent(trimmedQuery)}&page=${normalizedPage}&mode=${mode}`);
+    };
+
+    const handleModeChange = (nextMode: SearchMode) => {
+        const trimmedQuery = initialQuery.trim();
+
+        if (!trimmedQuery) {
+            return;
+        }
+
+        navigate(`/search?q=${encodeURIComponent(trimmedQuery)}&page=1&mode=${nextMode}`);
     };
 
     const visiblePageNumbers = useMemo(() => {
@@ -411,7 +427,10 @@ const SearchPage = () => {
                             </button>
                         </form>
 
-                        <div className="mt-5 text-sm text-slate-400">{resultCountLabel}</div>
+                        <div className="mt-5 flex flex-col gap-4">
+                            <SearchFilters mode={mode} onChange={handleModeChange} />
+                            <div className="text-sm text-slate-400">{resultCountLabel}</div>
+                        </div>
                     </div>
                 </section>
 

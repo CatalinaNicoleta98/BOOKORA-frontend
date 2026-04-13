@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import type { FormEvent } from "react";import { Link, useSearchParams } from "react-router-dom";
+import type { FormEvent } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { searchBooks } from "../services/searchService";
 
 interface SearchResultItem {
@@ -77,15 +78,22 @@ const normalizeSearchResults = (rawResponse: unknown): SearchResultItem[] => {
     }
 
     const responseRecord = rawResponse as Record<string, unknown>;
-    const rawItems = Array.isArray(responseRecord.data)
-        ? responseRecord.data
-        : Array.isArray(responseRecord.docs)
-            ? responseRecord.docs
-            : Array.isArray((responseRecord.data as Record<string, unknown> | undefined)?.docs)
-                ? ((responseRecord.data as Record<string, unknown>).docs as unknown[])
-                : Array.isArray((responseRecord.data as Record<string, unknown> | undefined)?.books)
-                    ? ((responseRecord.data as Record<string, unknown>).books as unknown[])
-                    : [];
+    const responseData =
+        responseRecord.data && typeof responseRecord.data === "object"
+            ? (responseRecord.data as Record<string, unknown>)
+            : undefined;
+
+    const rawItems = Array.isArray(responseRecord.results)
+        ? responseRecord.results
+        : Array.isArray(responseRecord.data)
+            ? responseRecord.data
+            : Array.isArray(responseRecord.docs)
+                ? responseRecord.docs
+                : Array.isArray(responseData?.docs)
+                    ? (responseData.docs as unknown[])
+                    : Array.isArray(responseData?.books)
+                        ? (responseData.books as unknown[])
+                        : [];
 
     return rawItems
         .filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === "object")
@@ -108,6 +116,7 @@ const normalizeSearchResults = (rawResponse: unknown): SearchResultItem[] => {
 };
 
 const SearchPage = () => {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const initialQuery = searchParams.get("q") ?? "";
 
@@ -183,7 +192,7 @@ const SearchPage = () => {
             ? `/search?q=${encodeURIComponent(trimmedQuery)}`
             : "/search";
 
-        window.location.assign(nextUrl);
+        navigate(nextUrl);
     };
 
     return (

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import SearchFilters, { type SearchMode } from "../components/SearchFilters";
 import SearchReasultsCard from "../components/SearchReasultsCard";
+import SearchPagination from "../components/SearchPagination";
 import { searchBooks } from "../services/searchService";
 
 interface SearchResultItem {
@@ -483,42 +484,13 @@ const SearchPage = () => {
                             ))}
                         </div>
                     ) : null}
-                    {!isLoading && pagination.totalPages > 1 ? (
-                        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-                            <button
-                                type="button"
-                                onClick={() => handlePageChange(pagination.page - 1)}
-                                disabled={pagination.page <= 1}
-                                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                                Previous
-                            </button>
-
-                            {visiblePageNumbers.map((pageNumber) => (
-                                <button
-                                    key={pageNumber}
-                                    type="button"
-                                    onClick={() => handlePageChange(pageNumber)}
-                                    aria-current={pageNumber === pagination.page ? "page" : undefined}
-                                    className={`inline-flex h-11 min-w-11 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
-                                        pageNumber === pagination.page
-                                            ? "border-amber-200/30 bg-amber-200/12 text-amber-100"
-                                            : "border-white/10 bg-white/5 text-white hover:border-white/16 hover:bg-white/10"
-                                    }`}
-                                >
-                                    {pageNumber}
-                                </button>
-                            ))}
-
-                            <button
-                                type="button"
-                                onClick={() => handlePageChange(pagination.page + 1)}
-                                disabled={pagination.page >= pagination.totalPages}
-                                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                                Next
-                            </button>
-                        </div>
+                    {!isLoading ? (
+                        <SearchPagination
+                            currentPage={pagination.page}
+                            totalPages={pagination.totalPages}
+                            visiblePages={visiblePageNumbers}
+                            onPageChange={handlePageChange}
+                        />
                     ) : null}
                 </section>
             </div>

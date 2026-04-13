@@ -10,6 +10,9 @@ interface SearchResultItem {
     coverUrl?: string;
     publishYear?: string;
     description?: string;
+    averageRating?: number;
+    ratingsCount?: number;
+    readsCount?: number;
 }
 
 const getBookId = (rawBook: Record<string, unknown>, fallbackIndex: number) => {
@@ -45,31 +48,58 @@ const getBookAuthor = (rawBook: Record<string, unknown>) => {
 };
 
 const getBookCoverUrl = (rawBook: Record<string, unknown>) => {
+    if (typeof rawBook.cover === "string" && rawBook.cover.trim().length > 0) {
+        return rawBook.cover;
+    }
+
     if (typeof rawBook.coverUrl === "string" && rawBook.coverUrl.trim().length > 0) {
         return rawBook.coverUrl;
     }
 
-    if (typeof rawBook.cover_i === "number") {
-        return `https://covers.openlibrary.org/b/id/${rawBook.cover_i}-M.jpg`;
-    }
+    const coverId =
+        typeof rawBook.cover_i === "number"
+            ? rawBook.cover_i
+            : typeof rawBook.coverId === "number"
+                ? rawBook.coverId
+                : typeof rawBook.cover_id === "number"
+                    ? rawBook.cover_id
+                    : undefined;
 
-    if (typeof rawBook.coverId === "number") {
-        return `https://covers.openlibrary.org/b/id/${rawBook.coverId}-M.jpg`;
+    if (coverId) {
+        return `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;
     }
 
     return undefined;
 };
 
 const getBookDescription = (rawBook: Record<string, unknown>) => {
-    if (typeof rawBook.description === "string" && rawBook.description.trim().length > 0) {
-        return rawBook.description;
+    const descriptionValue = rawBook.description;
+    const firstSentenceValue = rawBook.first_sentence;
+
+    const text =
+        typeof descriptionValue === "string"
+            ? descriptionValue
+            : descriptionValue &&
+                typeof descriptionValue === "object" &&
+                typeof (descriptionValue as { value?: unknown }).value === "string"
+                ? ((descriptionValue as { value: string }).value)
+                : typeof firstSentenceValue === "string"
+                    ? firstSentenceValue
+                    : Array.isArray(firstSentenceValue) && typeof firstSentenceValue[0] === "string"
+                        ? firstSentenceValue[0]
+                        : typeof rawBook.subtitle === "string"
+                            ? rawBook.subtitle
+                            : undefined;
+
+    if (!text || text.trim().length === 0) {
+        return undefined;
     }
 
-    if (typeof rawBook.first_sentence === "string" && rawBook.first_sentence.trim().length > 0) {
-        return rawBook.first_sentence;
-    }
+    const normalizedText = text.trim();
 
-    return undefined;
+    return normalizedText.length > 220
+        ? `${normalizedText.slice(0, 220).trimEnd()}...`
+        : normalizedText;
 };
 
 const normalizeSearchResults = (rawResponse: unknown): SearchResultItem[] => {
@@ -111,7 +141,25 @@ const normalizeSearchResults = (rawResponse: unknown): SearchResultItem[] => {
                     : typeof item.publishYear === "string"
                         ? item.publishYear
                         : undefined,
-            description: getBookDescription(item)
+            description: getBookDescription(item),
+            averageRating:
+                typeof item.averageRating === "number"
+                    ? item.averageRating
+                    : typeof item.ratings_average === "number"
+                        ? item.ratings_average
+                        : undefined,
+            ratingsCount:
+                typeof item.ratingsCount === "number"
+                    ? item.ratingsCount
+                    : typeof item.ratings_count === "number"
+                        ? item.ratings_count
+                        : undefined,
+            readsCount:
+                typeof item.readsCount === "number"
+                    ? item.readsCount
+                    : typeof item.want_to_read_count === "number"
+                        ? item.want_to_read_count
+                        : undefined
         }));
 };
 
@@ -308,10 +356,23 @@ const SearchPage = () => {
                                                 by {result.author}
                                             </p>
 
-                                            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-400">
-                                                {result.description ??
-                                                    "A full book details page can be connected here next, including ratings, reviews, shelves, author info, and related books."}
-                                            </p>
+                                            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-400">
+                                                {typeof result.averageRating === "number" ? (
+                                                    <span className="font-medium text-amber-300">
+                                                        ★ {result.averageRating.toFixed(1)}
+                                                    </span>
+                                                ) : (
+                                                    <span>No rating</span>
+                                                )}
+
+                                                {typeof result.ratingsCount === "number" ? (
+                                                    <span>{result.ratingsCount.toLocaleString()} ratings</span>
+                                                ) : null}
+
+                                                {typeof result.readsCount === "number" ? (
+                                                    <span>{result.readsCount.toLocaleString()} readers</span>
+                                                ) : null}
+                                            </div>
 
                                             <div className="mt-5 flex flex-wrap gap-3">
                                                 <Link

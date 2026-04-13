@@ -4,13 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import SearchFilters, { type SearchMode } from "../components/SearchFilters";
 import SearchResultsList from "../components/SearchResultsList";
 import SearchPagination from "../components/SearchPagination";
-import { searchBooks } from "../services/searchService";
-import {
-    normalizeSearchPagination,
-    normalizeSearchResults,
-    type SearchPagination as SearchPaginationType,
-    type SearchResultItem
-} from "../utils/searchMappers";
+import { useSearch } from "../hooks/useSearch";
 
 
 const SearchPage = () => {
@@ -29,79 +23,18 @@ const SearchPage = () => {
     const mode: SearchMode =
         modeParam === "author" || modeParam === "title" ? modeParam : "all";
 
-    const [searchInput, setSearchInput] = useState(initialQuery);
-    const [results, setResults] = useState<SearchResultItem[]>([]);
-    const [pagination, setPagination] = useState<SearchPaginationType>({
+    const { results, pagination, isLoading, error } = useSearch({
+        query: initialQuery,
         page: initialPage,
-        limit: searchPageLimit,
-        total: 0,
-        totalPages: 0
+        mode,
+        limit: searchPageLimit
     });
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const [searchInput, setSearchInput] = useState(initialQuery);
 
     useEffect(() => {
         setSearchInput(initialQuery);
     }, [initialQuery]);
-
-    useEffect(() => {
-        const trimmedQuery = initialQuery.trim();
-
-        if (!trimmedQuery) {
-            setResults([]);
-            setPagination({
-                page: 1,
-                limit: searchPageLimit,
-                total: 0,
-                totalPages: 0
-            });
-            setIsLoading(false);
-            setErrorMessage(null);
-            return;
-        }
-
-        const loadResults = async () => {
-            try {
-                setIsLoading(true);
-                setErrorMessage(null);
-
-                const rawResponse = await searchBooks({
-                    q: mode === "author" ? undefined : trimmedQuery,
-                    author: mode === "author" ? trimmedQuery : undefined,
-                    page: initialPage,
-                    limit: searchPageLimit
-                });
-                const normalizedResults = normalizeSearchResults(rawResponse);
-                const normalizedPagination = normalizeSearchPagination(
-                    rawResponse,
-                    initialPage,
-                    searchPageLimit,
-                    normalizedResults.length
-                );
-
-                setResults(normalizedResults);
-                setPagination(normalizedPagination);
-            } catch (error) {
-                const fallbackMessage =
-                    error instanceof Error
-                        ? error.message
-                        : "Unable to search books right now.";
-
-                setErrorMessage(fallbackMessage);
-                setResults([]);
-                setPagination({
-                    page: initialPage,
-                    limit: searchPageLimit,
-                    total: 0,
-                    totalPages: 0
-                });
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        loadResults();
-    }, [initialPage, initialQuery, mode]);
 
     const resultCountLabel = useMemo(() => {
         const trimmedQuery = initialQuery.trim();
@@ -114,8 +47,8 @@ const SearchPage = () => {
             return `Searching for "${trimmedQuery}"...`;
         }
 
-        if (errorMessage) {
-            return errorMessage;
+        if (error) {
+            return error;
         }
 
         if (results.length === 0) {
@@ -127,7 +60,7 @@ const SearchPage = () => {
         const totalLabel = pagination.total > 0 ? pagination.total : results.length;
 
         return `Showing ${startIndex}-${endIndex} of ${totalLabel} result${totalLabel === 1 ? "" : "s"} for "${trimmedQuery}"`;
-    }, [errorMessage, initialQuery, isLoading, pagination.limit, pagination.page, pagination.total, results.length]);
+    }, [error, initialQuery, isLoading, pagination.limit, pagination.page, pagination.total, results.length]);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -245,7 +178,7 @@ const SearchPage = () => {
                         </div>
                     ) : null}
 
-                    {!isLoading && initialQuery.trim() && !errorMessage && results.length === 0 ? (
+                    {!isLoading && initialQuery.trim() && !error && results.length === 0 ? (
                         <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl">
                             <p className="text-base font-medium text-white">No books found.</p>
                             <p className="mt-3 text-sm leading-7 text-slate-400">

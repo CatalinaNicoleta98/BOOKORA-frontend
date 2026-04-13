@@ -15,6 +15,13 @@ interface SearchResultItem {
     readsCount?: number;
 }
 
+interface SearchPagination {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
 const getBookId = (rawBook: Record<string, unknown>, fallbackIndex: number) => {
     const idCandidates = [
         rawBook.id,
@@ -163,13 +170,79 @@ const normalizeSearchResults = (rawResponse: unknown): SearchResultItem[] => {
         }));
 };
 
+const normalizeSearchPagination = (
+    rawResponse: unknown,
+    fallbackPage: number,
+    fallbackLimit: number,
+    resultsLength: number
+): SearchPagination => {
+    if (!rawResponse || typeof rawResponse !== "object") {
+        return {
+            page: fallbackPage,
+            limit: fallbackLimit,
+            total: resultsLength,
+            totalPages: resultsLength > 0 ? 1 : 0
+        };
+    }
+
+    const responseRecord = rawResponse as Record<string, unknown>;
+    const paginationRecord =
+        responseRecord.pagination && typeof responseRecord.pagination === "object"
+            ? (responseRecord.pagination as Record<string, unknown>)
+            : undefined;
+
+    const resolvedPage =
+        typeof paginationRecord?.page === "number" && Number.isFinite(paginationRecord.page)
+            ? paginationRecord.page
+            : fallbackPage;
+
+    const resolvedLimit =
+        typeof paginationRecord?.limit === "number" && Number.isFinite(paginationRecord.limit)
+            ? paginationRecord.limit
+            : fallbackLimit;
+
+    const resolvedTotal =
+        typeof paginationRecord?.total === "number" && Number.isFinite(paginationRecord.total)
+            ? paginationRecord.total
+            : typeof paginationRecord?.numFound === "number" && Number.isFinite(paginationRecord.numFound)
+                ? paginationRecord.numFound
+                : resultsLength;
+
+    const resolvedTotalPages =
+        typeof paginationRecord?.totalPages === "number" && Number.isFinite(paginationRecord.totalPages)
+            ? paginationRecord.totalPages
+            : resolvedLimit > 0
+                ? Math.ceil(resolvedTotal / resolvedLimit)
+                : 0;
+
+    return {
+        page: Math.max(1, resolvedPage),
+        limit: Math.max(1, resolvedLimit),
+        total: Math.max(0, resolvedTotal),
+        totalPages: Math.max(0, resolvedTotalPages)
+    };
+};
+
 const SearchPage = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const initialQuery = searchParams.get("q") ?? "";
 
+    const initialPageParam = searchParams.get("page");
+    const initialPage =
+        initialPageParam && Number.isFinite(Number(initialPageParam))
+            ? Math.max(1, Number(initialPageParam))
+            : 1;
+    const searchPageLimit = 20;
+
     const [searchInput, setSearchInput] = useState(initialQuery);
     const [results, setResults] = useState<SearchResultItem[]>([]);
+    const [pagination, setPagination] = useState<SearchPagination>({
+        page: initialPage,
+        limit: searchPageLimit,
+        total: 0,
+        totalPages: 0
+    });
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -182,6 +255,12 @@ const SearchPage = () => {
 
         if (!trimmedQuery) {
             setResults([]);
+            setPagination({
+                page: 1,
+                limit: searchPageLimit,
+                total: 0,
+                totalPages: 0
+            });
             setIsLoading(false);
             setErrorMessage(null);
             return;
@@ -192,10 +271,21 @@ const SearchPage = () => {
                 setIsLoading(true);
                 setErrorMessage(null);
 
-                const rawResponse = await searchBooks({ q: trimmedQuery });
+                const rawResponse = await searchBooks({
+                    q: trimmedQuery,
+                    page: initialPage,
+                    limit: searchPageLimit
+                });
                 const normalizedResults = normalizeSearchResults(rawResponse);
+                const normalizedPagination = normalizeSearchPagination(
+                    rawResponse,
+                    initialPage,
+                    searchPageLimit,
+                    normalizedResults.length
+                );
 
                 setResults(normalizedResults);
+                setPagination(normalizedPagination);
             } catch (error) {
                 const fallbackMessage =
                     error instanceof Error
@@ -204,21 +294,29 @@ const SearchPage = () => {
 
                 setErrorMessage(fallbackMessage);
                 setResults([]);
+                setPagination({
+                    page: initialPage,
+                    limit: searchPageLimit,
+                    total: 0,
+                    totalPages: 0
+                });
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadResults();
-    }, [initialQuery]);
+    }, [initialPage, initialQuery]);
 
     const resultCountLabel = useMemo(() => {
-        if (!initialQuery.trim()) {
+        const trimmedQuery = initialQuery.trim();
+
+        if (!trimmedQuery) {
             return "Search for a book title, author, or series.";
         }
 
         if (isLoading) {
-            return `Searching for "${initialQuery.trim()}"...`;
+            return `Searching for "${trimmedQuery}"...`;
         }
 
         if (errorMessage) {
@@ -226,22 +324,52 @@ const SearchPage = () => {
         }
 
         if (results.length === 0) {
-            return `No results found for "${initialQuery.trim()}".`;
+            return `No results found for "${trimmedQuery}".`;
         }
 
-        return `${results.length} result${results.length === 1 ? "" : "s"} for "${initialQuery.trim()}"`;
-    }, [errorMessage, initialQuery, isLoading, results.length]);
+        const startIndex = (pagination.page - 1) * pagination.limit + 1;
+        const endIndex = startIndex + results.length - 1;
+        const totalLabel = pagination.total > 0 ? pagination.total : results.length;
+
+        return `Showing ${startIndex}-${endIndex} of ${totalLabel} result${totalLabel === 1 ? "" : "s"} for "${trimmedQuery}"`;
+    }, [errorMessage, initialQuery, isLoading, pagination.limit, pagination.page, pagination.total, results.length]);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const trimmedQuery = searchInput.trim();
         const nextUrl = trimmedQuery
-            ? `/search?q=${encodeURIComponent(trimmedQuery)}`
+            ? `/search?q=${encodeURIComponent(trimmedQuery)}&page=1`
             : "/search";
 
         navigate(nextUrl);
     };
+
+    const handlePageChange = (nextPage: number) => {
+        const trimmedQuery = initialQuery.trim();
+
+        if (!trimmedQuery) {
+            return;
+        }
+
+        const normalizedPage = Math.max(1, nextPage);
+        navigate(`/search?q=${encodeURIComponent(trimmedQuery)}&page=${normalizedPage}`);
+    };
+
+    const visiblePageNumbers = useMemo(() => {
+        if (pagination.totalPages <= 1) {
+            return [];
+        }
+
+        const startPage = Math.max(1, pagination.page - 2);
+        const endPage = Math.min(pagination.totalPages, startPage + 4);
+        const adjustedStartPage = Math.max(1, endPage - 4);
+
+        return Array.from(
+            { length: endPage - adjustedStartPage + 1 },
+            (_, index) => adjustedStartPage + index
+        );
+    }, [pagination.page, pagination.totalPages]);
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-[#070a12] text-slate-100">
@@ -392,6 +520,43 @@ const SearchPage = () => {
                                     </div>
                                 </article>
                             ))}
+                        </div>
+                    ) : null}
+                    {!isLoading && pagination.totalPages > 1 ? (
+                        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => handlePageChange(pagination.page - 1)}
+                                disabled={pagination.page <= 1}
+                                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                                Previous
+                            </button>
+
+                            {visiblePageNumbers.map((pageNumber) => (
+                                <button
+                                    key={pageNumber}
+                                    type="button"
+                                    onClick={() => handlePageChange(pageNumber)}
+                                    aria-current={pageNumber === pagination.page ? "page" : undefined}
+                                    className={`inline-flex h-11 min-w-11 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
+                                        pageNumber === pagination.page
+                                            ? "border-amber-200/30 bg-amber-200/12 text-amber-100"
+                                            : "border-white/10 bg-white/5 text-white hover:border-white/16 hover:bg-white/10"
+                                    }`}
+                                >
+                                    {pageNumber}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                onClick={() => handlePageChange(pagination.page + 1)}
+                                disabled={pagination.page >= pagination.totalPages}
+                                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                                Next
+                            </button>
                         </div>
                     ) : null}
                 </section>

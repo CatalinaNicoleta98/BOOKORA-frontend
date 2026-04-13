@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import SearchFilters, { type SearchMode } from "../components/SearchFilters";
-import SearchReasultsCard from "../components/SearchReasultsCard";
+import SearchResultsList from "../components/SearchResultsList";
 import SearchPagination from "../components/SearchPagination";
 import { searchBooks } from "../services/searchService";
 
@@ -468,21 +468,7 @@ const SearchPage = () => {
                     ) : null}
 
                     {!isLoading && results.length > 0 ? (
-                        <div className="grid gap-4">
-                            {results.map((result) => (
-                                <SearchReasultsCard
-                                    key={result.id}
-                                    id={result.id}
-                                    title={result.title}
-                                    author={result.author}
-                                    coverUrl={result.coverUrl}
-                                    publishYear={result.publishYear}
-                                    averageRating={result.averageRating}
-                                    ratingsCount={result.ratingsCount}
-                                    readsCount={result.readsCount}
-                                />
-                            ))}
-                        </div>
+                        <SearchResultsList results={results} />
                     ) : null}
                     {!isLoading ? (
                         <SearchPagination

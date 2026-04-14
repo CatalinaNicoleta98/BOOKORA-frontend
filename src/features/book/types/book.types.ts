@@ -1,5 +1,3 @@
-
-
 // Core Open Library response types
 
 export interface BookDescriptionValue {
@@ -38,9 +36,8 @@ export interface BookViewModel {
 export interface BookCoverPanelProps {
     coverUrl?: string;
     title: string;
-    ratingOptions: number[];
-    selectedRating: number | null;
-    onSelectRating: (rating: number) => void;
+    rating: number | null;
+    onChangeRating: (rating: number) => void;
 }
 
 export interface BookHeroProps {
@@ -66,4 +63,11 @@ export interface BookAboutSectionProps {
 export interface BookDetailsPanelProps {
     authorLabel: string;
     publishLabel: string;
+}
+
+export interface BookRatingStarsProps {
+    value: number | null; // 0.5 steps
+    onChange: (value: number) => void;
+    size?: "sm" | "md" | "lg";
+    readOnly?: boolean;
 }

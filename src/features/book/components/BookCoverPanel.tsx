@@ -1,13 +1,13 @@
 
 
 import type { BookCoverPanelProps } from "../types/book.types";
+import BookRatingStars from "./BookRatingStars";
 
 const BookCoverPanel = ({
     coverUrl,
     title,
-    ratingOptions,
-    selectedRating,
-    onSelectRating,
+    rating,
+    onChangeRating,
 }: BookCoverPanelProps) => {
     return (
         <aside className="space-y-4">
@@ -29,30 +29,17 @@ const BookCoverPanel = ({
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
                     Your rating
                 </p>
-                <div className="mt-4 grid grid-cols-5 gap-2">
-                    {ratingOptions.map((ratingOption) => {
-                        const isActive = selectedRating === ratingOption;
-
-                        return (
-                            <button
-                                key={ratingOption}
-                                type="button"
-                                onClick={() => onSelectRating(ratingOption)}
-                                className={`inline-flex h-11 items-center justify-center rounded-2xl border text-sm font-medium transition-all duration-300 ${
-                                    isActive
-                                        ? "border-amber-200/30 bg-amber-200/12 text-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.15)]"
-                                        : "border-white/10 bg-white/5 text-slate-200 hover:border-white/16 hover:bg-white/10"
-                                }`}
-                            >
-                                {ratingOption.toFixed(1)}
-                            </button>
-                        );
-                    })}
+                <div className="mt-4">
+                    <BookRatingStars
+                        value={rating}
+                        onChange={onChangeRating}
+                        size="lg"
+                    />
                 </div>
                 <p className="mt-4 text-sm text-slate-400">
-                    {selectedRating
-                        ? `Your current Bookora rating: ${selectedRating.toFixed(1)} stars`
-                        : "Choose a rating in 0.5 star steps."}
+                    {rating
+                        ? `Your current Bookora rating: ${rating.toFixed(1)} stars`
+                        : "Click left or right side of a star for half or full rating."}
                 </p>
             </div>
         </aside>

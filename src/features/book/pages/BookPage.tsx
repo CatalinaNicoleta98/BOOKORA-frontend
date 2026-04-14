@@ -88,7 +88,6 @@ const BookPage = () => {
     const subjectChips = (book?.subjects ?? []).slice(0, 8);
     const publishLabel = book?.first_publish_date ?? "Unknown publication date";
     const displayedDescription = isDescriptionExpanded ? description : descriptionPreview;
-    const ratingOptions = Array.from({ length: 10 }, (_, index) => (index + 1) * 0.5);
 
     if (isLoading) {
         return <div className="p-8 text-white">Loading book...</div>;
@@ -110,9 +109,8 @@ const BookPage = () => {
                         <BookCoverPanel
                             coverUrl={coverUrl}
                             title={book.title}
-                            ratingOptions={ratingOptions}
-                            selectedRating={selectedRating}
-                            onSelectRating={setSelectedRating}
+                            rating={selectedRating}
+                            onChangeRating={setSelectedRating}
                         />
 
                         <div className="min-w-0">

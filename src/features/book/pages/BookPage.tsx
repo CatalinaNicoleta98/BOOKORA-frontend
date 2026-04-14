@@ -5,6 +5,7 @@ import type { BookData } from "../types/book.types";
 import { createDescriptionPreview, getBookDescription, getCoverUrl } from "../utils/bookPage.utils";
 import BookCoverPanel from "../components/BookCoverPanel";
 import BookHero from "../components/BookHero";
+import BookActions from "../components/BookActions";
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -115,26 +116,11 @@ const BookPage = () => {
                         <div className="min-w-0">
                             <BookHero title={book.title} authorLabel={authorLabel} />
 
-                            <div className="mt-6 flex flex-wrap gap-3">
-                                <button
-                                    type="button"
-                                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/10 px-5 text-sm font-medium text-amber-100 transition-all duration-300 hover:border-amber-200/30 hover:bg-amber-200/14"
-                                >
-                                    Add to library
-                                </button>
-                                <button
-                                    type="button"
-                                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-5 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
-                                >
-                                    Want to read
-                                </button>
-                                <button
-                                    type="button"
-                                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-5 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
-                                >
-                                    Write review
-                                </button>
-                            </div>
+                            <BookActions
+                                onAddToLibrary={() => console.log("Add to library clicked")}
+                                onWantToRead={() => console.log("Want to read clicked")}
+                                onWriteReview={() => console.log("Write review clicked")}
+                            />
 
                             <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
                                 <div className="rounded-[1.75rem] border border-white/10 bg-[#0b1020]/70 p-6">

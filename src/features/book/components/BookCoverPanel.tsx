@@ -1,4 +1,5 @@
 import type { BookCoverPanelProps } from "../types/book.types";
+import BookActions from "./BookActions";
 import BookRatingStars from "./BookRatingStars";
 
 const BookCoverPanel = ({
@@ -36,6 +37,12 @@ const BookCoverPanel = ({
                     )}
                 </div>
             </div>
+
+             <BookActions
+                            onAddToLibrary={() => console.log("Add to library clicked")}
+                            onWantToRead={() => console.log("Want to read clicked")}
+                            onWriteReview={() => console.log("Write review clicked")}
+                        />
 
             <div className="mt-2 flex flex-col items-center gap-4">
                 {/* Rating */}

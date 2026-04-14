@@ -5,7 +5,6 @@ import type { BookData } from "../types/book.types";
 import { createDescriptionPreview, getBookDescription, getCoverUrl } from "../utils/bookPage.utils";
 import BookCoverPanel from "../components/BookCoverPanel";
 import BookHero from "../components/BookHero";
-import BookActions from "../components/BookActions";
 import BookAboutSection from "../components/BookAboutSection";
 import BookDetailsPanel from "../components/BookDetailsPanel";
 
@@ -102,21 +101,15 @@ const BookPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#070a12] px-6 py-10 text-white">
-            <div className="mx-auto max-w-6xl">
-                <div className="grid items-start gap-10 md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)]">
+        <div className="min-h-screen bg-transparent px-4 py-10 text-white sm:px-6 lg:px-8">
+            <div className="w-full">
+                <div className="grid items-start gap-8 xl:grid-cols-[320px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)]">
                     <div className="space-y-5">
                         <BookCoverPanel
                             coverUrl={coverUrl}
                             title={book.title}
                             rating={selectedRating}
                             onChangeRating={setSelectedRating}
-                        />
-
-                        <BookActions
-                            onAddToLibrary={() => console.log("Add to library clicked")}
-                            onWantToRead={() => console.log("Want to read clicked")}
-                            onWriteReview={() => console.log("Write review clicked")}
                         />
                     </div>
 

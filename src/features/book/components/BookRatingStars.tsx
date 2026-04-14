@@ -29,16 +29,16 @@ const StarSvg = ({ className }: { className: string }) => {
     );
 };
 
-const getStarFillWidth = (value: number, starNumber: number): string => {
+const getStarFillPercentage = (value: number, starNumber: number): number => {
     if (value >= starNumber) {
-        return "100%";
+        return 100;
     }
 
     if (value >= starNumber - 0.5) {
-        return "50%";
+        return 50;
     }
 
-    return "0%";
+    return 0;
 };
 
 const BookRatingStars = ({
@@ -68,7 +68,7 @@ const BookRatingStars = ({
         >
             {Array.from({ length: TOTAL_STARS }, (_, index) => {
                 const starNumber = index + 1;
-                const fillWidth = getStarFillWidth(displayValue, starNumber);
+                const fillPercentage = getStarFillPercentage(displayValue, starNumber);
                 const leftValue = starNumber - 0.5;
                 const rightValue = starNumber;
 
@@ -77,8 +77,8 @@ const BookRatingStars = ({
                         <StarSvg className="absolute inset-0 h-full w-full text-white/20" />
 
                         <div
-                            className="absolute inset-y-0 left-0 overflow-hidden"
-                            style={{ width: fillWidth }}
+                            className="absolute inset-0 overflow-hidden"
+                            style={{ clipPath: `inset(0 ${100 - fillPercentage}% 0 0)` }}
                         >
                             <StarSvg className="h-full w-full text-amber-300 drop-shadow-[0_0_10px_rgba(252,211,77,0.35)]" />
                         </div>

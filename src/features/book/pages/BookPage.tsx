@@ -6,6 +6,7 @@ import { createDescriptionPreview, getBookDescription, getCoverUrl } from "../ut
 import BookCoverPanel from "../components/BookCoverPanel";
 import BookHero from "../components/BookHero";
 import BookActions from "../components/BookActions";
+import BookAboutSection from "../components/BookAboutSection";
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -123,37 +124,14 @@ const BookPage = () => {
                             />
 
                             <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-                                <div className="rounded-[1.75rem] border border-white/10 bg-[#0b1020]/70 p-6">
-                                    <div className="flex items-center justify-between gap-4">
-                                        <h2 className="text-lg font-semibold text-white">About this book</h2>
-                                        {description.length > descriptionPreview.length ? (
-                                            <button
-                                                type="button"
-                                                onClick={() => setIsDescriptionExpanded((currentValue) => !currentValue)}
-                                                className="text-sm font-medium text-amber-200 transition-colors duration-300 hover:text-amber-100"
-                                            >
-                                                {isDescriptionExpanded ? "Show less" : "Show more"}
-                                            </button>
-                                        ) : null}
-                                    </div>
-
-                                    <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
-                                        {displayedDescription}
-                                    </p>
-
-                                    {subjectChips.length > 0 ? (
-                                        <div className="mt-6 flex flex-wrap gap-2">
-                                            {subjectChips.map((subject) => (
-                                                <span
-                                                    key={subject}
-                                                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.14em] text-slate-300"
-                                                >
-                                                    {subject}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    ) : null}
-                                </div>
+                                <BookAboutSection
+                                    displayedDescription={displayedDescription}
+                                    description={description}
+                                    descriptionPreview={descriptionPreview}
+                                    isDescriptionExpanded={isDescriptionExpanded}
+                                    onToggleDescription={() => setIsDescriptionExpanded((currentValue) => !currentValue)}
+                                    subjectChips={subjectChips}
+                                />
 
                                 <div className="rounded-[1.75rem] border border-white/10 bg-[#0b1020]/70 p-6">
                                     <h2 className="text-lg font-semibold text-white">Book details</h2>

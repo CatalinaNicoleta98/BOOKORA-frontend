@@ -10,17 +10,16 @@ const BookCoverPanel = ({
     return (
         <aside className="space-y-5">
             <div className="group relative isolate">
-                <div className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.18),_transparent_38%),radial-gradient(circle_at_bottom,_rgba(96,165,250,0.16),_transparent_42%)] opacity-80 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute -inset-5 rounded-[2rem] bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.16),_transparent_40%),radial-gradient(circle_at_bottom,_rgba(96,165,250,0.14),_transparent_44%)] opacity-70 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
 
-                <div className="relative overflow-visible rounded-[2rem] p-1">
-                    <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                <div className="relative overflow-visible">
 
                     {coverUrl ? (
                         <div className="relative [perspective:1400px]">
                             <div className="relative overflow-hidden rounded-[1.5rem] bg-[#0f172a] shadow-[0_18px_40px_rgba(15,23,42,0.45)] transition-all duration-500 [transform-style:preserve-3d] group-hover:-translate-y-1 group-hover:rotate-y-[-10deg] group-hover:rotate-x-[5deg] group-hover:shadow-[0_30px_80px_rgba(15,23,42,0.68)]">
-                                <div className="pointer-events-none absolute inset-y-0 left-0 w-[18%] bg-gradient-to-r from-white/18 via-white/7 to-transparent opacity-80" />
-                                <div className="pointer-events-none absolute inset-x-0 top-0 h-[12%] bg-gradient-to-b from-white/12 to-transparent" />
-                                <div className="pointer-events-none absolute inset-y-0 right-0 w-[10%] bg-gradient-to-l from-black/18 to-transparent opacity-70" />
+                                <div className="pointer-events-none absolute inset-y-0 left-0 w-[14%] bg-gradient-to-r from-white/14 via-white/6 to-transparent opacity-70" />
+                                <div className="pointer-events-none absolute inset-x-0 top-0 h-[10%] bg-gradient-to-b from-white/10 to-transparent" />
+                                <div className="pointer-events-none absolute inset-y-0 right-0 w-[10%] bg-gradient-to-l from-black/14 to-transparent opacity-60" />
 
                                 <img
                                     src={coverUrl}

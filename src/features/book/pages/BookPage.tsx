@@ -103,9 +103,9 @@ const BookPage = () => {
 
     return (
         <div className="min-h-screen bg-[#070a12] px-6 py-10 text-white">
-            <div className="mx-auto flex max-w-7xl flex-col gap-8">
-                <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl">
-                    <div className="grid gap-8 p-6 md:grid-cols-[280px_1fr] md:p-8 xl:grid-cols-[320px_1fr]">
+            <div className="mx-auto max-w-6xl">
+                <div className="grid items-start gap-10 md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)]">
+                    <div className="space-y-5">
                         <BookCoverPanel
                             coverUrl={coverUrl}
                             title={book.title}
@@ -113,33 +113,30 @@ const BookPage = () => {
                             onChangeRating={setSelectedRating}
                         />
 
-                        <div className="min-w-0">
-                            <BookHero title={book.title} authorLabel={authorLabel} />
+                        <BookActions
+                            onAddToLibrary={() => console.log("Add to library clicked")}
+                            onWantToRead={() => console.log("Want to read clicked")}
+                            onWriteReview={() => console.log("Write review clicked")}
+                        />
+                    </div>
 
-                            <BookActions
-                                onAddToLibrary={() => console.log("Add to library clicked")}
-                                onWantToRead={() => console.log("Want to read clicked")}
-                                onWriteReview={() => console.log("Write review clicked")}
+                    <div className="min-w-0">
+                        <BookHero title={book.title} authorLabel={authorLabel} />
+
+                        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+                            <BookAboutSection
+                                displayedDescription={displayedDescription}
+                                description={description}
+                                descriptionPreview={descriptionPreview}
+                                isDescriptionExpanded={isDescriptionExpanded}
+                                onToggleDescription={() => setIsDescriptionExpanded((currentValue) => !currentValue)}
+                                subjectChips={subjectChips}
                             />
 
-                            <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-                                <BookAboutSection
-                                    displayedDescription={displayedDescription}
-                                    description={description}
-                                    descriptionPreview={descriptionPreview}
-                                    isDescriptionExpanded={isDescriptionExpanded}
-                                    onToggleDescription={() => setIsDescriptionExpanded((currentValue) => !currentValue)}
-                                    subjectChips={subjectChips}
-                                />
-
-                                <BookDetailsPanel
-                                    authorLabel={authorLabel}
-                                    publishLabel={publishLabel}
-                                />
-                            </div>
+                            <BookDetailsPanel authorLabel={authorLabel} publishLabel={publishLabel} />
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
         </div>
     );

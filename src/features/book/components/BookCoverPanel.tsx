@@ -37,18 +37,22 @@ const BookCoverPanel = ({
                 </div>
             </div>
 
-            <div className="rounded-[1.75rem] border border-white/10 bg-[#0b1020]/70 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.22)] backdrop-blur-xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
-                    Your rating
-                </p>
-                <div className="mt-4">
+            <div className="mt-2 flex flex-col items-center gap-4">
+                {/* Rating */}
+                <div className="flex flex-col items-center gap-2">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                        Your rating
+                    </p>
                     <BookRatingStars value={rating} onChange={onChangeRating} size="lg" />
                 </div>
-                <p className="mt-4 text-sm text-slate-400">
-                    {rating
-                        ? `Your current Bookora rating: ${rating.toFixed(1)} stars`
-                        : "Click left or right side of a star for half or full rating."}
-                </p>
+
+                {/* Edit activity */}
+                <button
+                    type="button"
+                    className="inline-flex h-10 items-center justify-center rounded-full border border-slate-700/60 bg-slate-800/60 px-4 text-sm font-semibold text-slate-200 transition-all duration-200 hover:border-slate-500 hover:bg-slate-700/70 hover:text-white"
+                >
+                    Edit activity
+                </button>
             </div>
         </aside>
     );

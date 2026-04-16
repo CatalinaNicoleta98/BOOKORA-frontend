@@ -33,6 +33,15 @@ interface BookDetailApiPayload {
         count?: number;
     };
     reviewsCount?: number;
+    pageCount?: number;
+    editionCount?: number;
+    languages?: string[];
+    publishers?: string[];
+    publishPlaces?: string[];
+    subjectPeople?: string[];
+    subjectPlaces?: string[];
+    subjectTimes?: string[];
+    excerpts?: string[];
 }
 
 interface BookDetailApiResponse {
@@ -79,6 +88,15 @@ const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel 
         averageRating: payload.rating?.average,
         ratingsCount: payload.rating?.count,
         reviewsCount: payload.reviewsCount,
+        pageCount: payload.pageCount,
+        editionCount: payload.editionCount,
+        languages: payload.languages,
+        publishers: payload.publishers,
+        publishPlaces: payload.publishPlaces,
+        subjectPeople: payload.subjectPeople,
+        subjectPlaces: payload.subjectPlaces,
+        subjectTimes: payload.subjectTimes,
+        excerpts: payload.excerpts,
     };
 };
 
@@ -193,7 +211,7 @@ const BookPage = () => {
                             reviewsCount={book.reviewsCount}
                         />
 
-                        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+                        <div className="mt-8 space-y-8">
                             <BookAboutSection
                                 displayedDescription={displayedDescription}
                                 description={description}
@@ -203,7 +221,19 @@ const BookPage = () => {
                                 subjectChips={subjectChips}
                             />
 
-                            <BookDetailsPanel authorLabel={authorLabel} publishLabel={publishLabel} />
+                            <BookDetailsPanel
+                                authorLabel={authorLabel}
+                                publishLabel={publishLabel}
+                                pageCount={book.pageCount}
+                                editionCount={book.editionCount}
+                                languages={book.languages}
+                                publishers={book.publishers}
+                                publishPlaces={book.publishPlaces}
+                                subjectPeople={book.subjectPeople}
+                                subjectPlaces={book.subjectPlaces}
+                                subjectTimes={book.subjectTimes}
+                                excerpts={book.excerpts}
+                            />
                         </div>
                     </div>
                 </div>

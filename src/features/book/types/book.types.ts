@@ -39,6 +39,17 @@ export interface BookViewModel {
     averageRating?: number;
     ratingsCount?: number;
     reviewsCount?: number;
+
+    // extended metadata
+    pageCount?: number;
+    editionCount?: number;
+    languages?: string[];
+    publishers?: string[];
+    publishPlaces?: string[];
+    subjectPeople?: string[];
+    subjectPlaces?: string[];
+    subjectTimes?: string[];
+    excerpts?: string[];
 }
 
 // Component props (kept minimal and reusable)
@@ -78,6 +89,15 @@ export interface BookAboutSectionProps {
 export interface BookDetailsPanelProps {
     authorLabel: string;
     publishLabel: string;
+    pageCount?: number;
+    editionCount?: number;
+    languages?: string[];
+    publishers?: string[];
+    publishPlaces?: string[];
+    subjectPeople?: string[];
+    subjectPlaces?: string[];
+    subjectTimes?: string[];
+    excerpts?: string[];
 }
 
 export interface BookRatingStarsProps {

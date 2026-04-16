@@ -21,6 +21,11 @@ export interface BookData {
 
 // View model types (frontend-safe, normalized)
 
+export interface BookSeries {
+    key: string;
+    name: string;
+}
+
 export interface BookViewModel {
     id: string;
     title: string;
@@ -29,6 +34,8 @@ export interface BookViewModel {
     authors: string[];
     publishDate: string;
     subjects: string[];
+    series?: BookSeries;
+    seriesPositionLabel?: string; // e.g. "Book 1"
 }
 
 // Component props (kept minimal and reusable)
@@ -43,6 +50,8 @@ export interface BookCoverPanelProps {
 export interface BookHeroProps {
     title: string;
     authorLabel: string;
+    series?: BookSeries;
+    seriesPositionLabel?: string;
 }
 
 export interface BookActionsProps {

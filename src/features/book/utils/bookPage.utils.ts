@@ -1,6 +1,13 @@
 
 import type { BookData, BookDescriptionValue, BookViewModel } from "../types/book.types";
 
+const slugify = (value: string): string =>
+    value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
 // Normalize description from Open Library
 export const getBookDescription = (
     description?: string | BookDescriptionValue
@@ -36,6 +43,26 @@ export const mapBookToViewModel = (
     book: BookData,
     authors: string[]
 ): BookViewModel => {
+    const rawSeries = (book as any)?.series;
+    const rawSeriesPosition = (book as any)?.series_position;
+
+    const seriesName = Array.isArray(rawSeries)
+        ? rawSeries[0]
+        : typeof rawSeries === "string"
+        ? rawSeries
+        : undefined;
+
+    const series = seriesName
+        ? {
+              key: slugify(seriesName),
+              name: seriesName,
+          }
+        : undefined;
+
+    const seriesPositionLabel = rawSeriesPosition
+        ? `Book ${rawSeriesPosition}`
+        : undefined;
+
     return {
         id,
         title: book.title,
@@ -44,6 +71,8 @@ export const mapBookToViewModel = (
         authors,
         publishDate: book.first_publish_date ?? "Unknown publication date",
         subjects: (book.subjects ?? []).slice(0, 8),
+        series,
+        seriesPositionLabel,
     };
 };
 

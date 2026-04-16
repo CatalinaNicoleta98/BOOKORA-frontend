@@ -1,18 +1,83 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import type { BookData } from "../types/book.types";
-import { createDescriptionPreview, getBookDescription, getCoverUrl } from "../utils/bookPage.utils";
-import BookCoverPanel from "../components/BookCoverPanel";
-import BookHero from "../components/BookHero";
 import BookAboutSection from "../components/BookAboutSection";
+import BookCoverPanel from "../components/BookCoverPanel";
 import BookDetailsPanel from "../components/BookDetailsPanel";
+import BookHero from "../components/BookHero";
+import type { BookViewModel } from "../types/book.types";
+import { createDescriptionPreview } from "../utils/bookPage.utils";
+
+interface BookDetailApiAuthor {
+    name: string;
+    key?: string;
+}
+
+interface BookDetailApiSeries {
+    key: string;
+    name: string;
+}
+
+interface BookDetailApiPayload {
+    externalBookId: string;
+    title: string;
+    description?: string;
+    cover?: string;
+    authors: BookDetailApiAuthor[];
+    firstPublishDate?: string;
+    subjects: string[];
+    series?: BookDetailApiSeries;
+    seriesPosition?: string;
+}
+
+interface BookDetailApiResponse {
+    error: string | null;
+    data?: BookDetailApiPayload;
+}
+
+const DEFAULT_API_BASE_URL = "http://localhost:4000/api";
+
+const getApiBaseUrl = () => {
+    const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+
+    if (!configuredBaseUrl) {
+        return DEFAULT_API_BASE_URL;
+    }
+
+    return configuredBaseUrl.replace(/\/+$/, "");
+};
+
+const getNormalizedDescription = (description?: string) => {
+    if (!description) {
+        return "No description available yet.";
+    }
+
+    const normalizedDescription = description.trim();
+    return normalizedDescription.length > 0 ? normalizedDescription : "No description available yet.";
+};
+
+const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel => {
+    const authorNames = payload.authors
+        .map((author) => author.name?.trim())
+        .filter((authorName): authorName is string => Boolean(authorName && authorName.length > 0));
+
+    return {
+        id: payload.externalBookId,
+        title: payload.title,
+        description: getNormalizedDescription(payload.description),
+        coverUrl: payload.cover ?? undefined,
+        authors: authorNames,
+        publishDate: payload.firstPublishDate ?? "Unknown publication date",
+        subjects: Array.isArray(payload.subjects) ? payload.subjects.slice(0, 8) : [],
+        series: payload.series,
+        seriesPositionLabel: payload.seriesPosition ? `Book ${payload.seriesPosition}` : undefined,
+    };
+};
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
 
-    const [book, setBook] = useState<BookData | null>(null);
-    const [authorNames, setAuthorNames] = useState<string[]>([]);
+    const [book, setBook] = useState<BookViewModel | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedRating, setSelectedRating] = useState<number | null>(null);
@@ -20,72 +85,63 @@ const BookPage = () => {
 
     useEffect(() => {
         if (!id) {
+            setBook(null);
+            setError("Book id is missing.");
             return;
         }
+
+        const abortController = new AbortController();
 
         const fetchBook = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
-                setAuthorNames([]);
 
                 const normalizedId = id.replace("/works/", "").trim();
-                const response = await fetch(`https://openlibrary.org/works/${normalizedId}.json`);
+                const apiBaseUrl = getApiBaseUrl();
+                const response = await fetch(`${apiBaseUrl}/books/${encodeURIComponent(normalizedId)}`, {
+                    signal: abortController.signal,
+                });
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch book details.");
                 }
 
-                const data = (await response.json()) as BookData;
-                setBook(data);
+                const responseData = (await response.json()) as BookDetailApiResponse;
 
-                const authorKeys = (data.authors ?? [])
-                    .map((entry) => entry.author?.key)
-                    .filter((key): key is string => Boolean(key && key.trim().length > 0));
+                if (!responseData.data) {
+                    throw new Error(responseData.error ?? "Book details response was empty.");
+                }
 
-                if (authorKeys.length === 0) {
-                    setAuthorNames([]);
+                setBook(mapBookDetailToViewModel(responseData.data));
+            } catch (err) {
+                if (abortController.signal.aborted) {
                     return;
                 }
 
-                const resolvedAuthors = await Promise.all(
-                    authorKeys.map(async (authorKey) => {
-                        const authorResponse = await fetch(`https://openlibrary.org${authorKey}.json`);
-
-                        if (!authorResponse.ok) {
-                            return null;
-                        }
-
-                        const authorData = (await authorResponse.json()) as { name?: string };
-                        return typeof authorData.name === "string" ? authorData.name.trim() : null;
-                    })
-                );
-
-                setAuthorNames(
-                    resolvedAuthors.filter(
-                        (authorName): authorName is string => Boolean(authorName && authorName.length > 0)
-                    )
-                );
-            } catch (err) {
                 const message = err instanceof Error ? err.message : "Something went wrong.";
                 setError(message);
                 setBook(null);
-                setAuthorNames([]);
             } finally {
-                setIsLoading(false);
+                if (!abortController.signal.aborted) {
+                    setIsLoading(false);
+                }
             }
         };
 
         void fetchBook();
+
+        return () => {
+            abortController.abort();
+        };
     }, [id]);
 
-    const coverUrl = useMemo(() => getCoverUrl(book?.covers?.[0]), [book?.covers]);
-    const description = useMemo(() => getBookDescription(book?.description), [book?.description]);
+    const description = useMemo(() => getNormalizedDescription(book?.description), [book?.description]);
     const descriptionPreview = useMemo(() => createDescriptionPreview(description), [description]);
 
-    const authorLabel = authorNames.length > 0 ? authorNames.join(", ") : "Unknown author";
-    const subjectChips = (book?.subjects ?? []).slice(0, 8);
-    const publishLabel = book?.first_publish_date ?? "Unknown publication date";
+    const authorLabel = book?.authors.length ? book.authors.join(", ") : "Unknown author";
+    const subjectChips = book?.subjects ?? [];
+    const publishLabel = book?.publishDate ?? "Unknown publication date";
     const displayedDescription = isDescriptionExpanded ? description : descriptionPreview;
 
     if (isLoading) {
@@ -106,7 +162,7 @@ const BookPage = () => {
                 <div className="grid items-start gap-8 xl:grid-cols-[320px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)]">
                     <div className="space-y-5">
                         <BookCoverPanel
-                            coverUrl={coverUrl}
+                            coverUrl={book.coverUrl}
                             title={book.title}
                             rating={selectedRating}
                             onChangeRating={setSelectedRating}
@@ -114,7 +170,12 @@ const BookPage = () => {
                     </div>
 
                     <div className="min-w-0">
-                        <BookHero title={book.title} authorLabel={authorLabel} />
+                        <BookHero
+                            title={book.title}
+                            authorLabel={authorLabel}
+                            series={book.series}
+                            seriesPositionLabel={book.seriesPositionLabel}
+                        />
 
                         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
                             <BookAboutSection

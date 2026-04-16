@@ -36,6 +36,9 @@ export interface BookViewModel {
     subjects: string[];
     series?: BookSeries;
     seriesPositionLabel?: string; // e.g. "Book 1"
+    averageRating?: number;
+    ratingsCount?: number;
+    reviewsCount?: number;
 }
 
 // Component props (kept minimal and reusable)
@@ -52,6 +55,9 @@ export interface BookHeroProps {
     authorLabel: string;
     series?: BookSeries;
     seriesPositionLabel?: string;
+    averageRating?: number;
+    ratingsCount?: number;
+    reviewsCount?: number;
 }
 
 export interface BookActionsProps {

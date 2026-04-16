@@ -28,6 +28,11 @@ interface BookDetailApiPayload {
     subjects: string[];
     series?: BookDetailApiSeries;
     seriesPosition?: string;
+    rating?: {
+        average?: number;
+        count?: number;
+    };
+    reviewsCount?: number;
 }
 
 interface BookDetailApiResponse {
@@ -71,6 +76,9 @@ const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel 
         subjects: Array.isArray(payload.subjects) ? payload.subjects.slice(0, 8) : [],
         series: payload.series,
         seriesPositionLabel: payload.seriesPosition ? `Book ${payload.seriesPosition}` : undefined,
+        averageRating: payload.rating?.average,
+        ratingsCount: payload.rating?.count,
+        reviewsCount: payload.reviewsCount,
     };
 };
 
@@ -86,6 +94,8 @@ const BookPage = () => {
     useEffect(() => {
         if (!id) {
             setBook(null);
+            setSelectedRating(null);
+            setIsDescriptionExpanded(false);
             setError("Book id is missing.");
             return;
         }
@@ -96,6 +106,9 @@ const BookPage = () => {
             try {
                 setIsLoading(true);
                 setError(null);
+                setBook(null);
+                setSelectedRating(null);
+                setIsDescriptionExpanded(false);
 
                 const normalizedId = id.replace("/works/", "").trim();
                 const apiBaseUrl = getApiBaseUrl();
@@ -175,6 +188,9 @@ const BookPage = () => {
                             authorLabel={authorLabel}
                             series={book.series}
                             seriesPositionLabel={book.seriesPositionLabel}
+                            averageRating={book.averageRating}
+                            ratingsCount={book.ratingsCount}
+                            reviewsCount={book.reviewsCount}
                         />
 
                         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">

@@ -2,12 +2,18 @@ import { Link } from "react-router-dom";
 
 import type { BookHeroProps } from "../types/book.types";
 
+import { useState } from "react";
+import BookRatingStars from "./BookRatingStars";
+import BookActions from "./BookActions";
+
 const BookHero = ({
     title,
     authorLabel,
     series,
     seriesPositionLabel,
 }: BookHeroProps) => {
+    const [rating, setRating] = useState<number | null>(null);
+
     const hasSeries = Boolean(series?.key && series?.name);
     const seriesHref = hasSeries ? `/series/${encodeURIComponent(series!.key)}` : "#";
     const seriesLabel = [series?.name, seriesPositionLabel].filter(Boolean).join(" · ");
@@ -31,6 +37,21 @@ const BookHero = ({
                 <p className="text-lg leading-snug text-slate-300 sm:text-[1.35rem]">
                     <span className="font-medium text-slate-100">{authorLabel}</span>
                 </p>
+
+                <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                    <div className="flex items-center gap-3">
+                        <BookRatingStars value={rating} onChange={setRating} />
+                        <span className="text-sm text-slate-400">
+                            {rating ? `${rating.toFixed(1)} / 5` : "Rate this book"}
+                        </span>
+                    </div>
+
+                    <BookActions
+                        onAddToLibrary={() => {}}
+                        onWantToRead={() => {}}
+                        onWriteReview={() => {}}
+                    />
+                </div>
             </div>
         </header>
     );

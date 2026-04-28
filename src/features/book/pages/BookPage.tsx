@@ -7,6 +7,7 @@ import BookCoverPanel from "../components/BookCoverPanel";
 import BookDetailsPanel from "../components/BookDetailsPanel";
 import BookEditionsSection from "../components/BookEditionsSection";
 import BookHero from "../components/BookHero";
+import BookReviewsSection from "../components/BookReviewsSection";
 import BookSeriesSection from "../components/BookSeriesSection";
 import SimilarBooksSection from "../components/SimilarBooksSection";
 import type { BookViewModel } from "../types/book.types";
@@ -247,6 +248,12 @@ const BookPage = () => {
                             <BookEditionsSection editions={book.editions} />
                             <BookAuthorSection authorDetails={book.authorDetails} />
                             <SimilarBooksSection books={book.similarBooks} />
+                            <BookReviewsSection
+                                reviews={book.reviews}
+                                averageRating={book.averageRating}
+                                ratingsCount={book.ratingsCount}
+                                reviewsCount={book.reviewsCount}
+                            />
                         </div>
                     </div>
                 </div>

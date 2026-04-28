@@ -154,6 +154,13 @@ export interface SimilarBooksSectionProps {
     books?: BookSummary[];
 }
 
+export interface BookReviewsSectionProps {
+    reviews?: Review[];
+    averageRating?: number;
+    ratingsCount?: number;
+    reviewsCount?: number;
+}
+
 export interface BookRatingStarsProps {
     value: number | null; // 0.5 steps
     onChange: (value: number) => void;

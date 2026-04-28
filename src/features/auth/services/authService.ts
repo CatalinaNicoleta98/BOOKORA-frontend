@@ -38,7 +38,7 @@ export const authService = {
 
     getCurrentUser: async (token: string): Promise<AuthUser> => {
         const response = await httpClient.get<CurrentUserResponseDTO>(
-            "/auth/me",
+            "/users/me",
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -59,7 +59,7 @@ export const authService = {
         token: string
     ): Promise<AuthUser> => {
         const response = await httpClient.patch(
-            "/auth/profile",
+            "/users/me",
             payload,
             {
                 headers: {

@@ -58,6 +58,7 @@ export interface Review {
     rating: number;
     content: string;
     createdAt: string;
+    source?: "open_library" | "bookora";
 }
 
 export interface BookViewModel {
@@ -92,6 +93,55 @@ export interface BookViewModel {
     authorDetails?: AuthorDetails;
     similarBooks?: BookSummary[];
     reviews?: Review[];
+}
+
+// Book detail API shapes
+
+export interface BookDetailApiAuthor {
+    name: string;
+    key?: string;
+}
+
+export interface BookDetailApiSeries {
+    key: string;
+    name: string;
+}
+
+export interface BookDetailApiRating {
+    average?: number;
+    count?: number;
+}
+
+export interface BookDetailApiPayload {
+    externalBookId: string;
+    title: string;
+    description?: string;
+    cover?: string;
+    authors: BookDetailApiAuthor[];
+    firstPublishDate?: string;
+    subjects: string[];
+    series?: BookDetailApiSeries;
+    seriesPosition?: string;
+    rating?: BookDetailApiRating;
+    reviewsCount?: number;
+    pageCount?: number;
+    editionCount?: number;
+    languages?: string[];
+    publishers?: string[];
+    publishPlaces?: string[];
+    subjectPeople?: string[];
+    subjectPlaces?: string[];
+    subjectTimes?: string[];
+    excerpts?: string[];
+    editions?: EditionSummary[];
+    authorDetails?: AuthorDetails;
+    similarBooks?: BookSummary[];
+    reviews?: Review[];
+}
+
+export interface BookDetailApiResponse {
+    error: string | null;
+    data?: BookDetailApiPayload;
 }
 
 // Component props (kept minimal and reusable)

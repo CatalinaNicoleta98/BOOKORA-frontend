@@ -1,5 +1,18 @@
+import type {
+    AuthorDetails,
+    BookData,
+    BookDescriptionValue,
+    BookDetailApiPayload,
+    BookSummary,
+    BookViewModel,
+    EditionSummary,
+    Review,
+} from "../types/book.types";
 
-import type { BookData, BookDescriptionValue, BookViewModel } from "../types/book.types";
+interface BookDataWithSeries extends BookData {
+    series?: string[] | string;
+    series_position?: string | number;
+}
 
 const slugify = (value: string): string =>
     value
@@ -37,14 +50,66 @@ export const getCoverUrl = (coverId?: number): string | undefined => {
     return `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;
 };
 
+const getNormalizedText = (value?: string) => {
+    const normalizedValue = value?.trim();
+    return normalizedValue && normalizedValue.length > 0 ? normalizedValue : undefined;
+};
+
+const getDisplaySubjects = (subjects?: string[]) =>
+    Array.isArray(subjects)
+        ? subjects
+              .filter((subject) => !subject.toLowerCase().startsWith("series:"))
+              .slice(0, 8)
+        : [];
+
+const mapBookSummary = (summary: BookSummary): BookSummary => ({
+    id: summary.id,
+    title: summary.title,
+    coverUrl: summary.coverUrl,
+    authors: summary.authors,
+    averageRating: summary.averageRating,
+});
+
+const mapEditionSummary = (edition: EditionSummary): EditionSummary => ({
+    id: edition.id,
+    format: edition.format,
+    publishDate: edition.publishDate,
+    publisher: edition.publisher,
+    language: edition.language,
+});
+
+const mapAuthorDetails = (authorDetails?: AuthorDetails): AuthorDetails | undefined => {
+    if (!authorDetails) {
+        return undefined;
+    }
+
+    return {
+        id: authorDetails.id,
+        name: authorDetails.name,
+        bio: authorDetails.bio,
+        photoUrl: authorDetails.photoUrl,
+        topWorks: authorDetails.topWorks?.map(mapBookSummary),
+    };
+};
+
+const mapReview = (review: Review): Review => ({
+    id: review.id,
+    userName: review.userName,
+    rating: review.rating,
+    content: review.content,
+    createdAt: review.createdAt,
+    source: review.source,
+});
+
 // Map raw API response to frontend-safe view model
 export const mapBookToViewModel = (
     id: string,
     book: BookData,
     authors: string[]
 ): BookViewModel => {
-    const rawSeries = (book as any)?.series;
-    const rawSeriesPosition = (book as any)?.series_position;
+    const bookWithSeries = book as BookDataWithSeries;
+    const rawSeries = bookWithSeries.series;
+    const rawSeriesPosition = bookWithSeries.series_position;
 
     const seriesName = Array.isArray(rawSeries)
         ? rawSeries[0]
@@ -70,7 +135,7 @@ export const mapBookToViewModel = (
         coverUrl: getCoverUrl(book.covers?.[0]),
         authors,
         publishDate: book.first_publish_date ?? "Unknown publication date",
-        subjects: (book.subjects ?? []).slice(0, 8),
+        subjects: getDisplaySubjects(book.subjects),
         series,
         seriesPositionLabel,
 
@@ -80,6 +145,40 @@ export const mapBookToViewModel = (
         authorDetails: undefined,
         similarBooks: undefined,
         reviews: undefined,
+    };
+};
+
+export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel => {
+    const authorNames = payload.authors
+        .map((author) => getNormalizedText(author.name))
+        .filter((authorName): authorName is string => Boolean(authorName));
+
+    return {
+        id: payload.externalBookId,
+        title: payload.title,
+        description: getNormalizedText(payload.description) ?? "No description available yet.",
+        coverUrl: payload.cover ?? undefined,
+        authors: authorNames,
+        publishDate: payload.firstPublishDate ?? "Unknown publication date",
+        subjects: getDisplaySubjects(payload.subjects),
+        series: payload.series,
+        seriesPositionLabel: payload.seriesPosition ? `#${payload.seriesPosition}` : undefined,
+        averageRating: payload.rating?.average,
+        ratingsCount: payload.rating?.count,
+        reviewsCount: payload.reviewsCount,
+        pageCount: payload.pageCount,
+        editionCount: payload.editionCount,
+        languages: payload.languages,
+        publishers: payload.publishers,
+        publishPlaces: payload.publishPlaces,
+        subjectPeople: payload.subjectPeople,
+        subjectPlaces: payload.subjectPlaces,
+        subjectTimes: payload.subjectTimes,
+        excerpts: payload.excerpts,
+        editions: payload.editions?.map(mapEditionSummary),
+        authorDetails: mapAuthorDetails(payload.authorDetails),
+        similarBooks: payload.similarBooks?.map(mapBookSummary),
+        reviews: payload.reviews?.map(mapReview),
     };
 };
 

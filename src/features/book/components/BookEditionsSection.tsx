@@ -121,11 +121,23 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                             key={edition.id}
                             className="w-56 shrink-0 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.52),rgba(15,23,42,0.28))] p-4"
                         >
+                            {edition.coverUrl ? (
+                                <img
+                                    src={edition.coverUrl}
+                                    alt={edition.format ?? "Edition cover"}
+                                    className="aspect-[3/4] w-full rounded-[0.95rem] object-cover shadow-[0_14px_28px_rgba(2,6,23,0.28)]"
+                                />
+                            ) : (
+                                <div className="flex aspect-[3/4] w-full items-center justify-center rounded-[0.95rem] bg-slate-900/80 px-4 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+                                    No cover
+                                </div>
+                            )}
+
                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                                 Edition
                             </p>
 
-                            <h3 className="mt-2 text-sm font-semibold text-slate-100">
+                            <h3 className="mt-3 text-sm font-semibold text-slate-100">
                                 {edition.format ?? "Unknown format"}
                             </h3>
 

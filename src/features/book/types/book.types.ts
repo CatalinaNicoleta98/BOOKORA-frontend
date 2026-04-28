@@ -38,6 +38,7 @@ export interface BookSummary {
 
 export interface EditionSummary {
     id: string;
+    coverUrl?: string;
     format?: string; // hardcover, paperback, ebook, audiobook
     publishDate?: string;
     publisher?: string;

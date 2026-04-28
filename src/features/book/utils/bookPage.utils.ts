@@ -7,6 +7,7 @@ import type {
     BookViewModel,
     EditionSummary,
     Review,
+    CommunityRatingSummary,
 } from "../types/book.types";
 
 interface BookDataWithSeries extends BookData {
@@ -103,6 +104,45 @@ const mapReview = (review: Review): Review => ({
     source: review.source,
 });
 
+export const EMPTY_COMMUNITY_RATING: CommunityRatingSummary = {
+    average: 0,
+    ratingsCount: 0,
+    reviewsCount: 0,
+};
+
+const mapCommunityRating = (
+    communityRating?: Partial<CommunityRatingSummary>
+): CommunityRatingSummary => ({
+    average: typeof communityRating?.average === "number" ? communityRating.average : 0,
+    ratingsCount:
+        typeof communityRating?.ratingsCount === "number" ? communityRating.ratingsCount : 0,
+    reviewsCount:
+        typeof communityRating?.reviewsCount === "number" ? communityRating.reviewsCount : 0,
+});
+
+export const applyUserRatingToCommunityRating = (
+    communityRating: CommunityRatingSummary,
+    previousRating: number | undefined,
+    nextRating: number
+): CommunityRatingSummary => {
+    const normalizedPreviousRating =
+        typeof previousRating === "number" ? previousRating : undefined;
+    const nextRatingsCount =
+        normalizedPreviousRating === undefined
+            ? communityRating.ratingsCount + 1
+            : communityRating.ratingsCount;
+    const adjustedRatingsTotal =
+        communityRating.average * communityRating.ratingsCount -
+        (normalizedPreviousRating ?? 0) +
+        nextRating;
+
+    return {
+        ...communityRating,
+        average: nextRatingsCount > 0 ? adjustedRatingsTotal / nextRatingsCount : 0,
+        ratingsCount: nextRatingsCount,
+    };
+};
+
 // Map raw API response to frontend-safe view model
 export const mapBookToViewModel = (
     id: string,
@@ -140,6 +180,7 @@ export const mapBookToViewModel = (
         subjects: getDisplaySubjects(book.subjects),
         series,
         seriesPositionLabel,
+        communityRating: EMPTY_COMMUNITY_RATING,
 
         // prepared sections (no data yet)
         seriesBooks: undefined,
@@ -168,6 +209,7 @@ export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookVie
         averageRating: payload.rating?.average,
         ratingsCount: payload.rating?.count,
         reviewsCount: payload.reviewsCount,
+        communityRating: mapCommunityRating(payload.communityRating),
         pageCount: payload.pageCount,
         editionCount: payload.editionCount,
         languages: payload.languages,

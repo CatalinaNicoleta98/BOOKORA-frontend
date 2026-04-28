@@ -26,6 +26,12 @@ export interface BookSeries {
     name: string;
 }
 
+export interface CommunityRatingSummary {
+    average: number;
+    ratingsCount: number;
+    reviewsCount: number;
+}
+
 // Reusable summary types for upcoming sections
 
 export interface BookSummary {
@@ -90,6 +96,7 @@ export interface BookViewModel {
     averageRating?: number;
     ratingsCount?: number;
     reviewsCount?: number;
+    communityRating: CommunityRatingSummary;
 
     // extended metadata
     pageCount?: number;
@@ -139,6 +146,7 @@ export interface BookDetailApiPayload {
     series?: BookDetailApiSeries;
     seriesPosition?: string;
     rating?: BookDetailApiRating;
+    communityRating?: CommunityRatingSummary;
     reviewsCount?: number;
     pageCount?: number;
     editionCount?: number;
@@ -175,9 +183,7 @@ export interface BookHeroProps {
     authorLabel: string;
     series?: BookSeries;
     seriesPositionLabel?: string;
-    averageRating?: number;
-    ratingsCount?: number;
-    reviewsCount?: number;
+    communityRating: CommunityRatingSummary;
 }
 
 export interface BookActionsProps {
@@ -224,9 +230,7 @@ export interface SimilarBooksSectionProps {
 
 export interface BookReviewsSectionProps {
     reviews?: Review[];
-    averageRating?: number;
-    ratingsCount?: number;
-    reviewsCount?: number;
+    communityRating: CommunityRatingSummary;
     currentUser?: BookReviewCurrentUser;
     currentUserRating?: number | null;
     currentUserReview?: BookUserReviewEntry;

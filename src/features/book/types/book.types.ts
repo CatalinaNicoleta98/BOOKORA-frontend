@@ -63,6 +63,12 @@ export interface Review {
     source?: "open_library" | "bookora";
 }
 
+export interface BookReviewCurrentUser {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+}
+
 export interface BookViewModel {
     id: string;
     title: string;
@@ -211,6 +217,8 @@ export interface BookReviewsSectionProps {
     averageRating?: number;
     ratingsCount?: number;
     reviewsCount?: number;
+    currentUser?: BookReviewCurrentUser;
+    currentUserRating?: number | null;
 }
 
 export interface BookRatingStarsProps {

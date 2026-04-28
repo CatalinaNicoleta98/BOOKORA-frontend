@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { useAuth } from "../../auth/context/AuthContext";
 import BookAboutSection from "../components/BookAboutSection";
 import BookAuthorSection from "../components/BookAuthorSection";
 import BookCoverPanel from "../components/BookCoverPanel";
@@ -26,6 +27,7 @@ const getApiBaseUrl = () => {
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
+    const { state: authState } = useAuth();
 
     const [book, setBook] = useState<BookViewModel | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -98,6 +100,13 @@ const BookPage = () => {
     const subjectChips = book?.subjects ?? [];
     const publishLabel = book?.publishDate ?? "Unknown publication date";
     const displayedDescription = isDescriptionExpanded ? description : descriptionPreview;
+    const currentUser = authState.user
+        ? {
+              id: authState.user.id,
+              name: authState.user.name,
+              avatarUrl: authState.user.avatarUrl,
+          }
+        : undefined;
 
     if (isLoading) {
         return <div className="p-8 text-white">Loading book...</div>;
@@ -115,7 +124,7 @@ const BookPage = () => {
         <div className="min-h-screen bg-transparent px-4 py-10 text-white sm:px-6 lg:px-8">
             <div className="w-full">
                 <div className="grid items-start gap-8 xl:grid-cols-[320px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)]">
-                    <div className="space-y-5">
+                    <div className="space-y-5 xl:sticky xl:top-24 xl:self-start">
                         <BookCoverPanel
                             coverUrl={book.coverUrl}
                             title={book.title}
@@ -167,6 +176,8 @@ const BookPage = () => {
                                 averageRating={book.averageRating}
                                 ratingsCount={book.ratingsCount}
                                 reviewsCount={book.reviewsCount}
+                                currentUser={currentUser}
+                                currentUserRating={selectedRating}
                             />
                         </div>
                     </div>

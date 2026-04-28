@@ -73,6 +73,13 @@ export const mapBookToViewModel = (
         subjects: (book.subjects ?? []).slice(0, 8),
         series,
         seriesPositionLabel,
+
+        // prepared sections (no data yet)
+        seriesBooks: undefined,
+        editions: undefined,
+        authorDetails: undefined,
+        similarBooks: undefined,
+        reviews: undefined,
     };
 };
 

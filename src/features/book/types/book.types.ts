@@ -26,6 +26,40 @@ export interface BookSeries {
     name: string;
 }
 
+// Reusable summary types for upcoming sections
+
+export interface BookSummary {
+    id: string;
+    title: string;
+    coverUrl?: string;
+    authors?: string[];
+    averageRating?: number;
+}
+
+export interface EditionSummary {
+    id: string;
+    format?: string; // hardcover, paperback, ebook, audiobook
+    publishDate?: string;
+    publisher?: string;
+    language?: string;
+}
+
+export interface AuthorDetails {
+    id: string;
+    name: string;
+    bio?: string;
+    photoUrl?: string;
+    topWorks?: BookSummary[];
+}
+
+export interface Review {
+    id: string;
+    userName: string;
+    rating: number;
+    content: string;
+    createdAt: string;
+}
+
 export interface BookViewModel {
     id: string;
     title: string;
@@ -50,6 +84,14 @@ export interface BookViewModel {
     subjectPlaces?: string[];
     subjectTimes?: string[];
     excerpts?: string[];
+
+    // future sections (Goodreads-style)
+
+    seriesBooks?: BookSummary[];
+    editions?: EditionSummary[];
+    authorDetails?: AuthorDetails;
+    similarBooks?: BookSummary[];
+    reviews?: Review[];
 }
 
 // Component props (kept minimal and reusable)

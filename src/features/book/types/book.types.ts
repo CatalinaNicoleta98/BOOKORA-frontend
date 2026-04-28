@@ -69,6 +69,14 @@ export interface BookReviewCurrentUser {
     avatarUrl?: string;
 }
 
+export interface BookUserReviewEntry {
+    id: string;
+    status: string;
+    rating?: number;
+    content?: string;
+    updatedAt?: string;
+}
+
 export interface BookViewModel {
     id: string;
     title: string;
@@ -219,6 +227,12 @@ export interface BookReviewsSectionProps {
     reviewsCount?: number;
     currentUser?: BookReviewCurrentUser;
     currentUserRating?: number | null;
+    currentUserReview?: BookUserReviewEntry;
+    reviewDraft: string;
+    onReviewDraftChange: (value: string) => void;
+    onCurrentUserRatingChange: (value: number) => void;
+    onSaveCurrentUserReview: () => void;
+    isSavingCurrentUserReview?: boolean;
 }
 
 export interface BookRatingStarsProps {

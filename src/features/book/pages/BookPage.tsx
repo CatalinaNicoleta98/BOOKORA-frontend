@@ -9,21 +9,14 @@ import BookDetailsPanel from "../components/BookDetailsPanel";
 import BookEditionsSection from "../components/BookEditionsSection";
 import BookHero from "../components/BookHero";
 import BookReviewsSection from "../components/BookReviewsSection";
+import {
+    getBookDetail,
+    getCurrentUserBookReview,
+    saveCurrentUserBookReview,
+} from "../services/bookService";
 import SimilarBooksSection from "../components/SimilarBooksSection";
-import type { BookDetailApiResponse, BookViewModel } from "../types/book.types";
+import type { BookUserReviewEntry, BookViewModel } from "../types/book.types";
 import { createDescriptionPreview, mapBookDetailToViewModel } from "../utils/bookPage.utils";
-
-const DEFAULT_API_BASE_URL = "http://localhost:4000/api";
-
-const getApiBaseUrl = () => {
-    const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
-
-    if (!configuredBaseUrl) {
-        return DEFAULT_API_BASE_URL;
-    }
-
-    return configuredBaseUrl.replace(/\/+$/, "");
-};
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -34,6 +27,9 @@ const BookPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [selectedRating, setSelectedRating] = useState<number | null>(null);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+    const [currentUserReview, setCurrentUserReview] = useState<BookUserReviewEntry | null>(null);
+    const [reviewDraft, setReviewDraft] = useState("");
+    const [isSavingReview, setIsSavingReview] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -53,24 +49,28 @@ const BookPage = () => {
                 setBook(null);
                 setSelectedRating(null);
                 setIsDescriptionExpanded(false);
+                setCurrentUserReview(null);
+                setReviewDraft("");
 
                 const normalizedId = id.replace("/works/", "").trim();
-                const apiBaseUrl = getApiBaseUrl();
-                const response = await fetch(`${apiBaseUrl}/books/${encodeURIComponent(normalizedId)}`, {
-                    signal: abortController.signal,
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch book details.");
-                }
-
-                const responseData = (await response.json()) as BookDetailApiResponse;
+                const responseData = await getBookDetail(normalizedId);
 
                 if (!responseData.data) {
                     throw new Error(responseData.error ?? "Book details response was empty.");
                 }
 
-                setBook(mapBookDetailToViewModel(responseData.data));
+                const nextBook = mapBookDetailToViewModel(responseData.data);
+                setBook(nextBook);
+
+                if (authState.isAuthenticated) {
+                    const savedReview = await getCurrentUserBookReview(normalizedId);
+
+                    if (!abortController.signal.aborted) {
+                        setCurrentUserReview(savedReview);
+                        setSelectedRating(savedReview?.rating ?? null);
+                        setReviewDraft(savedReview?.content ?? "");
+                    }
+                }
             } catch (err) {
                 if (abortController.signal.aborted) {
                     return;
@@ -91,7 +91,7 @@ const BookPage = () => {
         return () => {
             abortController.abort();
         };
-    }, [id]);
+    }, [authState.isAuthenticated, id]);
 
     const description = useMemo(() => book?.description ?? "No description available yet.", [book?.description]);
     const descriptionPreview = useMemo(() => createDescriptionPreview(description), [description]);
@@ -107,6 +107,77 @@ const BookPage = () => {
               avatarUrl: authState.user.avatarUrl,
           }
         : undefined;
+
+    const getPublishedYear = (publishDate?: string) => {
+        if (!publishDate) {
+            return undefined;
+        }
+
+        const matchedYear = publishDate.match(/\b(\d{4})\b/);
+
+        if (!matchedYear) {
+            return undefined;
+        }
+
+        return Number.parseInt(matchedYear[1], 10);
+    };
+
+    const handlePersistRating = async (rating: number) => {
+        setSelectedRating(rating);
+
+        if (!authState.isAuthenticated || !book) {
+            return;
+        }
+
+        try {
+            setIsSavingReview(true);
+            setError(null);
+
+            const savedReview = await saveCurrentUserBookReview({
+                externalBookId: book.id,
+                title: book.title,
+                author: book.authors[0],
+                cover: book.coverUrl,
+                publishedYear: getPublishedYear(book.publishDate),
+                rating,
+                notes: reviewDraft,
+            });
+
+            setCurrentUserReview(savedReview);
+        } catch {
+            setError("Could not save your rating right now.");
+        } finally {
+            setIsSavingReview(false);
+        }
+    };
+
+    const handleSaveCurrentUserReview = async () => {
+        if (!authState.isAuthenticated || !book) {
+            return;
+        }
+
+        try {
+            setIsSavingReview(true);
+            setError(null);
+
+            const savedReview = await saveCurrentUserBookReview({
+                externalBookId: book.id,
+                title: book.title,
+                author: book.authors[0],
+                cover: book.coverUrl,
+                publishedYear: getPublishedYear(book.publishDate),
+                rating: selectedRating ?? undefined,
+                notes: reviewDraft,
+            });
+
+            setCurrentUserReview(savedReview);
+            setReviewDraft(savedReview.content ?? "");
+        } catch {
+            setError("Could not save your review right now.");
+        } finally {
+            setIsSavingReview(false);
+        }
+    };
 
     if (isLoading) {
         return <div className="p-8 text-white">Loading book...</div>;
@@ -129,7 +200,7 @@ const BookPage = () => {
                             coverUrl={book.coverUrl}
                             title={book.title}
                             rating={selectedRating}
-                            onChangeRating={setSelectedRating}
+                            onChangeRating={handlePersistRating}
                         />
                     </div>
 
@@ -178,6 +249,12 @@ const BookPage = () => {
                                 reviewsCount={book.reviewsCount}
                                 currentUser={currentUser}
                                 currentUserRating={selectedRating}
+                                currentUserReview={currentUserReview ?? undefined}
+                                reviewDraft={reviewDraft}
+                                onReviewDraftChange={setReviewDraft}
+                                onCurrentUserRatingChange={handlePersistRating}
+                                onSaveCurrentUserReview={handleSaveCurrentUserReview}
+                                isSavingCurrentUserReview={isSavingReview}
                             />
                         </div>
                     </div>

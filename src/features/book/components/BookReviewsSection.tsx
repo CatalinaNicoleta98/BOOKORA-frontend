@@ -17,13 +17,16 @@ const BookReviewsSection = ({
     reviewsCount,
     currentUser,
     currentUserRating,
+    currentUserReview,
+    reviewDraft,
+    onReviewDraftChange,
+    onCurrentUserRatingChange,
+    onSaveCurrentUserReview,
+    isSavingCurrentUserReview = false,
 }: BookReviewsSectionProps) => {
     const hasReviews = Boolean(reviews?.length);
     const formattedRatingsCount = formatNumber(ratingsCount);
     const formattedReviewsCount = formatNumber(reviewsCount);
-    const currentUserReview = currentUser
-        ? reviews?.find((review) => review.userName === currentUser.name)
-        : undefined;
 
     return (
         <section className="border-t border-white/8 pt-6 sm:pt-7">
@@ -70,38 +73,43 @@ const BookReviewsSection = ({
                                         {currentUser.name}
                                     </p>
 
-                                    {currentUserReview ? (
-                                        <>
-                                            <BookRatingStars
-                                                value={currentUserReview.rating}
-                                                onChange={() => {}}
-                                                readOnly
-                                            />
-                                            <p className="text-sm leading-7 text-slate-300">
-                                                {currentUserReview.content}
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <BookRatingStars
-                                                value={currentUserRating ?? 0}
-                                                onChange={() => {}}
-                                                readOnly
-                                            />
-                                            <p className="text-sm leading-7 text-slate-400">
-                                                You have not written a review for this book yet.
-                                            </p>
-                                        </>
-                                    )}
+                                    <BookRatingStars
+                                        value={currentUserRating ?? null}
+                                        onChange={onCurrentUserRatingChange}
+                                    />
+
+                                    <textarea
+                                        value={reviewDraft}
+                                        onChange={(event) => onReviewDraftChange(event.target.value)}
+                                        placeholder="Share what you thought about this book..."
+                                        className="min-h-28 w-full rounded-[1rem] border border-white/10 bg-slate-950/45 px-4 py-3 text-sm leading-7 text-slate-200 outline-none transition-colors placeholder:text-slate-500 focus:border-amber-200/30"
+                                    />
+
+                                    {!currentUserReview?.content ? (
+                                        <p className="text-sm leading-7 text-slate-400">
+                                            You have not written a review for this book yet.
+                                        </p>
+                                    ) : null}
                                 </div>
                             </div>
 
-                            <button
-                                type="button"
-                                className="inline-flex h-11 items-center justify-center rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] px-5 text-sm font-semibold text-amber-100 transition-all hover:border-amber-200/35 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.12))] hover:text-white"
-                            >
-                                {currentUserReview ? "Edit review" : "Write a review"}
-                            </button>
+                            <div className="flex flex-col items-start gap-2">
+                                <button
+                                    type="button"
+                                    onClick={onSaveCurrentUserReview}
+                                    disabled={isSavingCurrentUserReview}
+                                    className="inline-flex h-11 items-center justify-center rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] px-5 text-sm font-semibold text-amber-100 transition-all hover:border-amber-200/35 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.12))] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    {isSavingCurrentUserReview
+                                        ? "Saving..."
+                                        : currentUserReview
+                                        ? "Save changes"
+                                        : "Write a review"}
+                                </button>
+                                <p className="text-xs text-slate-500">
+                                    Rating changes are saved with half-star precision and added to your reading list automatically.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import BookAboutSection from "../components/BookAboutSection";
+import BookAuthorSection from "../components/BookAuthorSection";
 import BookCoverPanel from "../components/BookCoverPanel";
 import BookDetailsPanel from "../components/BookDetailsPanel";
 import BookEditionsSection from "../components/BookEditionsSection";
@@ -243,6 +244,7 @@ const BookPage = () => {
                             />
 
                             <BookEditionsSection editions={book.editions} />
+                            <BookAuthorSection authorDetails={book.authorDetails} />
                         </div>
                     </div>
                 </div>

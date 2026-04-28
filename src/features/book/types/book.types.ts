@@ -166,6 +166,7 @@ export interface BookCoverPanelProps {
     coverUrl?: string;
     title: string;
     rating: number | null;
+    readingStatus?: string;
     onChangeRating: (rating: number) => void;
 }
 
@@ -180,6 +181,7 @@ export interface BookHeroProps {
 }
 
 export interface BookActionsProps {
+    currentStatus?: string;
     onAddToLibrary: () => void;
     onWantToRead: () => void;
     onWriteReview: () => void;

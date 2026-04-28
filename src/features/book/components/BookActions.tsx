@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { BookActionsProps } from "../types/book.types";
 
-type ReadingStatus = "want_to_read" | "currently_reading" | "currently_listening" | "finished" | "did_not_finish";
+type ReadingStatus =
+    | "want_to_read"
+    | "currently_reading"
+    | "currently_listening"
+    | "finished_reading"
+    | "finished_listening"
+    | "on_break"
+    | "did_not_finish";
 type OwnershipFormat = "physical" | "ebook" | "audiobook";
 
 const statusOptions: Array<{ value: ReadingStatus; label: string; description: string }> = [
@@ -22,9 +29,14 @@ const statusOptions: Array<{ value: ReadingStatus; label: string; description: s
         description: "Listening to the audiobook",
     },
     {
-        value: "finished",
-        label: "Finished",
+        value: "finished_reading",
+        label: "Read",
         description: "Completed the book",
+    },
+    {
+        value: "on_break",
+        label: "On Break",
+        description: "Paused for now",
     },
     {
         value: "did_not_finish",
@@ -45,16 +57,34 @@ const statusButtonLabelMap: Record<ReadingStatus, string> = {
     want_to_read: "Want to Read",
     currently_reading: "Currently Reading",
     currently_listening: "Currently Listening",
-    finished: "Finished",
+    finished_reading: "Read",
+    finished_listening: "Finished Listening",
+    on_break: "On Break",
     did_not_finish: "Did Not Finish",
 };
 
-const BookActions = ({ onAddToLibrary, onWantToRead }: BookActionsProps) => {
+const getInitialStatus = (status?: string): ReadingStatus => {
+    if (!status) {
+        return "currently_reading";
+    }
+
+    if (status in statusButtonLabelMap) {
+        return status as ReadingStatus;
+    }
+
+    return "currently_reading";
+};
+
+const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookActionsProps) => {
     const [isManageOpen, setIsManageOpen] = useState(false);
-    const [selectedStatus, setSelectedStatus] = useState<ReadingStatus>("currently_reading");
+    const [selectedStatus, setSelectedStatus] = useState<ReadingStatus>(getInitialStatus(currentStatus));
     const [selectedFormats, setSelectedFormats] = useState<OwnershipFormat[]>(["physical"]);
 
     const activeStatusLabel = statusButtonLabelMap[selectedStatus];
+
+    useEffect(() => {
+        setSelectedStatus(getInitialStatus(currentStatus));
+    }, [currentStatus]);
 
     const toggleFormat = (format: OwnershipFormat) => {
         setSelectedFormats((currentFormats) => {

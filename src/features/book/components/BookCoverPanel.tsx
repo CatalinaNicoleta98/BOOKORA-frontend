@@ -6,6 +6,7 @@ const BookCoverPanel = ({
     coverUrl,
     title,
     rating,
+    readingStatus,
     onChangeRating,
 }: BookCoverPanelProps) => {
     return (
@@ -39,6 +40,7 @@ const BookCoverPanel = ({
             </div>
 
              <BookActions
+                            currentStatus={readingStatus}
                             onAddToLibrary={() => console.log("Add to library clicked")}
                             onWantToRead={() => console.log("Want to read clicked")}
                             onWriteReview={() => console.log("Write review clicked")}

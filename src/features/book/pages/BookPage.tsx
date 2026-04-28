@@ -200,6 +200,7 @@ const BookPage = () => {
                             coverUrl={book.coverUrl}
                             title={book.title}
                             rating={selectedRating}
+                            readingStatus={currentUserReview?.status}
                             onChangeRating={handlePersistRating}
                         />
                     </div>

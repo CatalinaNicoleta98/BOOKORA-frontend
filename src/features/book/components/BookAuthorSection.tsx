@@ -18,12 +18,12 @@ const BookAuthorSection = ({ authorDetails }: BookAuthorSectionProps) => {
                 </h2>
             </div>
 
-            <div className="mt-5 flex items-start gap-4">
+            <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start">
                 {authorDetails.photoUrl ? (
                     <img
                         src={authorDetails.photoUrl}
                         alt={authorDetails.name}
-                        className="h-20 w-20 rounded-2xl object-cover"
+                        className="h-20 w-20 rounded-2xl object-cover ring-1 ring-white/10"
                     />
                 ) : null}
 
@@ -49,7 +49,7 @@ const BookAuthorSection = ({ authorDetails }: BookAuthorSectionProps) => {
                                     <Link
                                         key={work.id}
                                         to={`/books/${encodeURIComponent(work.id)}`}
-                                        className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                                        className="inline-flex items-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.24))] px-4 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
                                     >
                                         {work.title}
                                     </Link>

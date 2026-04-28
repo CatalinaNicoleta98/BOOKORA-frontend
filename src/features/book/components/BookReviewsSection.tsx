@@ -32,7 +32,7 @@ const BookReviewsSection = ({
             </div>
 
             {typeof averageRating === "number" ? (
-                <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                <div className="mt-5 flex flex-wrap items-center gap-3 rounded-[1.25rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-slate-300">
                     <BookRatingStars value={averageRating} onChange={() => {}} readOnly />
                     <span className="font-medium text-slate-100">{averageRating.toFixed(2)}</span>
                     {formattedRatingsCount ? <span>· {formattedRatingsCount} ratings</span> : null}
@@ -62,12 +62,12 @@ const BookReviewsSection = ({
                     ))}
                 </div>
             ) : (
-                <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
+                <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.24))] p-6">
                     <p className="text-base font-medium text-slate-100">
                         Reviews will appear here once readers start reviewing this book.
                     </p>
                     <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-400">
-                        Community feedback, highlighted reactions, and reader impressions will show up in this section as Bookora collects them.
+                        Open Library does not currently provide free-form text reviews for this book, so this space is ready for Bookora reader reviews and future external review support when real written content is available.
                     </p>
                 </div>
             )}

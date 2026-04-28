@@ -23,13 +23,13 @@ const SimilarBooksSection = ({ books }: SimilarBooksSectionProps) => {
                     <Link
                         key={book.id}
                         to={`/books/${encodeURIComponent(book.id)}`}
-                        className="w-40 shrink-0 space-y-3 rounded-[1.25rem] border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
+                        className="w-40 shrink-0 space-y-3 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.52),rgba(15,23,42,0.24))] p-3 transition-colors hover:bg-white/10"
                     >
                         {book.coverUrl ? (
                             <img
                                 src={book.coverUrl}
                                 alt={book.title}
-                                className="aspect-[3/4] w-full rounded-[0.9rem] object-cover"
+                                className="aspect-[3/4] w-full rounded-[0.9rem] object-cover shadow-[0_14px_28px_rgba(2,6,23,0.28)]"
                             />
                         ) : (
                             <div className="flex aspect-[3/4] w-full items-center justify-center rounded-[0.9rem] bg-slate-900/80 px-4 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-500">

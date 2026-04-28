@@ -16,14 +16,18 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                 </h2>
             </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="mt-5 flex gap-3 overflow-x-auto pb-2">
                 {editions.map((edition) => (
                     <article
                         key={edition.id}
-                        className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4"
+                        className="w-56 shrink-0 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.52),rgba(15,23,42,0.28))] p-4"
                     >
-                        <h3 className="text-sm font-semibold text-slate-100">
-                            {edition.format ?? "Edition"}
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                            Edition
+                        </p>
+
+                        <h3 className="mt-2 text-sm font-semibold text-slate-100">
+                            {edition.format ?? "Unknown format"}
                         </h3>
 
                         <div className="mt-2 space-y-1 text-sm text-slate-300">

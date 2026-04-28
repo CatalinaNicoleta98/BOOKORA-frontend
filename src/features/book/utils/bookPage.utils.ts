@@ -72,10 +72,12 @@ const mapBookSummary = (summary: BookSummary): BookSummary => ({
 
 const mapEditionSummary = (edition: EditionSummary): EditionSummary => ({
     id: edition.id,
+    title: edition.title,
     format: edition.format,
     publishDate: edition.publishDate,
     publisher: edition.publisher,
     language: edition.language,
+    coverUrl: edition.coverUrl,
 });
 
 const mapAuthorDetails = (authorDetails?: AuthorDetails): AuthorDetails | undefined => {

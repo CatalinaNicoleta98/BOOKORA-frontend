@@ -124,7 +124,7 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                             {edition.coverUrl ? (
                                 <img
                                     src={edition.coverUrl}
-                                    alt={edition.format ?? "Edition cover"}
+                                    alt={edition.title}
                                     className="aspect-[3/4] w-full rounded-[0.95rem] object-cover shadow-[0_14px_28px_rgba(2,6,23,0.28)]"
                                 />
                             ) : (
@@ -133,18 +133,36 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                                 </div>
                             )}
 
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                Edition
-                            </p>
+                            <div className="mt-3 space-y-2">
+                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                    Edition
+                                </p>
 
-                            <h3 className="mt-3 text-sm font-semibold text-slate-100">
-                                {edition.format ?? "Unknown format"}
-                            </h3>
+                                <h3 className="line-clamp-2 text-sm font-semibold leading-6 text-slate-100">
+                                    {edition.title}
+                                </h3>
 
-                            <div className="mt-2 space-y-1 text-sm text-slate-300">
-                                {edition.publishDate ? <p>{edition.publishDate}</p> : null}
-                                {edition.publisher ? <p>{edition.publisher}</p> : null}
-                                {edition.language ? <p>{edition.language}</p> : null}
+                                <div className="flex flex-wrap gap-2 text-[0.72rem] font-medium uppercase tracking-[0.14em] text-slate-400">
+                                    {edition.publishDate ? (
+                                        <span className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1">
+                                            {edition.publishDate}
+                                        </span>
+                                    ) : null}
+                                    {edition.format ? (
+                                        <span className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1">
+                                            {edition.format}
+                                        </span>
+                                    ) : null}
+                                </div>
+
+                                <div className="space-y-1.5 text-sm text-slate-300">
+                                    {edition.publisher ? (
+                                        <p className="line-clamp-2">{edition.publisher}</p>
+                                    ) : null}
+                                    {edition.language ? (
+                                        <p className="text-slate-400">{edition.language}</p>
+                                    ) : null}
+                                </div>
                             </div>
                         </article>
                     ))}

@@ -9,50 +9,8 @@ import BookEditionsSection from "../components/BookEditionsSection";
 import BookHero from "../components/BookHero";
 import BookReviewsSection from "../components/BookReviewsSection";
 import SimilarBooksSection from "../components/SimilarBooksSection";
-import type { BookSummary, BookViewModel } from "../types/book.types";
-import { createDescriptionPreview } from "../utils/bookPage.utils";
-
-interface BookDetailApiAuthor {
-    name: string;
-    key?: string;
-}
-
-interface BookDetailApiSeries {
-    key: string;
-    name: string;
-}
-
-interface BookDetailApiPayload {
-    externalBookId: string;
-    title: string;
-    description?: string;
-    cover?: string;
-    authors: BookDetailApiAuthor[];
-    firstPublishDate?: string;
-    subjects: string[];
-    series?: BookDetailApiSeries;
-    seriesPosition?: string;
-    rating?: {
-        average?: number;
-        count?: number;
-    };
-    reviewsCount?: number;
-    pageCount?: number;
-    editionCount?: number;
-    languages?: string[];
-    publishers?: string[];
-    publishPlaces?: string[];
-    subjectPeople?: string[];
-    subjectPlaces?: string[];
-    subjectTimes?: string[];
-    excerpts?: string[];
-    similarBooks?: BookSummary[];
-}
-
-interface BookDetailApiResponse {
-    error: string | null;
-    data?: BookDetailApiPayload;
-}
+import type { BookDetailApiResponse, BookViewModel } from "../types/book.types";
+import { createDescriptionPreview, mapBookDetailToViewModel } from "../utils/bookPage.utils";
 
 const DEFAULT_API_BASE_URL = "http://localhost:4000/api";
 
@@ -64,51 +22,6 @@ const getApiBaseUrl = () => {
     }
 
     return configuredBaseUrl.replace(/\/+$/, "");
-};
-
-const getNormalizedDescription = (description?: string) => {
-    if (!description) {
-        return "No description available yet.";
-    }
-
-    const normalizedDescription = description.trim();
-    return normalizedDescription.length > 0 ? normalizedDescription : "No description available yet.";
-};
-
-const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel => {
-    const authorNames = payload.authors
-        .map((author) => author.name?.trim())
-        .filter((authorName): authorName is string => Boolean(authorName && authorName.length > 0));
-    const displaySubjects = Array.isArray(payload.subjects)
-        ? payload.subjects
-              .filter((subject) => !subject.toLowerCase().startsWith("series:"))
-              .slice(0, 8)
-        : [];
-
-    return {
-        id: payload.externalBookId,
-        title: payload.title,
-        description: getNormalizedDescription(payload.description),
-        coverUrl: payload.cover ?? undefined,
-        authors: authorNames,
-        publishDate: payload.firstPublishDate ?? "Unknown publication date",
-        subjects: displaySubjects,
-        series: payload.series,
-        seriesPositionLabel: payload.seriesPosition ? `#${payload.seriesPosition}` : undefined,
-        averageRating: payload.rating?.average,
-        ratingsCount: payload.rating?.count,
-        reviewsCount: payload.reviewsCount,
-        pageCount: payload.pageCount,
-        editionCount: payload.editionCount,
-        languages: payload.languages,
-        publishers: payload.publishers,
-        publishPlaces: payload.publishPlaces,
-        subjectPeople: payload.subjectPeople,
-        subjectPlaces: payload.subjectPlaces,
-        subjectTimes: payload.subjectTimes,
-        excerpts: payload.excerpts,
-        similarBooks: payload.similarBooks,
-    };
 };
 
 const BookPage = () => {
@@ -178,7 +91,7 @@ const BookPage = () => {
         };
     }, [id]);
 
-    const description = useMemo(() => getNormalizedDescription(book?.description), [book?.description]);
+    const description = useMemo(() => book?.description ?? "No description available yet.", [book?.description]);
     const descriptionPreview = useMemo(() => createDescriptionPreview(description), [description]);
 
     const authorLabel = book?.authors.length ? book.authors.join(", ") : "Unknown author";

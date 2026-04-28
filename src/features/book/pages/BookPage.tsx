@@ -5,6 +5,7 @@ import BookAboutSection from "../components/BookAboutSection";
 import BookCoverPanel from "../components/BookCoverPanel";
 import BookDetailsPanel from "../components/BookDetailsPanel";
 import BookHero from "../components/BookHero";
+import BookSeriesSection from "../components/BookSeriesSection";
 import type { BookViewModel } from "../types/book.types";
 import { createDescriptionPreview } from "../utils/bookPage.utils";
 
@@ -219,6 +220,11 @@ const BookPage = () => {
                                 isDescriptionExpanded={isDescriptionExpanded}
                                 onToggleDescription={() => setIsDescriptionExpanded((currentValue) => !currentValue)}
                                 subjectChips={subjectChips}
+                            />
+
+                            <BookSeriesSection
+                                series={book.series}
+                                seriesPositionLabel={book.seriesPositionLabel}
                             />
 
                             <BookDetailsPanel

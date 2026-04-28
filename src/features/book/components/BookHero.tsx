@@ -9,15 +9,11 @@ const BookHero = ({
     authorLabel,
     series,
     seriesPositionLabel,
-    averageRating,
-    ratingsCount,
-    reviewsCount,
+    communityRating,
 }: BookHeroProps) => {
     const hasSeries = Boolean(series?.key && series?.name);
     const seriesHref = hasSeries ? `/series/${encodeURIComponent(series!.key)}` : "#";
     const seriesLabel = [series?.name, seriesPositionLabel].filter(Boolean).join(" ");
-
-    const hasRating = typeof averageRating === "number";
 
     const formatNumber = (value?: number) => {
         if (!value && value !== 0) return undefined;
@@ -43,24 +39,18 @@ const BookHero = ({
                 <p className="text-[1.05rem] leading-snug text-slate-200 sm:text-[1.3rem]">
                     <span className="font-medium text-slate-100">{authorLabel}</span>
                 </p>
-                {hasRating ? (
-                    <div className="mt-3 flex items-center gap-3 text-sm text-slate-300">
-                        <BookRatingStars value={averageRating} onChange={() => {}} readOnly />
-                        <span className="text-slate-100 font-medium">
-                            {averageRating?.toFixed(2)}
-                        </span>
-                        {ratingsCount ? (
-                            <span className="text-slate-400">
-                                · {formatNumber(ratingsCount)} ratings
-                            </span>
-                        ) : null}
-                        {reviewsCount ? (
-                            <span className="text-slate-400">
-                                · {formatNumber(reviewsCount)} reviews
-                            </span>
-                        ) : null}
-                    </div>
-                ) : null}
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                    <BookRatingStars value={communityRating.average} onChange={() => {}} readOnly />
+                    <span className="font-medium text-slate-100">
+                        {communityRating.average.toFixed(2)}
+                    </span>
+                    <span className="text-slate-400">
+                        {formatNumber(communityRating.ratingsCount)} ratings
+                    </span>
+                    <span className="text-slate-400">
+                        · {formatNumber(communityRating.reviewsCount)} reviews
+                    </span>
+                </div>
             </div>
         </header>
     );

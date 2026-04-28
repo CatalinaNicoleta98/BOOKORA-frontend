@@ -16,7 +16,11 @@ import {
 } from "../services/bookService";
 import SimilarBooksSection from "../components/SimilarBooksSection";
 import type { BookUserReviewEntry, BookViewModel } from "../types/book.types";
-import { createDescriptionPreview, mapBookDetailToViewModel } from "../utils/bookPage.utils";
+import {
+    applyUserRatingToCommunityRating,
+    createDescriptionPreview,
+    mapBookDetailToViewModel,
+} from "../utils/bookPage.utils";
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -143,6 +147,20 @@ const BookPage = () => {
                 notes: reviewDraft,
             });
 
+            setBook((currentBook) => {
+                if (!currentBook) {
+                    return currentBook;
+                }
+
+                return {
+                    ...currentBook,
+                    communityRating: applyUserRatingToCommunityRating(
+                        currentBook.communityRating,
+                        currentUserReview?.rating,
+                        rating
+                    ),
+                };
+            });
             setCurrentUserReview(savedReview);
         } catch {
             setError("Could not save your rating right now.");
@@ -211,9 +229,7 @@ const BookPage = () => {
                             authorLabel={authorLabel}
                             series={book.series}
                             seriesPositionLabel={book.seriesPositionLabel}
-                            averageRating={book.averageRating}
-                            ratingsCount={book.ratingsCount}
-                            reviewsCount={book.reviewsCount}
+                            communityRating={book.communityRating}
                         />
 
                         <div className="mt-8 space-y-8 sm:mt-10 sm:space-y-10">
@@ -245,9 +261,7 @@ const BookPage = () => {
                             <SimilarBooksSection books={book.similarBooks} />
                             <BookReviewsSection
                                 reviews={book.reviews}
-                                averageRating={book.averageRating}
-                                ratingsCount={book.ratingsCount}
-                                reviewsCount={book.reviewsCount}
+                                communityRating={book.communityRating}
                                 currentUser={currentUser}
                                 currentUserRating={selectedRating}
                                 currentUserReview={currentUserReview ?? undefined}

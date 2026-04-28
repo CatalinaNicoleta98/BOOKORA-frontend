@@ -44,9 +44,7 @@ const formatStatusHeading = (status?: string) => {
 
 const BookReviewsSection = ({
     reviews,
-    averageRating,
-    ratingsCount,
-    reviewsCount,
+    communityRating,
     currentUser,
     currentUserRating,
     currentUserReview,
@@ -54,8 +52,8 @@ const BookReviewsSection = ({
     isSavingCurrentUserReview = false,
 }: BookReviewsSectionProps) => {
     const hasReviews = Boolean(reviews?.length);
-    const formattedRatingsCount = formatNumber(ratingsCount);
-    const formattedReviewsCount = formatNumber(reviewsCount);
+    const formattedRatingsCount = formatNumber(communityRating.ratingsCount);
+    const formattedReviewsCount = formatNumber(communityRating.reviewsCount);
     const visibleCommunityReviews = reviews?.filter((review) => review.id !== currentUserReview?.id) ?? [];
     const currentUserAvatarSource = getImageSource(currentUser?.avatarUrl);
 
@@ -70,14 +68,12 @@ const BookReviewsSection = ({
                 </h2>
             </div>
 
-            {typeof averageRating === "number" ? (
-                <div className="mt-5 flex flex-wrap items-center gap-3 rounded-[1.25rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-slate-300">
-                    <BookRatingStars value={averageRating} onChange={() => {}} readOnly />
-                    <span className="font-medium text-slate-100">{averageRating.toFixed(2)}</span>
-                    {formattedRatingsCount ? <span>· {formattedRatingsCount} ratings</span> : null}
-                    {formattedReviewsCount ? <span>· {formattedReviewsCount} reviews</span> : null}
-                </div>
-            ) : null}
+            <div className="mt-5 flex flex-wrap items-center gap-3 rounded-[1.25rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-slate-300">
+                <BookRatingStars value={communityRating.average} onChange={() => {}} readOnly />
+                <span className="font-medium text-slate-100">{communityRating.average.toFixed(2)}</span>
+                <span>· {formattedRatingsCount} ratings</span>
+                <span>· {formattedReviewsCount} reviews</span>
+            </div>
 
             {currentUser ? (
                 <div className="mt-6 rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(15,23,42,0.2))] p-5 sm:p-6">

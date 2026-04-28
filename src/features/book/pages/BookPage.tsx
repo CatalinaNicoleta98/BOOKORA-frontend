@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import BookAboutSection from "../components/BookAboutSection";
 import BookCoverPanel from "../components/BookCoverPanel";
 import BookDetailsPanel from "../components/BookDetailsPanel";
+import BookEditionsSection from "../components/BookEditionsSection";
 import BookHero from "../components/BookHero";
 import BookSeriesSection from "../components/BookSeriesSection";
 import type { BookViewModel } from "../types/book.types";
@@ -240,6 +241,8 @@ const BookPage = () => {
                                 subjectTimes={book.subjectTimes}
                                 excerpts={book.excerpts}
                             />
+
+                            <BookEditionsSection editions={book.editions} />
                         </div>
                     </div>
                 </div>

@@ -142,6 +142,10 @@ export interface BookDetailsPanelProps {
     excerpts?: string[];
 }
 
+export interface BookEditionsSectionProps {
+    editions?: EditionSummary[];
+}
+
 export interface BookRatingStarsProps {
     value: number | null; // 0.5 steps
     onChange: (value: number) => void;

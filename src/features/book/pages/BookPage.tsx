@@ -216,7 +216,7 @@ const BookPage = () => {
                             reviewsCount={book.reviewsCount}
                         />
 
-                        <div className="mt-8 space-y-8">
+                        <div className="mt-8 space-y-8 sm:mt-10 sm:space-y-10">
                             <BookAboutSection
                                 displayedDescription={displayedDescription}
                                 description={description}

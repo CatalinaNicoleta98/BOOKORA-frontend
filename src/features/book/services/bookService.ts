@@ -26,6 +26,9 @@ interface SaveBookReviewInput {
 
 const BOOK_BASE_PATH = "/books";
 const LIBRARY_BASE_PATH = "/library";
+const DEFAULT_IN_PROGRESS_STATUS = "currently_reading";
+const DEFAULT_FINISHED_READING_STATUS = "finished_reading";
+const DEFAULT_FINISHED_LISTENING_STATUS = "finished_listening";
 
 const mapLibraryEntryToUserReview = (entry: LibraryEntryRecord): BookUserReviewEntry => ({
     id: entry._id,
@@ -34,6 +37,18 @@ const mapLibraryEntryToUserReview = (entry: LibraryEntryRecord): BookUserReviewE
     content: entry.notes,
     updatedAt: entry.updatedAt,
 });
+
+const getStatusForSavedReview = (status?: string, rating?: number): string => {
+    if (rating === undefined) {
+        return status || DEFAULT_IN_PROGRESS_STATUS;
+    }
+
+    if (status === "currently_listening" || status === DEFAULT_FINISHED_LISTENING_STATUS) {
+        return DEFAULT_FINISHED_LISTENING_STATUS;
+    }
+
+    return DEFAULT_FINISHED_READING_STATUS;
+};
 
 export const getBookDetail = async (bookId: string): Promise<BookDetailApiResponse> => {
     const response = await httpClient.get<BookDetailApiResponse>(
@@ -67,7 +82,7 @@ export const saveCurrentUserBookReview = async ({
         const response = await httpClient.put<LibraryEntryRecord>(
             `${LIBRARY_BASE_PATH}/${existingEntry.id}`,
             {
-                status: existingEntry.status || "currently_reading",
+                status: getStatusForSavedReview(existingEntry.status, rating),
                 rating,
                 notes,
             }
@@ -85,7 +100,7 @@ export const saveCurrentUserBookReview = async ({
             author,
             cover,
             publishedYear,
-            status: "currently_reading",
+            status: getStatusForSavedReview(undefined, rating),
             rating,
             notes,
         }

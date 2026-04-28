@@ -8,6 +8,7 @@ import BookDetailsPanel from "../components/BookDetailsPanel";
 import BookEditionsSection from "../components/BookEditionsSection";
 import BookHero from "../components/BookHero";
 import BookSeriesSection from "../components/BookSeriesSection";
+import SimilarBooksSection from "../components/SimilarBooksSection";
 import type { BookViewModel } from "../types/book.types";
 import { createDescriptionPreview } from "../utils/bookPage.utils";
 
@@ -245,6 +246,7 @@ const BookPage = () => {
 
                             <BookEditionsSection editions={book.editions} />
                             <BookAuthorSection authorDetails={book.authorDetails} />
+                            <SimilarBooksSection books={book.similarBooks} />
                         </div>
                     </div>
                 </div>

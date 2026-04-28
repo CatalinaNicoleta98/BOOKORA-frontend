@@ -8,9 +8,8 @@ import BookDetailsPanel from "../components/BookDetailsPanel";
 import BookEditionsSection from "../components/BookEditionsSection";
 import BookHero from "../components/BookHero";
 import BookReviewsSection from "../components/BookReviewsSection";
-import BookSeriesSection from "../components/BookSeriesSection";
 import SimilarBooksSection from "../components/SimilarBooksSection";
-import type { BookViewModel } from "../types/book.types";
+import type { BookSummary, BookViewModel } from "../types/book.types";
 import { createDescriptionPreview } from "../utils/bookPage.utils";
 
 interface BookDetailApiAuthor {
@@ -47,6 +46,7 @@ interface BookDetailApiPayload {
     subjectPlaces?: string[];
     subjectTimes?: string[];
     excerpts?: string[];
+    similarBooks?: BookSummary[];
 }
 
 interface BookDetailApiResponse {
@@ -79,6 +79,11 @@ const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel 
     const authorNames = payload.authors
         .map((author) => author.name?.trim())
         .filter((authorName): authorName is string => Boolean(authorName && authorName.length > 0));
+    const displaySubjects = Array.isArray(payload.subjects)
+        ? payload.subjects
+              .filter((subject) => !subject.toLowerCase().startsWith("series:"))
+              .slice(0, 8)
+        : [];
 
     return {
         id: payload.externalBookId,
@@ -87,9 +92,9 @@ const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel 
         coverUrl: payload.cover ?? undefined,
         authors: authorNames,
         publishDate: payload.firstPublishDate ?? "Unknown publication date",
-        subjects: Array.isArray(payload.subjects) ? payload.subjects.slice(0, 8) : [],
+        subjects: displaySubjects,
         series: payload.series,
-        seriesPositionLabel: payload.seriesPosition ? `Book ${payload.seriesPosition}` : undefined,
+        seriesPositionLabel: payload.seriesPosition ? `#${payload.seriesPosition}` : undefined,
         averageRating: payload.rating?.average,
         ratingsCount: payload.rating?.count,
         reviewsCount: payload.reviewsCount,
@@ -102,6 +107,7 @@ const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel 
         subjectPlaces: payload.subjectPlaces,
         subjectTimes: payload.subjectTimes,
         excerpts: payload.excerpts,
+        similarBooks: payload.similarBooks,
     };
 };
 
@@ -224,11 +230,6 @@ const BookPage = () => {
                                 isDescriptionExpanded={isDescriptionExpanded}
                                 onToggleDescription={() => setIsDescriptionExpanded((currentValue) => !currentValue)}
                                 subjectChips={subjectChips}
-                            />
-
-                            <BookSeriesSection
-                                series={book.series}
-                                seriesPositionLabel={book.seriesPositionLabel}
                             />
 
                             <BookDetailsPanel

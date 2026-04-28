@@ -49,7 +49,7 @@ const statusButtonLabelMap: Record<ReadingStatus, string> = {
     did_not_finish: "Did Not Finish",
 };
 
-const BookActions = ({ onAddToLibrary, onWantToRead, onWriteReview }: BookActionsProps) => {
+const BookActions = ({ onAddToLibrary, onWantToRead }: BookActionsProps) => {
     const [isManageOpen, setIsManageOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState<ReadingStatus>("currently_reading");
     const [selectedFormats, setSelectedFormats] = useState<OwnershipFormat[]>(["physical"]);

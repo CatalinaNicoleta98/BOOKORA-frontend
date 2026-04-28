@@ -15,7 +15,7 @@ const BookHero = ({
 }: BookHeroProps) => {
     const hasSeries = Boolean(series?.key && series?.name);
     const seriesHref = hasSeries ? `/series/${encodeURIComponent(series!.key)}` : "#";
-    const seriesLabel = [series?.name, seriesPositionLabel].filter(Boolean).join(" #");
+    const seriesLabel = [series?.name, seriesPositionLabel].filter(Boolean).join(" ");
 
     const hasRating = typeof averageRating === "number";
 

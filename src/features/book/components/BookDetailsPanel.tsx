@@ -7,8 +7,6 @@ interface DetailRow {
     value: string;
 }
 
-const PREVIEW_ROW_COUNT = 0;
-
 const formatListValue = (values?: string[], limit = 3) => {
     if (!Array.isArray(values)) {
         return undefined;

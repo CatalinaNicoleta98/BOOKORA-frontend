@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import type { BookEditionsSectionProps } from "../types/book.types";
 
@@ -117,15 +118,16 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                     className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
                     {editions.map((edition) => (
-                        <article
+                        <Link
                             key={edition.id}
-                            className="w-56 shrink-0 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.52),rgba(15,23,42,0.28))] p-4"
+                            to={`/books/${encodeURIComponent(edition.id)}`}
+                            className="group block w-56 shrink-0 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.52),rgba(15,23,42,0.28))] p-4 transition-all hover:-translate-y-1 hover:border-amber-200/20 hover:bg-[linear-gradient(180deg,rgba(15,23,42,0.62),rgba(15,23,42,0.34))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/40"
                         >
                             {edition.coverUrl ? (
                                 <img
                                     src={edition.coverUrl}
                                     alt={edition.title}
-                                    className="aspect-[3/4] w-full rounded-[0.95rem] object-cover shadow-[0_14px_28px_rgba(2,6,23,0.28)]"
+                                    className="aspect-[3/4] w-full rounded-[0.95rem] object-cover shadow-[0_14px_28px_rgba(2,6,23,0.28)] transition-transform duration-300 group-hover:scale-[1.02]"
                                 />
                             ) : (
                                 <div className="flex aspect-[3/4] w-full items-center justify-center rounded-[0.95rem] bg-slate-900/80 px-4 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
@@ -138,7 +140,7 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                                     Edition
                                 </p>
 
-                                <h3 className="line-clamp-2 text-sm font-semibold leading-6 text-slate-100">
+                                <h3 className="line-clamp-2 text-sm font-semibold leading-6 text-slate-100 transition-colors group-hover:text-white">
                                     {edition.title}
                                 </h3>
 
@@ -164,7 +166,7 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                                     ) : null}
                                 </div>
                             </div>
-                        </article>
+                        </Link>
                     ))}
                 </div>
             </div>

@@ -2,6 +2,18 @@ import type { BookReviewsSectionProps } from "../types/book.types";
 
 import BookRatingStars from "./BookRatingStars";
 
+const getImageSource = (imagePath?: string | null) => {
+    if (!imagePath) {
+        return undefined;
+    }
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+
+    return `http://localhost:4000${imagePath}`;
+};
+
 const formatNumber = (value?: number) => {
     if (typeof value !== "number") {
         return undefined;
@@ -45,6 +57,7 @@ const BookReviewsSection = ({
     const formattedRatingsCount = formatNumber(ratingsCount);
     const formattedReviewsCount = formatNumber(reviewsCount);
     const visibleCommunityReviews = reviews?.filter((review) => review.id !== currentUserReview?.id) ?? [];
+    const currentUserAvatarSource = getImageSource(currentUser?.avatarUrl);
 
     return (
         <section className="border-t border-white/8 pt-6 sm:pt-7">
@@ -75,9 +88,9 @@ const BookReviewsSection = ({
                     <div className="mt-5 grid gap-6 lg:grid-cols-[200px_minmax(0,1fr)]">
                         <div className="flex items-start gap-4 lg:flex-col lg:gap-3">
                             <div className="shrink-0">
-                                {currentUser.avatarUrl ? (
+                                {currentUserAvatarSource ? (
                                     <img
-                                        src={currentUser.avatarUrl}
+                                        src={currentUserAvatarSource}
                                         alt={currentUser.name}
                                         className="h-16 w-16 rounded-full object-cover ring-1 ring-white/10"
                                     />

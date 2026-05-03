@@ -1,6 +1,3 @@
-
-
-
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -16,6 +13,9 @@ import {
   getLibraryEntryByBookId,
   upsertLibraryEntry
 } from "../services/libraryService";
+
+import OwnershipFormatSelector from "../components/OwnershipFormatSelector";
+import CustomListsSelector from "../components/CustomListSelector";
 
 
 // EditBookActivityPage
@@ -142,6 +142,18 @@ export const EditBookActivityPage = () => {
             <option value="did_not_finish">Did not finish</option>
           </select>
         </div>
+
+        {/* Formats */}
+        <OwnershipFormatSelector
+          value={formats}
+          onChange={setFormats}
+        />
+
+        {/* Custom Lists */}
+        <CustomListsSelector
+          value={customLists}
+          onChange={setCustomLists}
+        />
 
         {/* Review */}
         <div>

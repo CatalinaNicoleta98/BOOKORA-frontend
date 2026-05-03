@@ -28,11 +28,19 @@ export const OwnershipFormatSelector = ({
 
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium">
-        How do you own this book?
-      </label>
+      <div className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+          Formats
+        </p>
+        <h2 className="text-xl font-semibold text-white">
+          How are you reading this one?
+        </h2>
+        <p className="text-sm leading-7 text-slate-400">
+          Pick every format that applies so your activity feels accurate.
+        </p>
+      </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-3">
         {OPTIONS.map((option) => {
           const isActive = value.includes(option.value);
 
@@ -41,11 +49,11 @@ export const OwnershipFormatSelector = ({
               key={option.value}
               type="button"
               onClick={() => toggleFormat(option.value)}
-              className={`rounded-lg border px-4 py-2 text-sm transition
+              className={`inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-medium transition-all
                 ${
                   isActive
-                    ? "bg-white text-black border-white"
-                    : "bg-transparent text-white border-neutral-600 hover:border-white"
+                    ? "border-amber-200/30 bg-amber-200/12 text-amber-100"
+                    : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
                 }`}
             >
               {option.label}

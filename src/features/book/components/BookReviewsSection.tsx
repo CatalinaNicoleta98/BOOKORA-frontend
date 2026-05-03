@@ -101,7 +101,7 @@ const BookReviewsSection = ({
     const formattedRatingsCount = formatNumber(communityRating.ratingsCount);
     const formattedReviewsCount = formatNumber(communityRating.reviewsCount);
     const currentUserAvatarSource = getImageSource(currentUser?.avatarUrl);
-    const savedCurrentUserReview =
+    const currentUserReviewCardReview =
         currentUser && currentUserReview?.content
             ? {
                   id: currentUserReview.id,
@@ -115,12 +115,8 @@ const BookReviewsSection = ({
                       : "Just now",
                   source: "bookora" as const,
               }
-            : null;
-    const currentUserReviewCardReview = savedCurrentUserReview ?? undefined;
-    const visibleCommunityReviews = [
-        ...(savedCurrentUserReview ? [savedCurrentUserReview] : []),
-        ...((reviews ?? []).filter((review) => review.id !== currentUserReview?.id)),
-    ];
+            : undefined;
+    const visibleCommunityReviews = reviews ?? [];
     const hasReviews = visibleCommunityReviews.length > 0;
 
     return (
@@ -243,9 +239,7 @@ const BookReviewsSection = ({
                                     )}
                                     <div className="space-y-1">
                                         <p className="text-sm font-semibold text-slate-100">
-                                            {savedCurrentUserReview && review.id === savedCurrentUserReview.id
-                                                ? `${review.userName} (You)`
-                                                : review.userName}
+                                            {review.userName}
                                         </p>
                                         <p className="text-xs uppercase tracking-[0.14em] text-slate-500">
                                             {review.source === "bookora" ? "Bookora reader" : "Open Library"}
@@ -270,10 +264,10 @@ const BookReviewsSection = ({
             ) : (
                 <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.24))] p-6">
                     <p className="text-base font-medium text-slate-100">
-                        Reviews will appear here once readers start reviewing this book.
+                        Community reviews will appear here once public review text is available for this book.
                     </p>
                     <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-400">
-                        Open Library does not currently provide free-form text reviews for this book, so this space is ready for Bookora reader reviews and future external review support when real written content is available.
+                        Your own review still appears above in the personal section. This community area is reserved for reviews returned as public book reviews so every reader sees the same list.
                     </p>
                 </div>
             )}

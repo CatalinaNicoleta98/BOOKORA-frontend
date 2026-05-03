@@ -2,23 +2,35 @@ import { useState, useEffect } from "react";
 
 import { getHomePageData } from "../services/homeService";
 import HomeLayout from "../components/HomeLayout";
+import { useAuth } from "../../auth/context/AuthContext";
 
 const HomePage = () => {
+    const { state: authState } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<null | import("../types/home.types").HomePageData>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const load = async () => {
             try {
                 const result = await getHomePageData();
-                setData(result);
+                setData({
+                    ...result,
+                    userName: authState.user?.name ?? result.userName,
+                });
+            } catch {
+                setError("Could not load your home page right now.");
             } finally {
                 setIsLoading(false);
             }
         };
 
-        load();
-    }, []);
+        void load();
+    }, [authState.user?.name]);
+
+    if (error) {
+        return <div className="p-8 text-red-300">{error}</div>;
+    }
 
     if (isLoading || !data) {
         return (

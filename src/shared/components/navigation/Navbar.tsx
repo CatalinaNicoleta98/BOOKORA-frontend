@@ -7,6 +7,7 @@ import NavLogo from "./NavLogo";
 import DesktopNavLinks from "./DesktopNavLinks";
 import ProfileMenu from "./ProfileMenu";
 import MobileNavMenu from "./MobileNavMenu";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavbarUser {
     id?: string;
@@ -81,16 +82,16 @@ const Navbar = (_props: NavbarProps) => {
 
     const navigationItems = [
         { label: "Home", to: "/" },
-        { label: "Browse", to: "/browse" },
-        { label: "My Library", to: "/library" },
-        { label: "Lists", to: "/lists" },
+        { label: "Browse", to: "/search" },
+        { label: "Profile", to: "/profile" },
+        { label: "Shelves", to: "/profile" },
     ];
 
     
 
     return (
-        <header className="sticky top-0 z-50 border-b border-white/8 bg-[#070a12]/72 backdrop-blur-2xl">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-200/30 to-transparent" />
+        <header className="theme-navbar sticky top-0 z-50 border-b backdrop-blur-2xl">
+            <div className="absolute inset-x-0 top-0 h-px" />
 
             <div className="mx-auto flex w-full max-w-[1440px] items-center px-4 py-3 sm:px-6 lg:px-8">
                 <div className="hidden min-w-0 flex-1 items-center gap-4 lg:flex xl:gap-5">
@@ -107,7 +108,8 @@ const Navbar = (_props: NavbarProps) => {
                     <NavbarSearch />
                 </div>
 
-                <div className="hidden shrink-0 items-center lg:flex">
+                <div className="hidden shrink-0 items-center gap-3 lg:flex">
+                    <ThemeToggle />
                     <ProfileMenu
                         userDisplayName={userDisplayName}
                         userInitials={userInitials}
@@ -119,30 +121,33 @@ const Navbar = (_props: NavbarProps) => {
                 <div className="flex w-full items-center justify-between lg:hidden">
                     <NavLogo onClick={closeMobileMenu} />
 
-                    <button
-                        type="button"
-                        aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-                        aria-expanded={isMobileMenuOpen}
-                        onClick={toggleMobileMenu}
-                        className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-slate-200 transition-all duration-300 hover:text-white"
-                    >
-                        {isMobileMenuOpen ? (
-                            <div className="relative h-5 w-5">
-                                <span className="absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-current rotate-45" />
-                                <span className="absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-current -rotate-45" />
-                            </div>
-                        ) : mobileAvatarSource ? (
-                            <img
-                                src={mobileAvatarSource}
-                                alt={`${userDisplayName} avatar`}
-                                className="h-11 w-11 rounded-xl object-cover"
-                            />
-                        ) : (
-                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-base font-semibold text-slate-950">
-                                {userInitials}
-                            </div>
-                        )}
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <ThemeToggle />
+                        <button
+                            type="button"
+                            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                            aria-expanded={isMobileMenuOpen}
+                            onClick={toggleMobileMenu}
+                            className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface)] text-[var(--bookora-text-soft)] transition-all duration-300 hover:border-[var(--bookora-border-strong)] hover:text-[var(--bookora-title)]"
+                        >
+                            {isMobileMenuOpen ? (
+                                <div className="relative h-5 w-5">
+                                    <span className="absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-current rotate-45" />
+                                    <span className="absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-current -rotate-45" />
+                                </div>
+                            ) : mobileAvatarSource ? (
+                                <img
+                                    src={mobileAvatarSource}
+                                    alt={`${userDisplayName} avatar`}
+                                    className="h-11 w-11 rounded-xl object-cover"
+                                />
+                            ) : (
+                                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/80 via-indigo-300/80 to-fuchsia-300/80 text-base font-semibold text-slate-950">
+                                    {userInitials}
+                                </div>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
 

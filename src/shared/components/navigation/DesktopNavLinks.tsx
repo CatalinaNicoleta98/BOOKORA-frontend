@@ -9,9 +9,9 @@ interface NavigationItem {
 
 const navigationItems: NavigationItem[] = [
     { label: "Home", to: "/" },
-    { label: "Browse", to: "/browse" },
-    { label: "My Library", to: "/library" },
-    { label: "Lists", to: "/lists" },
+    { label: "Browse", to: "/search" },
+    { label: "Profile", to: "/profile" },
+    { label: "Shelves", to: "/profile" },
 ];
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) => {
@@ -19,10 +19,10 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) => {
         "group relative inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium tracking-[0.02em] transition-all duration-300";
 
     if (isActive) {
-        return `${baseClassName} border-amber-200/20 bg-white/12 text-white shadow-[0_10px_30px_rgba(15,23,42,0.28)] backdrop-blur-xl`;
+        return `${baseClassName} border-[var(--bookora-border-strong)] bg-[var(--bookora-surface)] text-[var(--bookora-title)] shadow-[0_10px_30px_rgba(15,23,42,0.18)] backdrop-blur-xl`;
     }
 
-    return `${baseClassName} border-transparent text-slate-300 hover:border-white/10 hover:bg-white/8 hover:text-white`;
+    return `${baseClassName} border-transparent text-[var(--bookora-text-muted)] hover:border-[var(--bookora-border)] hover:bg-[var(--bookora-surface)] hover:text-[var(--bookora-title)]`;
 };
 
 const DesktopNavLinks = () => {

@@ -1,17 +1,272 @@
 @import "tailwindcss";
 
+:root {
+    color-scheme: dark;
+    --bookora-font-sans: "Inter", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --bookora-font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    --bookora-bg: #070a12;
+    --bookora-bg-elevated: rgba(10, 15, 29, 0.86);
+    --bookora-bg-soft: rgba(255, 255, 255, 0.05);
+    --bookora-bg-strong: rgba(11, 16, 32, 0.82);
+    --bookora-surface: rgba(255, 255, 255, 0.055);
+    --bookora-surface-strong: rgba(13, 19, 35, 0.84);
+    --bookora-surface-muted: rgba(255, 255, 255, 0.03);
+    --bookora-border: rgba(255, 255, 255, 0.11);
+    --bookora-border-strong: rgba(255, 255, 255, 0.18);
+    --bookora-text: #f8fafc;
+    --bookora-text-muted: #94a3b8;
+    --bookora-text-soft: #cbd5e1;
+    --bookora-title: #ffffff;
+    --bookora-accent: #f4d08c;
+    --bookora-accent-strong: #e8b556;
+    --bookora-shadow: 0 28px 90px rgba(15, 23, 42, 0.34);
+    --bookora-shell-gradient:
+        radial-gradient(circle at top, rgba(120, 119, 198, 0.18), transparent 24%),
+        radial-gradient(circle at 82% 14%, rgba(244, 208, 140, 0.12), transparent 20%),
+        linear-gradient(to bottom, rgba(8, 11, 22, 0.92), rgba(7, 10, 18, 1));
+    --bookora-auth-gradient:
+        radial-gradient(circle at top, rgba(120, 119, 198, 0.22), transparent 24%),
+        radial-gradient(circle at 86% 16%, rgba(244, 208, 140, 0.14), transparent 18%),
+        radial-gradient(circle at 18% 78%, rgba(125, 211, 252, 0.09), transparent 18%),
+        linear-gradient(180deg, #0b1020 0%, #090d18 42%, #060811 100%);
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bookora-bg: #f7f2e8;
+    --bookora-bg-elevated: rgba(255, 250, 244, 0.88);
+    --bookora-bg-soft: rgba(255, 255, 255, 0.68);
+    --bookora-bg-strong: rgba(255, 252, 247, 0.92);
+    --bookora-surface: rgba(255, 255, 255, 0.72);
+    --bookora-surface-strong: rgba(255, 251, 246, 0.9);
+    --bookora-surface-muted: rgba(149, 104, 67, 0.06);
+    --bookora-border: rgba(104, 67, 44, 0.14);
+    --bookora-border-strong: rgba(104, 67, 44, 0.22);
+    --bookora-text: #32271f;
+    --bookora-text-muted: #6a5a4c;
+    --bookora-text-soft: #4a3d31;
+    --bookora-title: #1f1813;
+    --bookora-accent: #a66a31;
+    --bookora-accent-strong: #8c5321;
+    --bookora-shadow: 0 28px 70px rgba(120, 91, 62, 0.12);
+    --bookora-shell-gradient:
+        radial-gradient(circle at top, rgba(222, 196, 168, 0.4), transparent 24%),
+        radial-gradient(circle at 78% 18%, rgba(240, 191, 128, 0.22), transparent 18%),
+        linear-gradient(180deg, #fbf6ef 0%, #f7f1e8 48%, #f0e6da 100%);
+    --bookora-auth-gradient:
+        radial-gradient(circle at top, rgba(232, 214, 193, 0.7), transparent 26%),
+        radial-gradient(circle at 88% 14%, rgba(240, 191, 128, 0.25), transparent 18%),
+        radial-gradient(circle at 16% 78%, rgba(198, 219, 229, 0.18), transparent 16%),
+        linear-gradient(180deg, #fffaf4 0%, #f7efe3 44%, #efe3d3 100%);
+}
+
 html,
 body,
 #root {
     min-height: 100%;
 }
 
-body {
-    margin: 0;
+html {
+    background: var(--bookora-bg);
 }
 
 body {
+    margin: 0;
+    background: var(--bookora-bg);
+    color: var(--bookora-text);
+    font-family: var(--bookora-font-sans);
     scrollbar-gutter: stable;
+    transition: background-color 280ms ease, color 280ms ease;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+    transition:
+        color 200ms ease,
+        background-color 200ms ease,
+        border-color 200ms ease,
+        box-shadow 200ms ease,
+        transform 200ms ease;
+}
+
+.font-display,
+h1,
+h2,
+h3 {
+    font-family: var(--bookora-font-display);
+}
+
+.theme-app-shell {
+    background: var(--bookora-shell-gradient);
+    color: var(--bookora-text);
+}
+
+.theme-auth-shell {
+    background: var(--bookora-auth-gradient);
+    color: var(--bookora-text);
+}
+
+.theme-page-shell {
+    background: transparent;
+    color: var(--bookora-text);
+}
+
+.theme-glass-panel {
+    border: 1px solid var(--bookora-border);
+    background: var(--bookora-surface);
+    box-shadow: var(--bookora-shadow);
+    backdrop-filter: blur(22px);
+}
+
+.theme-glass-panel-strong {
+    border: 1px solid var(--bookora-border);
+    background: var(--bookora-surface-strong);
+    box-shadow: var(--bookora-shadow);
+    backdrop-filter: blur(22px);
+}
+
+.theme-soft-panel {
+    border: 1px solid var(--bookora-border);
+    background: var(--bookora-bg-soft);
+    box-shadow: 0 18px 60px rgba(15, 23, 42, 0.16);
+    backdrop-filter: blur(18px);
+}
+
+.theme-title {
+    color: var(--bookora-title);
+}
+
+.theme-text {
+    color: var(--bookora-text);
+}
+
+.theme-text-soft {
+    color: var(--bookora-text-soft);
+}
+
+.theme-text-muted {
+    color: var(--bookora-text-muted);
+}
+
+.theme-eyebrow {
+    color: color-mix(in srgb, var(--bookora-accent) 65%, var(--bookora-text-muted));
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.theme-input {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 76%, transparent);
+    color: var(--bookora-text);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.theme-input::placeholder {
+    color: color-mix(in srgb, var(--bookora-text-muted) 88%, transparent);
+}
+
+.theme-input:hover {
+    border-color: var(--bookora-border-strong);
+}
+
+.theme-input:focus {
+    outline: none;
+    border-color: color-mix(in srgb, var(--bookora-accent) 45%, white);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--bookora-accent) 10%, transparent);
+}
+
+.theme-button-primary {
+    border: 1px solid color-mix(in srgb, var(--bookora-accent) 30%, transparent);
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--bookora-accent) 82%, #fff4cf) 0%, color-mix(in srgb, var(--bookora-accent-strong) 68%, #d8c494) 52%, color-mix(in srgb, #bba3ff 52%, var(--bookora-accent) 48%) 100%);
+    color: #15100d;
+    box-shadow: 0 18px 44px color-mix(in srgb, var(--bookora-accent) 18%, transparent);
+}
+
+.theme-button-primary:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+}
+
+.theme-button-secondary {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 82%, transparent);
+    color: var(--bookora-text);
+}
+
+.theme-button-secondary:hover {
+    border-color: var(--bookora-border-strong);
+    background: color-mix(in srgb, var(--bookora-surface-strong) 76%, transparent);
+}
+
+.bookora-brand-mark {
+    background:
+        radial-gradient(circle at 28% 24%, rgba(255, 244, 207, 0.95), transparent 28%),
+        linear-gradient(135deg, #f1dfb1 0%, #d8c494 48%, #bba3ff 100%);
+    color: #15100d;
+    box-shadow: 0 16px 36px rgba(208, 163, 103, 0.24);
+}
+
+.bookora-brand-title {
+    color: var(--bookora-title);
+}
+
+.bookora-brand-tagline {
+    color: var(--bookora-text-muted);
+}
+
+.theme-navbar,
+.theme-footer {
+    background: color-mix(in srgb, var(--bookora-bg-elevated) 92%, transparent);
+    border-color: var(--bookora-border);
+    color: var(--bookora-text);
+}
+
+.theme-navbar::before,
+.theme-footer::before {
+    background: linear-gradient(to right, transparent, color-mix(in srgb, var(--bookora-accent) 55%, transparent), transparent);
+}
+
+.theme-toggle {
+    border-color: var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 84%, transparent);
+    color: var(--bookora-text-soft);
+}
+
+.theme-toggle:hover {
+    border-color: var(--bookora-border-strong);
+    background: color-mix(in srgb, var(--bookora-surface-strong) 80%, transparent);
+    color: var(--bookora-title);
+}
+
+.theme-toggle-bulb.is-on {
+    color: #a85f1b;
+}
+
+.theme-toggle-bulb.is-on .theme-toggle-glow {
+    background: radial-gradient(circle, rgba(255, 214, 97, 0.42), transparent 70%);
+}
+
+.theme-toggle-bulb.is-off {
+    color: var(--bookora-text-muted);
+}
+
+.theme-toggle-bulb.is-off .theme-toggle-glow {
+    background: radial-gradient(circle, rgba(148, 163, 184, 0.16), transparent 70%);
+}
+
+.theme-card-grid {
+    display: grid;
+    gap: 1.5rem;
 }
 
 .bookora-modal-scroll {
@@ -36,4 +291,10 @@ body {
 
 .bookora-modal-scroll::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, rgba(252, 211, 77, 0.92), rgba(245, 158, 11, 0.64));
+}
+
+@media (max-width: 640px) {
+    .theme-toggle span:last-child {
+        display: none;
+    }
 }

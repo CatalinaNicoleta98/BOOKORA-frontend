@@ -35,7 +35,7 @@ const ProfileMenu = ({
             <button
                 type="button"
                 onClick={() => setIsOpen((v) => !v)}
-                className="group inline-flex items-center justify-center rounded-xl p-0 transition-transform duration-200 hover:scale-105"
+                className="group inline-flex items-center justify-center rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface)] p-1 transition-transform duration-200 hover:scale-[1.02] hover:border-[var(--bookora-border-strong)]"
             >
                 {avatarSource ? (
                     <img
@@ -51,21 +51,21 @@ const ProfileMenu = ({
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-white/10 bg-[rgba(12,17,31,0.96)] shadow-[0_20px_40px_rgba(0,0,0,0.28)] backdrop-blur-lg">
+                <div className="absolute right-0 mt-2 w-52 overflow-hidden rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface-strong)] shadow-[0_20px_40px_rgba(0,0,0,0.18)] backdrop-blur-lg">
                     <button
                         type="button"
                         onClick={() => {
                             setIsOpen(false);
                             navigate("/profile");
                         }}
-                        className="w-full px-4 py-2 text-left text-sm text-slate-200 hover:bg-white/10"
+                        className="w-full px-4 py-3 text-left text-sm text-[var(--bookora-text)] hover:bg-[var(--bookora-surface)]"
                     >
                         Profile
                     </button>
                     <button
                         type="button"
                         onClick={onLogout}
-                        className="w-full px-4 py-2 text-left text-sm text-red-300 hover:bg-white/10"
+                        className="w-full px-4 py-3 text-left text-sm text-red-400 hover:bg-[var(--bookora-surface)]"
                     >
                         Logout
                     </button>

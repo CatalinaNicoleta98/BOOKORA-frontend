@@ -134,14 +134,14 @@ const NavbarSearch = () => {
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search books, authors, series..."
-                className="h-12 w-full rounded-2xl border border-white/10 bg-white/6 pl-4 pr-10 text-sm text-white outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-amber-200/40 focus:bg-white/8"
+                className="theme-input h-12 w-full rounded-2xl pl-4 pr-10 text-sm transition-all duration-200"
             />
             {searchQuery && (
                 <button
                     type="button"
                     aria-label="Clear search"
                     onClick={clearSearch}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[var(--bookora-text-muted)] transition-colors hover:bg-[var(--bookora-surface)] hover:text-[var(--bookora-title)]"
                 >
                     <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -150,9 +150,9 @@ const NavbarSearch = () => {
             )}
 
             {(searchQuery.trim().length > 0 || isSearching) && (
-                <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl border border-white/10 bg-[#0b1020]/98 shadow-2xl shadow-black/30 backdrop-blur-xl">
+                <div className="theme-glass-panel-strong absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl shadow-2xl shadow-black/20">
                     {isSearching && (
-                        <div className="px-4 py-4 text-sm text-slate-300">Searching...</div>
+                        <div className="theme-text-soft px-4 py-4 text-sm">Searching...</div>
                     )}
 
                     {!isSearching && searchError && (
@@ -160,11 +160,11 @@ const NavbarSearch = () => {
                     )}
 
                     {!isSearching && !searchError && searchQuery.trim().length >= 3 && searchResults.length === 0 && (
-                        <div className="px-4 py-4 text-sm text-slate-300">No results found</div>
+                        <div className="theme-text-soft px-4 py-4 text-sm">No results found</div>
                     )}
 
                     {!isSearching && !searchError && searchQuery.trim().length > 0 && searchQuery.trim().length < 3 && (
-                        <div className="px-4 py-4 text-sm text-slate-300">Type at least 3 characters to search</div>
+                        <div className="theme-text-soft px-4 py-4 text-sm">Type at least 3 characters to search</div>
                     )}
 
                     {!isSearching && searchResults.length > 0 && (
@@ -178,9 +178,9 @@ const NavbarSearch = () => {
                                         key={result.externalBookId}
                                         type="button"
                                         onClick={() => handleResultClick(result)}
-                                        className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-white/8"
+                                        className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--bookora-surface)]"
                                     >
-                                        <div className="flex h-16 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/6 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-300">
+                                        <div className="flex h-16 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--bookora-border)] bg-[var(--bookora-surface)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--bookora-text-soft)]">
                                             {result.cover ? (
                                                 <img
                                                     src={result.cover}
@@ -193,10 +193,10 @@ const NavbarSearch = () => {
                                         </div>
 
                                         <div className="min-w-0 flex-1">
-                                            <div className="truncate text-sm font-medium text-white">{result.title}</div>
-                                            <div className="mt-1 truncate text-xs text-slate-400">{result.author ?? "Unknown author"}</div>
+                                            <div className="theme-title truncate text-sm font-medium">{result.title}</div>
+                                            <div className="theme-text-muted mt-1 truncate text-xs">{result.author ?? "Unknown author"}</div>
                                             {metadata ? (
-                                                <div className="mt-2 truncate text-[11px] text-slate-500">{metadata}</div>
+                                                <div className="theme-text-muted mt-2 truncate text-[11px] opacity-80">{metadata}</div>
                                             ) : null}
                                         </div>
                                     </button>
@@ -206,11 +206,11 @@ const NavbarSearch = () => {
                     )}
 
                     {!isSearching && !searchError && searchResults.length > 0 && (
-                        <div className="border-t border-white/10 px-4 py-3">
+                        <div className="border-t border-[var(--bookora-border)] px-4 py-3">
                             <button
                                 type="button"
                                 onClick={handleViewAllResults}
-                                className="w-full text-left text-sm font-medium text-amber-200 transition-colors hover:text-amber-100"
+                                className="w-full text-left text-sm font-medium text-[var(--bookora-accent)] transition-colors hover:text-[var(--bookora-accent-strong)]"
                             >
                                 View all results
                             </button>

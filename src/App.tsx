@@ -4,7 +4,7 @@ import AppRouter from "./app/router/AppRouter";
 const App = () => {
     return (
         <BrowserRouter>
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen">
                 <AppRouter />
             </div>
         </BrowserRouter>

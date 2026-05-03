@@ -32,10 +32,10 @@ const mobileNavLinkClassName = ({ isActive }: { isActive: boolean }) => {
         "flex items-center justify-between rounded-2xl border px-4 py-3.5 text-sm font-medium tracking-[0.02em] transition-all duration-300";
 
     if (isActive) {
-        return `${baseClassName} border-amber-200/20 bg-white/12 text-white shadow-[0_14px_40px_rgba(15,23,42,0.28)]`;
+        return `${baseClassName} border-[var(--bookora-border-strong)] bg-[var(--bookora-surface)] text-[var(--bookora-title)] shadow-[0_14px_40px_rgba(15,23,42,0.18)]`;
     }
 
-    return `${baseClassName} border-white/8 bg-white/5 text-slate-300 hover:border-white/12 hover:bg-white/8 hover:text-white`;
+    return `${baseClassName} border-[var(--bookora-border)] bg-[var(--bookora-surface)] text-[var(--bookora-text-muted)] hover:border-[var(--bookora-border-strong)] hover:bg-[var(--bookora-surface-strong)] hover:text-[var(--bookora-title)]`;
 };
 
 const MobileNavMenu = ({
@@ -52,12 +52,12 @@ const MobileNavMenu = ({
 
     return (
         <div
-            className={`overflow-hidden border-t border-white/8 bg-[#0b1020]/96 backdrop-blur-2xl transition-all duration-300 ease-out lg:hidden ${
+            className={`overflow-hidden border-t border-[var(--bookora-border)] bg-[var(--bookora-bg-elevated)] backdrop-blur-2xl transition-all duration-300 ease-out lg:hidden ${
                 isOpen ? "max-h-[44rem] opacity-100" : "max-h-0 opacity-0"
             }`}
         >
             <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-4 py-5 sm:px-6">
-                <div className="rounded-3xl border border-white/8 bg-white/5 p-3 shadow-[0_18px_50px_rgba(15,23,42,0.22)]">
+                <div className="rounded-3xl border border-[var(--bookora-border)] bg-[var(--bookora-surface)] p-3 shadow-[0_18px_50px_rgba(15,23,42,0.14)]">
                     <button
                         type="button"
                         onClick={() => {
@@ -79,8 +79,8 @@ const MobileNavMenu = ({
                         )}
 
                         <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-semibold text-white">{userDisplayName}</p>
-                            <p className="truncate text-xs text-slate-400">View profile</p>
+                            <p className="truncate text-sm font-semibold text-[var(--bookora-title)]">{userDisplayName}</p>
+                            <p className="truncate text-xs text-[var(--bookora-text-muted)]">View profile</p>
                         </div>
 
                         <svg
@@ -103,7 +103,11 @@ const MobileNavMenu = ({
                     <div className="mt-3 border-t border-white/8 pt-3">
                         <button
                             type="button"
-                            className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-white/8 bg-white/6 px-4 text-sm font-medium text-slate-200 transition-all duration-300 hover:border-white/14 hover:bg-white/10 hover:text-white"
+                            onClick={() => {
+                                onClose();
+                                navigate("/search");
+                            }}
+                            className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface)] px-4 text-sm font-medium text-[var(--bookora-text)] transition-all duration-300 hover:border-[var(--bookora-border-strong)] hover:bg-[var(--bookora-surface-strong)] hover:text-[var(--bookora-title)]"
                         >
                             Search books
                         </button>
@@ -138,11 +142,11 @@ const MobileNavMenu = ({
                     ))}
                 </nav>
 
-                <div className="border-t border-white/8 pt-1">
+                <div className="border-t border-[var(--bookora-border)] pt-1">
                     <button
                         type="button"
                         onClick={onLogout}
-                        className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-white/8 bg-white/6 px-4 text-sm font-medium text-red-300 transition-all duration-300 hover:border-white/14 hover:bg-white/10"
+                        className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface)] px-4 text-sm font-medium text-red-400 transition-all duration-300 hover:border-[var(--bookora-border-strong)] hover:bg-[var(--bookora-surface-strong)]"
                     >
                         Logout
                     </button>

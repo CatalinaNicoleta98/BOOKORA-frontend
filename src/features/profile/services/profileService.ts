@@ -36,11 +36,11 @@ export const updateMyProfile = async (
 ): Promise<ProfileUser> => {
     const formData = new FormData();
 
-    if (input.name) {
+    if (input.name !== undefined) {
         formData.append("name", input.name);
     }
 
-    if (input.bio) {
+    if (input.bio !== undefined) {
         formData.append("bio", input.bio);
     }
 
@@ -52,8 +52,8 @@ export const updateMyProfile = async (
         formData.append("cover", input.coverFile);
     }
 
-    for (const [key, value] of formData.entries()) {
-        console.log("FormData entry:", key, value);
+    if (input.isProfilePublic !== undefined) {
+        formData.append("isProfilePublic", String(input.isProfilePublic));
     }
 
     const response = await httpClient.patch<UpdateMyProfileResponse>(

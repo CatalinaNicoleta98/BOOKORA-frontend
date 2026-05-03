@@ -1,10 +1,5 @@
 
-
-interface ProfileStatItem {
-    value: string;
-    label: string;
-    helperText: string;
-}
+import type { ProfileStatItem } from "../types/profile.types";
 
 interface ProfileStatsGridProps {
     stats: ProfileStatItem[];

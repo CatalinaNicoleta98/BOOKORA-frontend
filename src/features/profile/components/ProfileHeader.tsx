@@ -9,6 +9,7 @@ interface ProfileHeaderProps {
     profileBio: string;
     profileAvatarUrl?: string;
     profileCoverUrl?: string;
+    isProfilePublic: boolean;
     isEditingProfile: boolean;
     isProfileLoading: boolean;
     isSavingProfile: boolean;
@@ -25,6 +26,7 @@ interface ProfileHeaderProps {
     onStartEditing: () => void;
     onCancelEditing: () => void;
     onSaveProfile: () => void;
+    onShareProfile: () => void;
 }
 
 const ProfileHeader = ({
@@ -34,6 +36,7 @@ const ProfileHeader = ({
     profileBio,
     profileAvatarUrl,
     profileCoverUrl,
+    isProfilePublic,
     isEditingProfile,
     isProfileLoading,
     isSavingProfile,
@@ -49,7 +52,8 @@ const ProfileHeader = ({
     onCoverFileChange,
     onStartEditing,
     onCancelEditing,
-    onSaveProfile
+    onSaveProfile,
+    onShareProfile
 }: ProfileHeaderProps) => {
     return (
         <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
@@ -127,6 +131,9 @@ const ProfileHeader = ({
                                 <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
                                     @{profileName.toLowerCase().replace(/\s+/g, "")}
                                 </span>
+                                <span className="rounded-full border border-amber-200/16 bg-amber-200/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100">
+                                    {isProfilePublic ? "Public profile" : "Private profile"}
+                                </span>
                             </div>
 
                             {isEditingProfile ? (
@@ -151,23 +158,21 @@ const ProfileHeader = ({
                             <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-400">
                                 <span>{profileEmail}</span>
                                 <span className="h-1 w-1 rounded-full bg-slate-500" />
-                                <span>Esbjerg, Denmark</span>
-                                <span className="h-1 w-1 rounded-full bg-slate-500" />
-                                <span>Joined 2026</span>
+                                <span>{isProfilePublic ? "Visible to Bookora readers" : "Only visible to you"}</span>
                             </div>
                         </div>
                     </div>
 
                     <div className="flex flex-wrap gap-3 lg:justify-end">
-                        <button
-                            type="button"
-                            onClick={() => coverInputRef.current?.click()}
-                            className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
-                        >
-                            Edit cover
-                        </button>
                         {isEditingProfile ? (
                             <>
+                                <button
+                                    type="button"
+                                    onClick={() => coverInputRef.current?.click()}
+                                    className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                >
+                                    Edit cover
+                                </button>
                                 <button
                                     type="button"
                                     onClick={() => avatarInputRef.current?.click()}
@@ -202,6 +207,7 @@ const ProfileHeader = ({
                         )}
                         <button
                             type="button"
+                            onClick={onShareProfile}
                             className="inline-flex h-11 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/10 px-4 text-sm font-medium text-amber-100 transition-all duration-300 hover:border-amber-200/30 hover:bg-amber-200/14"
                         >
                             Share profile

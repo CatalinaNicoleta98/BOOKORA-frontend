@@ -1,136 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/context/AuthContext";
-
+import { getLibrary } from "../../library/services/libraryService";
+import type { LibraryEntry } from "../../library/types/library.types";
+import ProfileHeader from "../components/ProfileHeader";
+import ProfileLibrarySpotlight from "../components/ProfileLibrarySpotlight";
+import ProfileReadingGoals from "../components/ProfileReadingGoals";
+import ProfileRecentActivity from "../components/ProfileRecentActivity";
+import ProfileShelvesSection from "../components/ProfileShelvesSection";
+import ProfileStatsGrid from "../components/ProfileStatsGrid";
 import { getMyProfile, updateMyProfile } from "../services/profileService";
 import type { ProfileUser } from "../types/profile.types";
-import ProfileStatsGrid, { type ProfileStatItem } from "../components/ProfileStatsGrid";
-import ProfileReadingGoals from "../components/ProfileReadingGoals";
-import ProfileRecentActivity, { type ProfileActivityItem } from "../components/ProfileRecentActivity";
-import ProfileHeader from "../components/ProfileHeader";
-import ProfileShelvesSection, { type ProfileShelfItem } from "../components/ProfileShelvesSection";
-
-
-
-
-const profileStats: ProfileStatItem[] = [
-    {
-        label: "Books in library",
-        value: "24",
-        helperText: "Across physical, ebook, and audiobook formats.",
-    },
-    {
-        label: "Finished this year",
-        value: "6",
-        helperText: "You are steadily building your 2026 reading streak.",
-    },
-    {
-        label: "Currently reading",
-        value: "1",
-        helperText: "Your active reading progress lives here.",
-    },
-    {
-        label: "Currently listening",
-        value: "0",
-        helperText: "Audiobook sessions will appear separately.",
-    },
-];
-
-const profileShelves: ProfileShelfItem[] = [
-    {
-        id: "shelf-1",
-        name: "Want to read",
-        count: 12,
-        description: "A dreamy stack of books waiting for their turn."
-    },
-    {
-        id: "shelf-2",
-        name: "Finished",
-        count: 8,
-        description: "Stories that already made it into your reading history."
-    },
-    {
-        id: "shelf-3",
-        name: "On break",
-        count: 2,
-        description: "Books paused for now, but not forgotten."
-    }
-];
-
-const recentActivity: ProfileActivityItem[] = [
-    {
-        id: "activity-1",
-        title: "Progress updated on Harry Potter and the Philosopher's Stone",
-        description: "You moved forward to page 50 and kept the reading streak alive.",
-        timestamp: "Today",
-    },
-    {
-        id: "activity-2",
-        title: "A new title was added to Want to Read",
-        description: "Your future TBR stack is starting to look like a real fantasy tower.",
-        timestamp: "Yesterday",
-    },
-    {
-        id: "activity-3",
-        title: "Profile challenge progress increased",
-        description: "You are now 30% of the way toward your yearly reading target.",
-        timestamp: "This week",
-    },
-];
-
-const readingGoalTarget = 20;
-const readingGoalCurrent = 6;
-
-const getInitials = (name?: string) => {
-    if (!name) {
-        return "BK";
-    }
-
-    const initials = name
-        .split(" ")
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? "")
-        .join("");
-
-    return initials || "BK";
-};
-
-const getImageSource = (imagePath?: string) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
-
-const buildProfileFallback = (user: ProfileUser | null, authUser: { name?: string; email?: string; avatarUrl?: string; coverImageUrl?: string; bio?: string } | null) => {
-    if (user) {
-        return user;
-    }
-
-    return {
-        id: "",
-        name: authUser?.name ?? "Bookora Reader",
-        email: authUser?.email ?? "reader@bookora.app",
-        avatarUrl: authUser?.avatarUrl,
-        coverImageUrl: authUser?.coverImageUrl,
-        bio: authUser?.bio ?? "",
-        isProfilePublic: true,
-        role: "user"
-    } satisfies ProfileUser;
-};
+import {
+    buildProfileDashboardData,
+    buildProfileFallback,
+    getImageSource,
+    getInitials,
+    getProfileBio
+} from "../utils/profilePage.utils";
 
 const ProfilePage = () => {
+    const navigate = useNavigate();
     const { state, updateUser } = useAuth();
     const avatarInputRef = useRef<HTMLInputElement | null>(null);
     const coverInputRef = useRef<HTMLInputElement | null>(null);
 
     const [profile, setProfile] = useState<ProfileUser | null>(null);
+    const [libraryEntries, setLibraryEntries] = useState<LibraryEntry[]>([]);
     const [isProfileLoading, setIsProfileLoading] = useState(true);
     const [profileError, setProfileError] = useState<string | null>(null);
     const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -144,25 +41,41 @@ const ProfilePage = () => {
     const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
 
     useEffect(() => {
-        const loadProfile = async () => {
-            try {
-                setIsProfileLoading(true);
-                setProfileError(null);
+        const loadProfilePage = async () => {
+            setIsProfileLoading(true);
+            setProfileError(null);
 
-                const currentProfile = await getMyProfile();
+            const [profileResult, libraryResult] = await Promise.allSettled([
+                getMyProfile(),
+                getLibrary()
+            ]);
 
-                setProfile(currentProfile);
-                setEditName(currentProfile.name ?? "");
-                setEditBio(currentProfile.bio ?? "");
-            } catch (error) {
-                const fallbackMessage = error instanceof Error ? error.message : "Unable to load your profile right now.";
+            if (profileResult.status === "fulfilled") {
+                setProfile(profileResult.value);
+                setEditName(profileResult.value.name ?? "");
+                setEditBio(profileResult.value.bio ?? "");
+            } else {
+                const fallbackMessage =
+                    profileResult.reason instanceof Error
+                        ? profileResult.reason.message
+                        : "Unable to load your profile right now.";
                 setProfileError(fallbackMessage);
-            } finally {
-                setIsProfileLoading(false);
             }
+
+            if (libraryResult.status === "fulfilled") {
+                setLibraryEntries(libraryResult.value);
+            } else if (profileResult.status !== "rejected") {
+                const fallbackMessage =
+                    libraryResult.reason instanceof Error
+                        ? libraryResult.reason.message
+                        : "Unable to load your library activity right now.";
+                setProfileError(fallbackMessage);
+            }
+
+            setIsProfileLoading(false);
         };
 
-        loadProfile();
+        loadProfilePage();
     }, []);
 
     useEffect(() => {
@@ -178,6 +91,7 @@ const ProfilePage = () => {
     }, [avatarPreviewUrl, coverPreviewUrl]);
 
     const fallbackProfile = buildProfileFallback(profile, state.user ?? null);
+    const dashboardData = useMemo(() => buildProfileDashboardData(libraryEntries), [libraryEntries]);
 
     const handleAvatarFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0] ?? null;
@@ -248,9 +162,6 @@ const ProfilePage = () => {
             const selectedAvatarFile = avatarInputRef.current?.files?.[0] ?? avatarFile;
             const selectedCoverFile = coverInputRef.current?.files?.[0] ?? coverFile;
 
-            console.log("Selected avatar file:", selectedAvatarFile);
-            console.log("Selected cover file:", selectedCoverFile);
-
             const updatedProfile = await updateMyProfile({
                 name: editName.trim(),
                 bio: editBio.trim(),
@@ -276,6 +187,7 @@ const ProfilePage = () => {
             setCoverPreviewUrl(null);
             setIsEditingProfile(false);
             setSaveSuccessMessage("Profile updated successfully.");
+
             if (avatarInputRef.current) {
                 avatarInputRef.current.value = "";
             }
@@ -284,11 +196,28 @@ const ProfilePage = () => {
                 coverInputRef.current.value = "";
             }
         } catch (error) {
-            const fallbackMessage = error instanceof Error ? error.message : "Unable to save your profile right now.";
+            const fallbackMessage =
+                error instanceof Error ? error.message : "Unable to save your profile right now.";
             setProfileError(fallbackMessage);
         } finally {
             setIsSavingProfile(false);
         }
+    };
+
+    const handleShareProfile = async () => {
+        const profileUrl = `${window.location.origin}/profile`;
+
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(profileUrl);
+                setSaveSuccessMessage("Profile link copied to clipboard.");
+                return;
+            }
+        } catch {
+            // Fall through to the manual copy message.
+        }
+
+        setSaveSuccessMessage(`Share this profile link: ${profileUrl}`);
     };
 
     const profileName = useMemo(() => {
@@ -310,7 +239,7 @@ const ProfilePage = () => {
             return editBio;
         }
 
-        return fallbackProfile.bio?.trim() || "Curating fantasy worlds, cozy reads, and future obsessions, all in one place.";
+        return getProfileBio(fallbackProfile.bio);
     }, [editBio, fallbackProfile.bio, isEditingProfile]);
 
     const profileAvatarUrl = useMemo(() => {
@@ -329,6 +258,10 @@ const ProfilePage = () => {
         return getImageSource(fallbackProfile.coverImageUrl);
     }, [coverPreviewUrl, fallbackProfile.coverImageUrl]);
 
+    const openBook = (bookId: string) => {
+        navigate(`/books/${encodeURIComponent(bookId)}`);
+    };
+
     return (
         <div className="relative min-h-screen overflow-hidden bg-[#070a12] text-slate-100">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.14),_transparent_24%),radial-gradient(circle_at_82%_14%,_rgba(244,208,140,0.10),_transparent_20%),linear-gradient(to_bottom,_rgba(8,11,22,0.92),_rgba(7,10,18,1))]" />
@@ -342,6 +275,7 @@ const ProfilePage = () => {
                     profileBio={profileBio}
                     profileAvatarUrl={profileAvatarUrl}
                     profileCoverUrl={profileCoverUrl}
+                    isProfilePublic={fallbackProfile.isProfilePublic ?? true}
                     isEditingProfile={isEditingProfile}
                     isProfileLoading={isProfileLoading}
                     isSavingProfile={isSavingProfile}
@@ -358,26 +292,41 @@ const ProfilePage = () => {
                     onStartEditing={handleStartEditing}
                     onCancelEditing={handleCancelEditing}
                     onSaveProfile={handleSaveProfile}
+                    onShareProfile={handleShareProfile}
+                />
+
+                <ProfileLibrarySpotlight
+                    items={dashboardData.spotlight}
+                    onOpenBook={openBook}
+                    onBrowseBooks={() => navigate("/search")}
                 />
 
                 <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
                     <div className="relative px-6 pb-8 sm:px-8 lg:px-10">
-                        <ProfileStatsGrid stats={profileStats} />
+                        <ProfileStatsGrid stats={dashboardData.stats} />
                     </div>
                 </section>
 
                 <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
                     <div className="space-y-6">
-                        <ProfileShelvesSection shelves={profileShelves} />
+                        <ProfileShelvesSection
+                            shelves={dashboardData.shelves}
+                            onManageShelves={() => navigate("/search")}
+                            onOpenBook={openBook}
+                        />
                     </div>
 
                     <div className="space-y-6">
                         <ProfileReadingGoals
-                            target={readingGoalTarget}
-                            current={readingGoalCurrent}
+                            target={dashboardData.goal.target}
+                            current={dashboardData.goal.current}
                         />
 
-                        <ProfileRecentActivity items={recentActivity} />
+                        <ProfileRecentActivity
+                            items={dashboardData.activity}
+                            onOpenBook={openBook}
+                            onBrowseBooks={() => navigate("/search")}
+                        />
                     </div>
                 </section>
             </div>

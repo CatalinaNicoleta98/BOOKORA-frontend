@@ -7,6 +7,11 @@ interface ProfileReadingGoalsProps {
 
 const ProfileReadingGoals = ({ target, current }: ProfileReadingGoalsProps) => {
     const progress = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+    const remaining = Math.max(target - current, 0);
+    const helperText =
+        remaining === 0
+            ? "Reading goal reached. Everything from here is bonus momentum."
+            : `${remaining} ${remaining === 1 ? "book" : "books"} left to hit this year's target.`;
 
     return (
         <section className="rounded-[2rem] border border-white/10 bg-[#0b1020]/70 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl">
@@ -27,6 +32,7 @@ const ProfileReadingGoals = ({ target, current }: ProfileReadingGoalsProps) => {
             <p className="mt-3 text-sm text-slate-400">
                 {progress}% completed
             </p>
+            <p className="mt-1 text-sm text-slate-500">{helperText}</p>
         </section>
     );
 };

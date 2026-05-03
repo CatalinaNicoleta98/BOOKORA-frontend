@@ -1,17 +1,17 @@
 
-
-export interface ProfileShelfItem {
-    id: string;
-    name: string;
-    count: number;
-    description: string;
-}
+import type { ProfileShelfItem } from "../types/profile.types";
 
 interface ProfileShelvesSectionProps {
     shelves: ProfileShelfItem[];
+    onManageShelves: () => void;
+    onOpenBook: (bookId: string) => void;
 }
 
-const ProfileShelvesSection = ({ shelves }: ProfileShelvesSectionProps) => {
+const ProfileShelvesSection = ({
+    shelves,
+    onManageShelves,
+    onOpenBook
+}: ProfileShelvesSectionProps) => {
     return (
         <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:p-8">
             <div className="flex items-center justify-between gap-4">
@@ -23,9 +23,10 @@ const ProfileShelvesSection = ({ shelves }: ProfileShelvesSectionProps) => {
                 </div>
                 <button
                     type="button"
+                    onClick={onManageShelves}
                     className="text-sm font-medium text-amber-100 transition-colors duration-300 hover:text-amber-50"
                 >
-                    Manage shelves
+                    Browse library
                 </button>
             </div>
 
@@ -44,6 +45,37 @@ const ProfileShelvesSection = ({ shelves }: ProfileShelvesSectionProps) => {
                                 {shelf.count} books
                             </span>
                         </div>
+
+                        {shelf.previewBooks.length > 0 ? (
+                            <div className="mt-5 flex flex-wrap gap-3">
+                                {shelf.previewBooks.map((book) => (
+                                    <button
+                                        key={book.id}
+                                        type="button"
+                                        onClick={() => onOpenBook(book.id)}
+                                        className="group h-20 w-14 overflow-hidden rounded-[0.9rem] border border-white/10 bg-white/6 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/16"
+                                        aria-label={`Open ${book.title}`}
+                                        title={book.title}
+                                    >
+                                        {book.coverUrl ? (
+                                            <img
+                                                src={book.coverUrl}
+                                                alt={book.title}
+                                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                                {book.title}
+                                            </div>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="mt-5 rounded-[1rem] border border-dashed border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-slate-500">
+                                Nothing shelved here yet.
+                            </div>
+                        )}
                     </article>
                 ))}
             </div>

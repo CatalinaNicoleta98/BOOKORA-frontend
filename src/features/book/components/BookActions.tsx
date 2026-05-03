@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 
 import type { BookActionsProps } from "../types/book.types";
 
@@ -81,6 +82,13 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
     const [selectedFormats, setSelectedFormats] = useState<OwnershipFormat[]>(["physical"]);
 
     const activeStatusLabel = statusButtonLabelMap[selectedStatus];
+    const portalRoot = useMemo(() => {
+        if (typeof document === "undefined") {
+            return null;
+        }
+
+        return document.body;
+    }, []);
 
     useEffect(() => {
         setSelectedStatus(getInitialStatus(currentStatus));
@@ -92,8 +100,10 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
         }
 
         const { overflow } = document.body.style;
+        const { overflow: htmlOverflow } = document.documentElement.style;
 
         document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
@@ -105,6 +115,7 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
 
         return () => {
             document.body.style.overflow = overflow;
+            document.documentElement.style.overflow = htmlOverflow;
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [isManageOpen]);
@@ -130,52 +141,42 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
         onAddToLibrary();
     };
 
-    return (
-        <>
-            <div className="mt-2">
-                <button
-                    type="button"
-                    onClick={() => setIsManageOpen(true)}
-                    className="inline-flex h-12 w-full items-center justify-center rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] px-5 text-sm font-semibold text-amber-100 shadow-[0_14px_30px_rgba(15,23,42,0.18)] transition-all duration-300 hover:border-amber-200/30 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] hover:shadow-[0_18px_40px_rgba(15,23,42,0.24)]"
-                >
-                    {activeStatusLabel}
-                </button>
-            </div>
-
-            {isManageOpen ? (
-                <div
-                    className="fixed inset-0 z-[120] overflow-y-auto bg-[#020617]/78 p-4 backdrop-blur-md sm:p-6"
-                    onClick={() => setIsManageOpen(false)}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label="Manage this book"
-                >
-                    <div
-                        className="mx-auto flex min-h-full w-full max-w-xl items-start py-6 sm:items-center"
-                        onClick={(event) => event.stopPropagation()}
-                    >
-                        <div className="max-h-[calc(100dvh-3rem)] w-full overflow-y-auto rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,24,0.96),rgba(5,8,18,0.98))] p-6 text-white shadow-[0_30px_100px_rgba(2,6,23,0.55)] backdrop-blur-xl sm:max-h-[calc(100dvh-4rem)]">
-                        <div className="flex items-start justify-between gap-4">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                                    Manage this book
-                                </p>
-                                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-                                    Choose a shelf, format, and lists
-                                </h3>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={() => setIsManageOpen(false)}
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
-                                aria-label="Close manage book panel"
-                            >
-                                ×
-                            </button>
+    const manageModal = isManageOpen ? (
+        <div
+            className="fixed inset-0 z-[200] flex items-start justify-center p-4 sm:items-center sm:p-6"
+            onClick={() => setIsManageOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Manage this book"
+        >
+            <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" />
+            <div
+                className="relative z-10 flex w-full max-w-xl justify-center py-2 sm:py-0"
+                onClick={(event) => event.stopPropagation()}
+            >
+                <div className="flex max-h-[calc(100vh-3rem)] w-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,24,0.96),rgba(5,8,18,0.98))] text-white shadow-[0_30px_100px_rgba(2,6,23,0.55)] backdrop-blur-xl">
+                    <div className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-6">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                                Manage this book
+                            </p>
+                            <h3 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+                                Choose a shelf, format, and lists
+                            </h3>
                         </div>
 
-                        <div className="mt-6 space-y-6">
+                        <button
+                            type="button"
+                            onClick={() => setIsManageOpen(false)}
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                            aria-label="Close manage book panel"
+                        >
+                            ×
+                        </button>
+                    </div>
+
+                    <div className="bookora-modal-scroll overflow-y-auto px-6 py-6">
+                        <div className="space-y-6">
                             <section>
                                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
                                     Reading status
@@ -287,10 +288,24 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
-            ) : null}
+            </div>
+        </div>
+    ) : null;
+
+    return (
+        <>
+            <div className="mt-2">
+                <button
+                    type="button"
+                    onClick={() => setIsManageOpen(true)}
+                    className="inline-flex h-12 w-full items-center justify-center rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] px-5 text-sm font-semibold text-amber-100 shadow-[0_14px_30px_rgba(15,23,42,0.18)] transition-all duration-300 hover:border-amber-200/30 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] hover:shadow-[0_18px_40px_rgba(15,23,42,0.24)]"
+                >
+                    {activeStatusLabel}
+                </button>
+            </div>
+            {portalRoot ? createPortal(manageModal, portalRoot) : manageModal}
         </>
     );
 };

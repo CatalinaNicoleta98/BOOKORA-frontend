@@ -130,16 +130,16 @@ const BookDetailsPanel = ({
     const expandedRows = detailRows.slice(0, 6);
 
     return (
-        <section className="w-full border-t border-white/8 pt-6 sm:pt-7">
+        <section className="w-full border-t border-[var(--bookora-border)] pt-6 sm:pt-7">
             <div className="space-y-2">
-                <h2 className="text-[1.05rem] font-semibold text-white sm:text-[1.15rem]">
+                <h2 className="theme-title text-[1.05rem] font-semibold sm:text-[1.15rem]">
                     Book details
                 </h2>
 
                 <button
                     type="button"
                     onClick={() => setIsExpanded((currentValue) => !currentValue)}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-300 transition-colors hover:text-white"
+                    className="theme-text-soft inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-[var(--bookora-title)]"
                     aria-expanded={isExpanded}
                 >
                     <span>{isExpanded ? "Show less" : "Show details"}</span>
@@ -154,12 +154,12 @@ const BookDetailsPanel = ({
                     {expandedRows.map((row) => (
                         <div
                             key={row.label}
-                            className="grid gap-1 border-b border-white/6 pb-4 last:border-b-0 last:pb-0 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-4"
+                            className="grid gap-1 border-b border-[var(--bookora-border)] pb-4 last:border-b-0 last:pb-0 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-4"
                         >
-                            <dt className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                            <dt className="theme-text-muted text-[0.72rem] font-semibold uppercase tracking-[0.18em]">
                                 {row.label}
                             </dt>
-                            <dd className="text-sm leading-6 text-slate-200 sm:text-[0.95rem]">
+                            <dd className="theme-text text-sm leading-6 sm:text-[0.95rem]">
                                 {row.value}
                             </dd>
                         </div>

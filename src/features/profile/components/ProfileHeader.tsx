@@ -89,7 +89,8 @@ const ProfileHeader = ({
             </div>
 
             <div className="relative px-6 pb-8 sm:px-8 lg:px-10">
-                <div className="-mt-16 flex flex-col gap-6 lg:-mt-20 lg:flex-row lg:items-end lg:justify-between">
+                <div className="-mt-10 rounded-[2rem] border border-[var(--bookora-border)] bg-[color:var(--bookora-surface-strong)] px-5 py-5 shadow-[0_20px_60px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:px-6 lg:-mt-14 lg:px-7 lg:py-6">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                     <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
                         <div className="relative shrink-0">
                             <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-amber-200/40 via-fuchsia-200/30 to-sky-200/30 blur-xl" />
@@ -213,6 +214,7 @@ const ProfileHeader = ({
                             Share profile
                         </button>
                     </div>
+                </div>
                 </div>
 
                 {(isProfileLoading || profileError || saveSuccessMessage) ? (

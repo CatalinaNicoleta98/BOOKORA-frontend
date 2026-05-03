@@ -11,21 +11,21 @@ const BookAboutSection = ({
     subjectChips,
 }: BookAboutSectionProps) => {
     return (
-        <div className="rounded-[1.75rem] border border-white/10 bg-[#0b1020]/70 p-6">
+        <div className="theme-content-panel rounded-[1.75rem] p-6">
             <div className="flex items-center justify-between gap-4">
-                <h2 className="text-lg font-semibold text-white">About this book</h2>
+                <h2 className="theme-title text-lg font-semibold">About this book</h2>
                 {description.length > descriptionPreview.length ? (
                     <button
                         type="button"
                         onClick={onToggleDescription}
-                        className="text-sm font-medium text-amber-200 transition-colors duration-300 hover:text-amber-100"
+                        className="theme-accent-text text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
                     >
                         {isDescriptionExpanded ? "Show less" : "Show more"}
                     </button>
                 ) : null}
             </div>
 
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
+            <p className="theme-text-soft mt-4 max-w-3xl text-sm leading-7">
                 {displayedDescription}
             </p>
 
@@ -34,7 +34,7 @@ const BookAboutSection = ({
                     {subjectChips.map((subject) => (
                         <span
                             key={subject}
-                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.14em] text-slate-300"
+                            className="theme-pill-subtle rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.14em]"
                         >
                             {subject}
                         </span>

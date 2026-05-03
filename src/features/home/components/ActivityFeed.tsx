@@ -255,7 +255,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                     <div className="flex flex-col items-center">
                                         <span className={`h-3 w-3 rounded-full ${accent.dotClass}`} />
                                         {index < data.recentActivity.length - 1 ? (
-                                            <span className="mt-2 h-full min-h-10 w-px bg-white/10" />
+                                            <span className="mt-2 h-full min-h-10 w-px bg-[var(--bookora-border)]" />
                                         ) : null}
                                     </div>
 

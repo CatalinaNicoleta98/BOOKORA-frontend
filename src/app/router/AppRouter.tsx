@@ -8,6 +8,7 @@ import ProfilePage from "../../features/profile/pages/ProfilePage";
 import SearchPage from "../../features/search/pages/SearchPage";
 import AppShell from "../../shared/components/layout/AppShell";
 import BookPage from "../../features/book/pages/BookPage";
+import EditBookActivityPage from "../../features/library/pages/EditBookActivityPage";
 
 const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: ReactElement }) => {
     if (!isAuthenticated) {
@@ -45,6 +46,7 @@ const AppRouter = () => {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/books/:id" element={<BookPage />} />
+                <Route path="/books/:bookId/activity" element={<EditBookActivityPage />} />
             </Route>
 
             <Route

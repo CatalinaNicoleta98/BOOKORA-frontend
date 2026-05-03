@@ -176,6 +176,7 @@ export interface BookCoverPanelProps {
     rating: number | null;
     readingStatus?: string;
     onChangeRating: (rating: number) => void;
+    onEditActivity: () => void;
 }
 
 export interface BookHeroProps {
@@ -234,11 +235,8 @@ export interface BookReviewsSectionProps {
     currentUser?: BookReviewCurrentUser;
     currentUserRating?: number | null;
     currentUserReview?: BookUserReviewEntry;
-    reviewDraft: string;
-    onReviewDraftChange: (value: string) => void;
     onCurrentUserRatingChange: (value: number) => void;
-    onSaveCurrentUserReview: () => void;
-    isSavingCurrentUserReview?: boolean;
+    onOpenReviewEditor: () => void;
 }
 
 export interface BookRatingStarsProps {

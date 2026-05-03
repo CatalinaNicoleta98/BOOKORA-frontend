@@ -49,7 +49,7 @@ const BookReviewsSection = ({
     currentUserRating,
     currentUserReview,
     onCurrentUserRatingChange,
-    isSavingCurrentUserReview = false,
+    onOpenReviewEditor,
 }: BookReviewsSectionProps) => {
     const hasReviews = Boolean(reviews?.length);
     const formattedRatingsCount = formatNumber(communityRating.ratingsCount);
@@ -127,10 +127,10 @@ const BookReviewsSection = ({
 
                                 <button
                                     type="button"
-                                    disabled={isSavingCurrentUserReview}
+                                    onClick={onOpenReviewEditor}
                                     className="inline-flex h-12 items-center justify-center rounded-full border border-white/12 bg-white/5 px-5 text-sm font-semibold text-white transition-all hover:border-white/20 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
-                                    Write a Review
+                                    {currentUserReview?.content ? "Edit Review" : "Write a Review"}
                                 </button>
                             </div>
 

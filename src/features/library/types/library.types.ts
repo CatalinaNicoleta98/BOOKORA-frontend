@@ -11,6 +11,19 @@ export type ReadingStatus =
 
 export type BookFormat = "physical" | "ebook" | "audiobook";
 
+export interface LibraryBookSeed {
+  externalBookId: string;
+  title: string;
+  author?: string;
+  cover?: string;
+  publishedYear?: number;
+}
+
+export interface EditBookActivityLocationState {
+  book?: LibraryBookSeed;
+  focusSection?: "review";
+}
+
 export interface LibraryEntry {
   id: string;
 

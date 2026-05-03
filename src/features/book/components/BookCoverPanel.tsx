@@ -8,6 +8,7 @@ const BookCoverPanel = ({
     rating,
     readingStatus,
     onChangeRating,
+    onEditActivity,
 }: BookCoverPanelProps) => {
     return (
         <aside className="space-y-5">
@@ -39,12 +40,12 @@ const BookCoverPanel = ({
                 </div>
             </div>
 
-             <BookActions
-                            currentStatus={readingStatus}
-                            onAddToLibrary={() => console.log("Add to library clicked")}
-                            onWantToRead={() => console.log("Want to read clicked")}
-                            onWriteReview={() => console.log("Write review clicked")}
-                        />
+            <BookActions
+                currentStatus={readingStatus}
+                onAddToLibrary={() => console.log("Add to library clicked")}
+                onWantToRead={() => console.log("Want to read clicked")}
+                onWriteReview={() => console.log("Write review clicked")}
+            />
 
             <div className="mt-2 flex flex-col items-center gap-4">
                 {/* Rating */}
@@ -58,6 +59,7 @@ const BookCoverPanel = ({
                 {/* Edit activity */}
                 <button
                     type="button"
+                    onClick={onEditActivity}
                     className="inline-flex h-10 items-center justify-center rounded-full border border-slate-700/60 bg-slate-800/60 px-4 text-sm font-semibold text-slate-200 transition-all duration-200 hover:border-slate-500 hover:bg-slate-700/70 hover:text-white"
                 >
                     Edit activity

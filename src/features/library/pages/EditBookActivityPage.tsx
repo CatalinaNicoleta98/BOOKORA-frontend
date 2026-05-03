@@ -1,41 +1,129 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import type {
-  LibraryEntry,
-  ReadingStatus,
-  BookFormat,
-  UpdateLibraryEntryPayload,
-  CreateLibraryEntryPayload
-} from "../types/library.types";
-
+import BookRatingStars from "../../book/components/BookRatingStars";
+import { getBookDetail } from "../../book/services/bookService";
+import { mapBookDetailToViewModel } from "../../book/utils/bookPage.utils";
+import OwnershipFormatSelector from "../components/OwnershipFormatSelector";
+import CustomListsSelector from "../components/CustomListSelector";
+import ReadingDatesForm from "../components/ReadingDatesForm";
 import {
   getLibraryEntryByBookId,
   upsertLibraryEntry
 } from "../services/libraryService";
-
-import OwnershipFormatSelector from "../components/OwnershipFormatSelector";
-import CustomListsSelector from "../components/CustomListSelector";
-
-
-import BookRatingStars from "../../../features/book/components/BookRatingStars";
-import ReadingDatesForm from "../components/ReadingDatesForm";
-
-
-// EditBookActivityPage
+import type {
+  BookFormat,
+  CreateLibraryEntryPayload,
+  EditBookActivityLocationState,
+  LibraryBookSeed,
+  LibraryEntry,
+  ReadingStatus,
+  UpdateLibraryEntryPayload
+} from "../types/library.types";
 
 const DEFAULT_STATUS: ReadingStatus = "want_to_read";
 
-export const EditBookActivityPage = () => {
+const statusOptions: Array<{
+  value: ReadingStatus;
+  label: string;
+  description: string;
+}> = [
+  {
+    value: "want_to_read",
+    label: "Want to Read",
+    description: "Save it for later and keep it on your radar."
+  },
+  {
+    value: "currently_reading",
+    label: "Currently Reading",
+    description: "Track your active reading progress."
+  },
+  {
+    value: "currently_listening",
+    label: "Currently Listening",
+    description: "Use this when you are in the audiobook."
+  },
+  {
+    value: "finished_reading",
+    label: "Read",
+    description: "Mark the book as finished."
+  },
+  {
+    value: "finished_listening",
+    label: "Listened",
+    description: "Mark the audiobook as finished."
+  },
+  {
+    value: "on_break",
+    label: "On Break",
+    description: "Pause without losing your place."
+  },
+  {
+    value: "did_not_finish",
+    label: "Did Not Finish",
+    description: "Record books you stepped away from."
+  }
+];
+
+const getPublishedYear = (publishDate?: string) => {
+  if (!publishDate) {
+    return undefined;
+  }
+
+  const matchedYear = publishDate.match(/\b(\d{4})\b/);
+
+  if (!matchedYear) {
+    return undefined;
+  }
+
+  return Number.parseInt(matchedYear[1], 10);
+};
+
+const getBookSeedFromEntry = (libraryEntry: LibraryEntry): LibraryBookSeed => ({
+  externalBookId: libraryEntry.externalBookId ?? libraryEntry.id,
+  title: libraryEntry.title,
+  author: libraryEntry.author,
+  cover: libraryEntry.cover,
+  publishedYear: libraryEntry.publishedYear
+});
+
+const getStatusBadgeCopy = (status: ReadingStatus) => {
+  switch (status) {
+    case "currently_reading":
+      return "Reading now";
+    case "currently_listening":
+      return "Listening now";
+    case "finished_reading":
+      return "Finished";
+    case "finished_listening":
+      return "Finished audio";
+    case "on_break":
+      return "Paused";
+    case "did_not_finish":
+      return "Stopped";
+    case "want_to_read":
+    default:
+      return "Want to read";
+  }
+};
+
+const EditBookActivityPage = () => {
   const { bookId } = useParams<{ bookId: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as EditBookActivityLocationState | null;
+  const reviewTextareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [entry, setEntry] = useState<LibraryEntry | null>(null);
+  const [bookSeed, setBookSeed] = useState<LibraryBookSeed | null>(
+    locationState?.book ?? null
+  );
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // Form state
   const [status, setStatus] = useState<ReadingStatus>(DEFAULT_STATUS);
   const [formats, setFormats] = useState<BookFormat[]>([]);
   const [customLists, setCustomLists] = useState<string[]>([]);
@@ -45,56 +133,137 @@ export const EditBookActivityPage = () => {
   const [dateStarted, setDateStarted] = useState<string | undefined>();
   const [dateFinished, setDateFinished] = useState<string | undefined>();
 
-  // Load existing entry
-
   useEffect(() => {
+    let isCancelled = false;
+
     const load = async () => {
-      if (!bookId) return;
+      if (!bookId) {
+        setLoadError("Book id is missing.");
+        setLoading(false);
+        return;
+      }
 
       try {
-        const existing = await getLibraryEntryByBookId(bookId);
-        setEntry(existing);
+        setLoading(true);
+        setLoadError(null);
+        setSaveMessage(null);
+        setSaveError(null);
+
+        const normalizedBookId = bookId.replace("/works/", "").trim();
+        const existing = await getLibraryEntryByBookId(normalizedBookId);
+
+        if (isCancelled) {
+          return;
+        }
 
         if (existing) {
+          setEntry(existing);
+          setBookSeed(getBookSeedFromEntry(existing));
           setStatus(existing.status);
           setFormats(existing.formats ?? []);
           setCustomLists(existing.customLists ?? []);
           setRating(existing.rating);
-          setReviewText(existing.reviewText ?? "");
+          setReviewText(existing.reviewText ?? existing.notes ?? "");
           setIsSpoiler(existing.isSpoiler ?? false);
           setDateStarted(existing.dateStarted);
           setDateFinished(existing.dateFinished);
+          return;
+        }
+
+        if (locationState?.book) {
+          setBookSeed(locationState.book);
+          setStatus(DEFAULT_STATUS);
+          return;
+        }
+
+        const response = await getBookDetail(normalizedBookId);
+
+        if (!response.data || isCancelled) {
+          return;
+        }
+
+        const mappedBook = mapBookDetailToViewModel(response.data);
+        setBookSeed({
+          externalBookId: mappedBook.id,
+          title: mappedBook.title,
+          author: mappedBook.authors[0],
+          cover: mappedBook.coverUrl,
+          publishedYear: getPublishedYear(mappedBook.publishDate)
+        });
+      } catch {
+        if (!isCancelled) {
+          setLoadError("Could not load this book activity right now.");
         }
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    load();
-  }, [bookId]);
+    void load();
 
-  // Save handler
+    return () => {
+      isCancelled = true;
+    };
+  }, [bookId, locationState?.book]);
+
+  useEffect(() => {
+    if (loading || locationState?.focusSection !== "review") {
+      return;
+    }
+
+    const focusTimer = window.setTimeout(() => {
+      reviewTextareaRef.current?.scrollIntoView({
+        block: "center",
+        behavior: "smooth"
+      });
+      reviewTextareaRef.current?.focus();
+    }, 60);
+
+    return () => {
+      window.clearTimeout(focusTimer);
+    };
+  }, [loading, locationState?.focusSection]);
+
+  const pageHeading = entry ? "Edit your activity" : "Start tracking this book";
+  const activeStatusDetails = useMemo(() => {
+    return (
+      statusOptions.find((option) => option.value === status) ?? statusOptions[0]
+    );
+  }, [status]);
 
   const handleSave = async () => {
-    if (!bookId) return;
+    if (!bookId) {
+      return;
+    }
 
     setSaving(true);
     setSaveMessage(null);
     setSaveError(null);
 
     try {
+      const normalizedBookId = bookId.replace("/works/", "").trim();
+      const resolvedSeed =
+        bookSeed ??
+        (entry ? getBookSeedFromEntry(entry) : null) ?? {
+          externalBookId: normalizedBookId,
+          title: "Untitled book"
+        };
+
       const createPayload: CreateLibraryEntryPayload = {
         bookSource: "open_library",
-        externalBookId: bookId,
-        title: entry?.title ?? "",
-        author: entry?.author,
-        cover: entry?.cover,
-        publishedYear: entry?.publishedYear,
+        externalBookId: resolvedSeed.externalBookId,
+        title: resolvedSeed.title,
+        author: resolvedSeed.author,
+        cover: resolvedSeed.cover,
+        publishedYear: resolvedSeed.publishedYear,
         status,
         formats,
         customLists,
         rating,
         reviewText,
+        notes: reviewText,
         isSpoiler,
         dateStarted,
         dateFinished
@@ -106,14 +275,18 @@ export const EditBookActivityPage = () => {
         customLists,
         rating,
         reviewText,
+        notes: reviewText,
         isSpoiler,
         dateStarted,
         dateFinished
       };
 
       const saved = await upsertLibraryEntry(entry, createPayload, updatePayload);
+
       setEntry(saved);
-      setSaveMessage("Activity saved.");
+      setBookSeed(getBookSeedFromEntry(saved));
+      setReviewText(saved.reviewText ?? saved.notes ?? "");
+      setSaveMessage("Activity saved to your library.");
     } catch {
       setSaveError("Could not save activity. Please try again.");
     } finally {
@@ -121,110 +294,255 @@ export const EditBookActivityPage = () => {
     }
   };
 
-  // UI
-
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-neutral-400">Loading...</p>
+      <div className="flex min-h-[70vh] items-center justify-center">
+        <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] px-6 py-4 text-sm text-slate-300 shadow-[0_20px_60px_rgba(2,6,23,0.3)]">
+          Loading your activity editor...
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+        <div className="rounded-[1.75rem] border border-red-400/30 bg-red-950/20 p-6 text-red-100">
+          <p className="text-lg font-semibold">Could not open this activity editor.</p>
+          <p className="mt-2 text-sm text-red-200/90">{loadError}</p>
+          {bookId ? (
+            <button
+              type="button"
+              onClick={() => navigate(`/books/${bookId}`)}
+              className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-red-200/20 bg-white/5 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              Back to book
+            </button>
+          ) : null}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-semibold">Edit Activity</h1>
-
-      <div className="space-y-6">
-        {/* Status */}
-        <div>
-          <label className="mb-2 block text-sm font-medium">Status</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as ReadingStatus)}
-            className="w-full rounded-lg border bg-transparent px-3 py-2"
-          >
-            <option value="want_to_read">Want to read</option>
-            <option value="currently_reading">Currently reading</option>
-            <option value="finished_reading">Read</option>
-            <option value="currently_listening">Currently listening</option>
-            <option value="finished_listening">Listened</option>
-            <option value="on_break">On break</option>
-            <option value="did_not_finish">Did not finish</option>
-          </select>
-        </div>
-
-        {/* Formats */}
-        <OwnershipFormatSelector
-          value={formats}
-          onChange={setFormats}
-        />
-
-        {/* Custom Lists */}
-        <CustomListsSelector
-          value={customLists}
-          onChange={setCustomLists}
-        />
-
-        {/* Rating */}
-        <div>
-          <label className="mb-2 block text-sm font-medium">Your rating</label>
-          <BookRatingStars
-            value={rating ?? 0}
-            onChange={(value: number) => setRating(value)}
-          />
-        </div>
-
-        {/* Reading Dates */}
-        <ReadingDatesForm
-          dateStarted={dateStarted}
-          dateFinished={dateFinished}
-          onDateStartedChange={setDateStarted}
-          onDateFinishedChange={setDateFinished}
-        />
-
-        {/* Review */}
-        <div>
-          <label className="mb-2 block text-sm font-medium">Review</label>
-          <textarea
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            rows={5}
-            className="w-full rounded-lg border bg-transparent px-3 py-2"
-          />
-        </div>
-
-        {/* Spoiler */}
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={isSpoiler}
-            onChange={(e) => setIsSpoiler(e.target.checked)}
-          />
-          <span className="text-sm">Contains spoilers</span>
-        </div>
-
-        {(saveMessage || saveError) && (
-          <div
-            className={`rounded-lg border px-4 py-3 text-sm ${
-              saveError
-                ? "border-red-400/40 bg-red-950/30 text-red-200"
-                : "border-emerald-400/40 bg-emerald-950/30 text-emerald-200"
-            }`}
-          >
-            {saveError ?? saveMessage}
+    <div className="min-h-screen bg-transparent px-4 py-10 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-3">
+            <Link
+              to={bookId ? `/books/${bookId}` : "/"}
+              className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-white"
+            >
+              <span aria-hidden="true">←</span>
+              Back to book
+            </Link>
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                Book activity
+              </p>
+              <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                {pageHeading}
+              </h1>
+              <p className="max-w-2xl text-sm leading-7 text-slate-400">
+                Save your shelf, formats, dates, and review in one place. Everything here feeds back into your Bookora reading history.
+              </p>
+            </div>
           </div>
-        )}
 
-        {/* Save button */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="rounded-lg bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
+          <div className="inline-flex items-center rounded-full border border-amber-200/20 bg-amber-200/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-100">
+            {getStatusBadgeCopy(status)}
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-8 xl:grid-cols-[320px_minmax(0,1fr)]">
+          <aside className="space-y-5 xl:sticky xl:top-24 xl:self-start">
+            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.66),rgba(15,23,42,0.28))] shadow-[0_30px_90px_rgba(2,6,23,0.38)]">
+              {bookSeed?.cover ? (
+                <img
+                  src={bookSeed.cover}
+                  alt={bookSeed.title}
+                  className="aspect-[3/4] w-full object-cover"
+                />
+              ) : (
+                <div className="flex aspect-[3/4] w-full items-center justify-center bg-[#0f172a] px-8 text-center text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
+                  No cover available
+                </div>
+              )}
+
+              <div className="space-y-4 px-5 py-5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Editing
+                  </p>
+                  <h2 className="mt-2 text-xl font-semibold text-white">
+                    {bookSeed?.title ?? "This book"}
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-400">
+                    {bookSeed?.author ?? "Unknown author"}
+                    {bookSeed?.publishedYear ? ` · ${bookSeed.publishedYear}` : ""}
+                  </p>
+                </div>
+
+                <div className="rounded-[1.25rem] border border-white/10 bg-slate-950/30 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Current focus
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-100">
+                    {activeStatusDetails.label}
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                    {activeStatusDetails.description}
+                  </p>
+                </div>
+
+                <div className="rounded-[1.25rem] border border-white/10 bg-slate-950/20 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Your rating
+                  </p>
+                  <div className="mt-3">
+                    <BookRatingStars
+                      value={rating ?? null}
+                      onChange={(value) => setRating(value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div className="space-y-6">
+            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(15,23,42,0.22))] p-5 sm:p-6">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  Reading status
+                </p>
+                <h2 className="text-xl font-semibold text-white">
+                  Choose the shelf that fits best
+                </h2>
+              </div>
+
+              <div className="mt-5 grid gap-3 md:grid-cols-2">
+                {statusOptions.map((option) => {
+                  const isSelected = status === option.value;
+
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setStatus(option.value)}
+                      className={`rounded-[1.5rem] border px-5 py-4 text-left transition-all ${
+                        isSelected
+                          ? "border-amber-200/30 bg-amber-200/10 shadow-[0_18px_40px_rgba(251,191,36,0.08)]"
+                          : "border-white/10 bg-white/[0.03] hover:border-white/16 hover:bg-white/[0.05]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-base font-semibold text-white">
+                            {option.label}
+                          </p>
+                          <p className="mt-1 text-sm leading-6 text-slate-400">
+                            {option.description}
+                          </p>
+                        </div>
+                        <span className="pt-1 text-lg text-amber-200">
+                          {isSelected ? "✓" : ""}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
+              <OwnershipFormatSelector value={formats} onChange={setFormats} />
+            </section>
+
+            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
+              <CustomListsSelector value={customLists} onChange={setCustomLists} />
+            </section>
+
+            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
+              <ReadingDatesForm
+                dateStarted={dateStarted}
+                dateFinished={dateFinished}
+                onDateStartedChange={setDateStarted}
+                onDateFinishedChange={setDateFinished}
+              />
+            </section>
+
+            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(15,23,42,0.22))] p-5 sm:p-6">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  Review
+                </p>
+                <h2 className="text-xl font-semibold text-white">
+                  Add your thoughts
+                </h2>
+                <p className="text-sm leading-7 text-slate-400">
+                  Write a quick reaction or a full review. If you already reviewed this book, it is loaded here for editing.
+                </p>
+              </div>
+
+              <div className="mt-5 space-y-4">
+                <textarea
+                  ref={reviewTextareaRef}
+                  value={reviewText}
+                  onChange={(event) => setReviewText(event.target.value)}
+                  rows={8}
+                  placeholder="What stood out to you about this book?"
+                  className="min-h-48 w-full rounded-[1.5rem] border border-white/10 bg-slate-950/35 px-4 py-3 text-sm leading-7 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-amber-200/30 focus:bg-slate-950/45"
+                />
+
+                <label className="inline-flex items-center gap-3 text-sm text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={isSpoiler}
+                    onChange={(event) => setIsSpoiler(event.target.checked)}
+                    className="h-4 w-4 rounded border-white/20 bg-slate-950/40 text-amber-300 focus:ring-amber-200/30"
+                  />
+                  Mark this review as containing spoilers
+                </label>
+              </div>
+            </section>
+
+            {(saveMessage || saveError) ? (
+              <div
+                className={`rounded-[1.5rem] border px-5 py-4 text-sm ${
+                  saveError
+                    ? "border-red-400/30 bg-red-950/20 text-red-100"
+                    : "border-emerald-400/30 bg-emerald-950/20 text-emerald-100"
+                }`}
+              >
+                {saveError ?? saveMessage}
+              </div>
+            ) : null}
+
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[2rem] border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+              <p className="text-sm text-slate-400">
+                Changes update your shelf history and your review snapshot for this book.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate(bookId ? `/books/${bookId}` : "/")}
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-[#20150f] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#2d1d15] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {saving ? "Saving..." : entry ? "Save changes" : "Save activity"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

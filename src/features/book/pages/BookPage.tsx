@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import BookAboutSection from "../components/BookAboutSection";
@@ -12,10 +12,11 @@ import BookReviewsSection from "../components/BookReviewsSection";
 import {
     getBookDetail,
     getCurrentUserBookReview,
-    saveCurrentUserBookReview,
+    saveCurrentUserBookReview
 } from "../services/bookService";
 import SimilarBooksSection from "../components/SimilarBooksSection";
 import type { BookUserReviewEntry, BookViewModel } from "../types/book.types";
+import type { EditBookActivityLocationState } from "../../library/types/library.types";
 import {
     applyUserRatingToCommunityRating,
     createDescriptionPreview,
@@ -24,6 +25,7 @@ import {
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const { state: authState } = useAuth();
 
     const [book, setBook] = useState<BookViewModel | null>(null);
@@ -32,8 +34,6 @@ const BookPage = () => {
     const [selectedRating, setSelectedRating] = useState<number | null>(null);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const [currentUserReview, setCurrentUserReview] = useState<BookUserReviewEntry | null>(null);
-    const [reviewDraft, setReviewDraft] = useState("");
-    const [isSavingReview, setIsSavingReview] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -54,7 +54,6 @@ const BookPage = () => {
                 setSelectedRating(null);
                 setIsDescriptionExpanded(false);
                 setCurrentUserReview(null);
-                setReviewDraft("");
 
                 const normalizedId = id.replace("/works/", "").trim();
                 const responseData = await getBookDetail(normalizedId);
@@ -72,7 +71,6 @@ const BookPage = () => {
                     if (!abortController.signal.aborted) {
                         setCurrentUserReview(savedReview);
                         setSelectedRating(savedReview?.rating ?? null);
-                        setReviewDraft(savedReview?.content ?? "");
                     }
                 }
             } catch (err) {
@@ -126,6 +124,25 @@ const BookPage = () => {
         return Number.parseInt(matchedYear[1], 10);
     };
 
+    const openActivityEditor = (focusSection?: "review") => {
+        if (!book) {
+            return;
+        }
+
+        const activityState: EditBookActivityLocationState = {
+            book: {
+                externalBookId: book.id,
+                title: book.title,
+                author: book.authors[0],
+                cover: book.coverUrl,
+                publishedYear: getPublishedYear(book.publishDate),
+            },
+            focusSection,
+        };
+
+        navigate(`/books/${book.id}/activity`, { state: activityState });
+    };
+
     const handlePersistRating = async (rating: number) => {
         setSelectedRating(rating);
 
@@ -134,7 +151,6 @@ const BookPage = () => {
         }
 
         try {
-            setIsSavingReview(true);
             setError(null);
 
             const savedReview = await saveCurrentUserBookReview({
@@ -144,7 +160,7 @@ const BookPage = () => {
                 cover: book.coverUrl,
                 publishedYear: getPublishedYear(book.publishDate),
                 rating,
-                notes: reviewDraft,
+                notes: currentUserReview?.content,
             });
 
             setBook((currentBook) => {
@@ -164,36 +180,6 @@ const BookPage = () => {
             setCurrentUserReview(savedReview);
         } catch {
             setError("Could not save your rating right now.");
-        } finally {
-            setIsSavingReview(false);
-        }
-    };
-
-    const handleSaveCurrentUserReview = async () => {
-        if (!authState.isAuthenticated || !book) {
-            return;
-        }
-
-        try {
-            setIsSavingReview(true);
-            setError(null);
-
-            const savedReview = await saveCurrentUserBookReview({
-                externalBookId: book.id,
-                title: book.title,
-                author: book.authors[0],
-                cover: book.coverUrl,
-                publishedYear: getPublishedYear(book.publishDate),
-                rating: selectedRating ?? undefined,
-                notes: reviewDraft,
-            });
-
-            setCurrentUserReview(savedReview);
-            setReviewDraft(savedReview.content ?? "");
-        } catch {
-            setError("Could not save your review right now.");
-        } finally {
-            setIsSavingReview(false);
         }
     };
 
@@ -220,6 +206,7 @@ const BookPage = () => {
                             rating={selectedRating}
                             readingStatus={currentUserReview?.status}
                             onChangeRating={handlePersistRating}
+                            onEditActivity={() => openActivityEditor()}
                         />
                     </div>
 
@@ -265,11 +252,8 @@ const BookPage = () => {
                                 currentUser={currentUser}
                                 currentUserRating={selectedRating}
                                 currentUserReview={currentUserReview ?? undefined}
-                                reviewDraft={reviewDraft}
-                                onReviewDraftChange={setReviewDraft}
                                 onCurrentUserRatingChange={handlePersistRating}
-                                onSaveCurrentUserReview={handleSaveCurrentUserReview}
-                                isSavingCurrentUserReview={isSavingReview}
+                                onOpenReviewEditor={() => openActivityEditor("review")}
                             />
                         </div>
                     </div>

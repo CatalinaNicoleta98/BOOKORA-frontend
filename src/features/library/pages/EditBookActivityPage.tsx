@@ -32,6 +32,8 @@ export const EditBookActivityPage = () => {
   const [entry, setEntry] = useState<LibraryEntry | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Form state
   const [status, setStatus] = useState<ReadingStatus>(DEFAULT_STATUS);
@@ -77,6 +79,8 @@ export const EditBookActivityPage = () => {
     if (!bookId) return;
 
     setSaving(true);
+    setSaveMessage(null);
+    setSaveError(null);
 
     try {
       const createPayload: CreateLibraryEntryPayload = {
@@ -109,6 +113,9 @@ export const EditBookActivityPage = () => {
 
       const saved = await upsertLibraryEntry(entry, createPayload, updatePayload);
       setEntry(saved);
+      setSaveMessage("Activity saved.");
+    } catch {
+      setSaveError("Could not save activity. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -197,12 +204,24 @@ export const EditBookActivityPage = () => {
           <span className="text-sm">Contains spoilers</span>
         </div>
 
+        {(saveMessage || saveError) && (
+          <div
+            className={`rounded-lg border px-4 py-3 text-sm ${
+              saveError
+                ? "border-red-400/40 bg-red-950/30 text-red-200"
+                : "border-emerald-400/40 bg-emerald-950/30 text-emerald-200"
+            }`}
+          >
+            {saveError ?? saveMessage}
+          </div>
+        )}
+
         {/* Save button */}
         <div className="flex justify-end">
           <button
             onClick={handleSave}
             disabled={saving}
-            className="rounded-lg bg-white px-4 py-2 text-black disabled:opacity-50"
+            className="rounded-lg bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save"}
           </button>

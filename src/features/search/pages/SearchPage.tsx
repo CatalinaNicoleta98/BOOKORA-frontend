@@ -110,21 +110,18 @@ const SearchPage = () => {
     }, [pagination.page, pagination.totalPages]);
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#070a12] text-slate-100">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.14),_transparent_24%),radial-gradient(circle_at_82%_14%,_rgba(244,208,140,0.10),_transparent_20%),linear-gradient(to_bottom,_rgba(8,11,22,0.92),_rgba(7,10,18,1))]" />
-            <div className="absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_center,_rgba(255,255,255,0.08)_0.8px,_transparent_0.8px)] [background-size:28px_28px]" />
-
+        <div className="theme-page-shell relative min-h-screen">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
-                <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
+                <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
                     <div className="relative px-6 py-8 sm:px-8 lg:px-10">
                         <div className="max-w-4xl">
-                            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
+                            <p className="theme-eyebrow">
                                 Search
                             </p>
-                            <h1 className="mt-3 text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem]">
+                            <h1 className="theme-title mt-3 text-3xl font-semibold sm:text-4xl lg:text-[2.75rem]">
                                 Find your next book obsession
                             </h1>
-                            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-[15px]">
+                            <p className="theme-text-soft mt-4 max-w-2xl text-sm leading-7 sm:text-[15px]">
                                 Search titles, authors, or series and explore books in a full results
                                 view.
                             </p>
@@ -139,11 +136,11 @@ const SearchPage = () => {
                                 value={searchInput}
                                 onChange={(event) => setSearchInput(event.target.value)}
                                 placeholder="Search books, authors, or series"
-                                className="w-full rounded-2xl border border-white/12 bg-[#0b1020]/76 px-5 py-3 text-sm text-white outline-none transition-colors duration-300 placeholder:text-slate-500 focus:border-amber-200/30"
+                                className="theme-input w-full rounded-2xl px-5 py-3 text-sm transition-colors duration-300"
                             />
                             <button
                                 type="submit"
-                                className="inline-flex items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/10 px-5 py-3 text-sm font-medium text-amber-100 transition-all duration-300 hover:border-amber-200/30 hover:bg-amber-200/14"
+                                className="theme-button-primary inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-medium transition-all duration-300"
                             >
                                 Search books
                             </button>
@@ -151,18 +148,18 @@ const SearchPage = () => {
 
                         <div className="mt-5 flex flex-col gap-4">
                             <SearchFilters mode={mode} onChange={handleModeChange} />
-                            <div className="text-sm text-slate-400">{resultCountLabel}</div>
+                            <div className="theme-text-muted text-sm">{resultCountLabel}</div>
                         </div>
                     </div>
                 </section>
 
                 <section className="grid gap-4">
                     {!initialQuery.trim() ? (
-                        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl">
-                            <p className="text-base font-medium text-white">
+                        <div className="theme-glass-panel rounded-[2rem] p-8 text-center">
+                            <p className="theme-title text-base font-medium">
                                 Start with a title, author, or series.
                             </p>
-                            <p className="mt-3 text-sm leading-7 text-slate-400">
+                            <p className="theme-text-muted mt-3 text-sm leading-7">
                                 This page will become the full search experience for both mobile search
                                 and desktop “View all results”.
                             </p>
@@ -170,18 +167,18 @@ const SearchPage = () => {
                     ) : null}
 
                     {isLoading ? (
-                        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl">
-                            <p className="text-base font-medium text-white">Searching books...</p>
-                            <p className="mt-3 text-sm leading-7 text-slate-400">
+                        <div className="theme-glass-panel rounded-[2rem] p-8 text-center">
+                            <p className="theme-title text-base font-medium">Searching books...</p>
+                            <p className="theme-text-muted mt-3 text-sm leading-7">
                                 We are pulling the best matches for your query.
                             </p>
                         </div>
                     ) : null}
 
                     {!isLoading && initialQuery.trim() && !error && results.length === 0 ? (
-                        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl">
-                            <p className="text-base font-medium text-white">No books found.</p>
-                            <p className="mt-3 text-sm leading-7 text-slate-400">
+                        <div className="theme-glass-panel rounded-[2rem] p-8 text-center">
+                            <p className="theme-title text-base font-medium">No books found.</p>
+                            <p className="theme-text-muted mt-3 text-sm leading-7">
                                 Try a different title, author name, or a shorter search phrase.
                             </p>
                         </div>

@@ -16,8 +16,8 @@ const AuthPageLayout = ({
     children,
 }: AuthPageLayoutProps) => {
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#070a12] text-slate-100">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.22),_transparent_24%),radial-gradient(circle_at_86%_16%,_rgba(244,208,140,0.14),_transparent_18%),radial-gradient(circle_at_18%_78%,_rgba(125,211,252,0.09),_transparent_18%),linear-gradient(180deg,_#0b1020_0%,_#090d18_42%,_#060811_100%)]" />
+        <div className="theme-auth-shell relative min-h-screen overflow-hidden">
+            <div className="absolute inset-0" />
             <div className="absolute inset-0 opacity-55 [background-image:radial-gradient(rgba(255,255,255,0.22)_0.7px,transparent_0.7px)] [background-size:30px_30px]" />
             <div className="absolute inset-0 opacity-80 [background-image:radial-gradient(rgba(255,255,255,0.42)_1.2px,transparent_1.2px)] [background-size:150px_150px] animate-[pulse_12s_ease-in-out_infinite]" />
             <div className="absolute inset-0 opacity-45 [background-image:radial-gradient(rgba(244,208,140,0.42)_1.1px,transparent_1.1px)] [background-size:210px_210px] animate-[pulse_18s_ease-in-out_infinite]" />
@@ -95,7 +95,7 @@ const AuthPageLayout = ({
             </div>
 
             <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1400px] items-center px-4 py-6 sm:px-6 sm:py-10 lg:px-10 lg:py-14 xl:px-14">
-                <div className="grid w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.05] shadow-[0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.06),transparent_28%,transparent_72%,rgba(255,255,255,0.03))] before:content-[''] lg:min-h-[820px] lg:grid-cols-[1.18fr_0.82fr] xl:rounded-[2.25rem]">
+                <div className="theme-glass-panel relative grid w-full overflow-hidden rounded-[1.75rem] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.06),transparent_28%,transparent_72%,rgba(255,255,255,0.03))] before:content-[''] lg:min-h-[820px] lg:grid-cols-[1.18fr_0.82fr] xl:rounded-[2.25rem]">
                     <AuthShowcase />
 
                     <section className="relative flex min-h-[640px] items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,rgba(255,255,255,0.01)_100%)] px-5 py-10 sm:px-8 sm:py-12 lg:min-h-[820px] lg:px-10 xl:px-14">

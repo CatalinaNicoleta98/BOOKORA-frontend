@@ -263,10 +263,7 @@ const ProfilePage = () => {
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#070a12] text-slate-100">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.14),_transparent_24%),radial-gradient(circle_at_82%_14%,_rgba(244,208,140,0.10),_transparent_20%),linear-gradient(to_bottom,_rgba(8,11,22,0.92),_rgba(7,10,18,1))]" />
-            <div className="absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_center,_rgba(255,255,255,0.08)_0.8px,_transparent_0.8px)] [background-size:28px_28px]" />
-
+        <div className="theme-page-shell relative min-h-screen">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
                 <ProfileHeader
                     profileName={profileName}

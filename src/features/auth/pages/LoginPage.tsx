@@ -61,7 +61,7 @@ const LoginPage = () => {
                             Don&apos;t have an account yet?{" "}
                             <Link
                                 to="/register"
-                                className="font-medium text-amber-100 transition hover:text-white"
+                                className="font-medium text-[var(--bookora-accent)] transition hover:text-[var(--bookora-title)]"
                             >
                                 Create one
                             </Link>

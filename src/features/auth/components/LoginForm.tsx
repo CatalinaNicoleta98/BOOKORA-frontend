@@ -24,7 +24,7 @@ const LoginForm = ({
     return (
         <form onSubmit={onSubmit} className="mt-10 space-y-6 sm:space-y-7">
             <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-slate-200">
+                <label htmlFor="email" className="theme-text block text-sm font-medium">
                     Email
                 </label>
                 <input
@@ -35,12 +35,12 @@ const LoginForm = ({
                     required
                     autoComplete="email"
                     placeholder="you@example.com"
-                    className="w-full rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3.5 text-sm text-white outline-none backdrop-blur-md"
+                    className="theme-input w-full rounded-2xl px-4 py-3.5 text-sm backdrop-blur-md"
                 />
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium text-slate-200">
+                <label htmlFor="password" className="theme-text block text-sm font-medium">
                     Password
                 </label>
                 <input
@@ -51,7 +51,7 @@ const LoginForm = ({
                     required
                     autoComplete="current-password"
                     placeholder="Enter your password"
-                    className="w-full rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3.5 text-sm text-white outline-none backdrop-blur-md"
+                    className="theme-input w-full rounded-2xl px-4 py-3.5 text-sm backdrop-blur-md"
                 />
             </div>
 
@@ -64,7 +64,7 @@ const LoginForm = ({
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-2xl bg-gradient-to-r from-amber-200 via-violet-300 to-indigo-300 px-4 py-4 text-sm font-semibold text-slate-950"
+                className="theme-button-primary w-full rounded-2xl px-4 py-4 text-sm font-semibold"
             >
                 {isSubmitting ? "Signing you in..." : "Sign in"}
             </button>

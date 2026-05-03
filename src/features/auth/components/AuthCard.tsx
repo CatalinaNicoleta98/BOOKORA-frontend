@@ -15,19 +15,19 @@ const AuthCard = ({ eyebrow, title, description, children, footer }: AuthCardPro
         <section className="relative w-full max-w-md">
             <div className="absolute inset-0 -z-10 rounded-[32px] bg-[radial-gradient(circle_at_top,_rgba(187,163,255,0.22),_transparent_60%)] blur-2xl" />
 
-            <div className="relative rounded-[28px] border border-white/10 bg-white/[0.035] px-8 py-10 shadow-[0_30px_80px_rgba(10,14,25,0.6)] backdrop-blur-2xl">
+            <div className="theme-glass-panel relative rounded-[28px] px-8 py-10">
                 {eyebrow ? (
-                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+                    <p className="theme-eyebrow">
                         {eyebrow}
                     </p>
                 ) : null}
 
-                <h1 className="mt-3 text-3xl font-semibold leading-tight text-white">
+                <h1 className="theme-title mt-3 text-3xl font-semibold leading-tight">
                     {title}
                 </h1>
 
                 {description ? (
-                    <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                    <p className="theme-text-soft mt-3 text-sm leading-relaxed">
                         {description}
                     </p>
                 ) : null}
@@ -35,7 +35,7 @@ const AuthCard = ({ eyebrow, title, description, children, footer }: AuthCardPro
                 {children}
 
                 {footer ? (
-                    <div className="mt-8 text-center text-sm text-slate-400">
+                    <div className="theme-text-soft mt-8 text-center text-sm">
                         {footer}
                     </div>
                 ) : null}

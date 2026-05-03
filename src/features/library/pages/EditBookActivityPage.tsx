@@ -1,0 +1,182 @@
+
+
+
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import type {
+  LibraryEntry,
+  ReadingStatus,
+  BookFormat,
+  UpdateLibraryEntryPayload,
+  CreateLibraryEntryPayload
+} from "../types/library.types";
+
+import {
+  getLibraryEntryByBookId,
+  upsertLibraryEntry
+} from "../services/libraryService";
+
+
+// EditBookActivityPage
+
+const DEFAULT_STATUS: ReadingStatus = "want_to_read";
+
+export const EditBookActivityPage = () => {
+  const { bookId } = useParams<{ bookId: string }>();
+
+  const [entry, setEntry] = useState<LibraryEntry | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  // Form state
+  const [status, setStatus] = useState<ReadingStatus>(DEFAULT_STATUS);
+  const [formats, setFormats] = useState<BookFormat[]>([]);
+  const [customLists, setCustomLists] = useState<string[]>([]);
+  const [rating, setRating] = useState<number | undefined>();
+  const [reviewText, setReviewText] = useState("");
+  const [isSpoiler, setIsSpoiler] = useState(false);
+  const [dateStarted, setDateStarted] = useState<string | undefined>();
+  const [dateFinished, setDateFinished] = useState<string | undefined>();
+
+  // Load existing entry
+
+  useEffect(() => {
+    const load = async () => {
+      if (!bookId) return;
+
+      try {
+        const existing = await getLibraryEntryByBookId(bookId);
+        setEntry(existing);
+
+        if (existing) {
+          setStatus(existing.status);
+          setFormats(existing.formats ?? []);
+          setCustomLists(existing.customLists ?? []);
+          setRating(existing.rating);
+          setReviewText(existing.reviewText ?? "");
+          setIsSpoiler(existing.isSpoiler ?? false);
+          setDateStarted(existing.dateStarted);
+          setDateFinished(existing.dateFinished);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, [bookId]);
+
+  // Save handler
+
+  const handleSave = async () => {
+    if (!bookId) return;
+
+    setSaving(true);
+
+    try {
+      const createPayload: CreateLibraryEntryPayload = {
+        bookSource: "open_library",
+        externalBookId: bookId,
+        title: entry?.title ?? "",
+        author: entry?.author,
+        cover: entry?.cover,
+        publishedYear: entry?.publishedYear,
+        status,
+        formats,
+        customLists,
+        rating,
+        reviewText,
+        isSpoiler,
+        dateStarted,
+        dateFinished
+      };
+
+      const updatePayload: UpdateLibraryEntryPayload = {
+        status,
+        formats,
+        customLists,
+        rating,
+        reviewText,
+        isSpoiler,
+        dateStarted,
+        dateFinished
+      };
+
+      const saved = await upsertLibraryEntry(entry, createPayload, updatePayload);
+      setEntry(saved);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // UI
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-sm text-neutral-400">Loading...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-4xl px-4 py-8">
+      <h1 className="mb-6 text-2xl font-semibold">Edit Activity</h1>
+
+      <div className="space-y-6">
+        {/* Status */}
+        <div>
+          <label className="mb-2 block text-sm font-medium">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as ReadingStatus)}
+            className="w-full rounded-lg border bg-transparent px-3 py-2"
+          >
+            <option value="want_to_read">Want to read</option>
+            <option value="currently_reading">Currently reading</option>
+            <option value="finished_reading">Read</option>
+            <option value="currently_listening">Currently listening</option>
+            <option value="finished_listening">Listened</option>
+            <option value="on_break">On break</option>
+            <option value="did_not_finish">Did not finish</option>
+          </select>
+        </div>
+
+        {/* Review */}
+        <div>
+          <label className="mb-2 block text-sm font-medium">Review</label>
+          <textarea
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            rows={5}
+            className="w-full rounded-lg border bg-transparent px-3 py-2"
+          />
+        </div>
+
+        {/* Spoiler */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={isSpoiler}
+            onChange={(e) => setIsSpoiler(e.target.checked)}
+          />
+          <span className="text-sm">Contains spoilers</span>
+        </div>
+
+        {/* Save button */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="rounded-lg bg-white px-4 py-2 text-black disabled:opacity-50"
+          >
+            {saving ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EditBookActivityPage;

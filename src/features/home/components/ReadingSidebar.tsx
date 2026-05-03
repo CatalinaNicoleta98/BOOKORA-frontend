@@ -30,12 +30,6 @@ const spotlightSections: ReadingSpotlightConfig[] = [
         emptyLabel: "No audiobook in progress yet",
         statuses: ["currently_listening"],
     },
-    {
-        id: "currently-ebook",
-        label: "Currently on ebook",
-        emptyLabel: "No ebook in progress yet",
-        statuses: ["currently_on_ebook"],
-    },
 ];
 
 const getSpotlightItem = (
@@ -179,13 +173,15 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                 <div className="mt-5 space-y-3">
                     {shelfPreview.length > 0 ? (
                         shelfPreview.map((shelf) => (
-                            <div
+                            <button
                                 key={shelf.id}
-                                className="flex items-center justify-between rounded-[1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.75)_0%,rgba(12,16,30,0.7)_100%)] px-4 py-3 transition hover:border-white/15"
+                                type="button"
+                                onClick={() => navigate("/profile")}
+                                className="flex w-full items-center justify-between rounded-[1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.75)_0%,rgba(12,16,30,0.7)_100%)] px-4 py-3 text-left transition hover:border-white/15"
                             >
                                 <span className="text-sm text-slate-200">{shelf.label}</span>
                                 <span className="text-sm font-medium text-white">{shelf.count}</span>
-                            </div>
+                            </button>
                         ))
                     ) : (
                         <div className="rounded-[1rem] border border-dashed border-white/10 bg-white/[0.025] px-4 py-4 text-sm leading-6 text-slate-400">
@@ -220,6 +216,14 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                     Keep momentum across print, ebook, and audio, while still tracking each format in
                     the way that fits it best.
                 </p>
+
+                <button
+                    type="button"
+                    onClick={() => navigate("/profile")}
+                    className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                    See full reading history
+                </button>
             </section>
         </aside>
     );

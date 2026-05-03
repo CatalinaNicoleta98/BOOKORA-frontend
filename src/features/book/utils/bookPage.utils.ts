@@ -102,6 +102,8 @@ const mapReview = (review: Review): Review => ({
     content: review.content,
     createdAt: review.createdAt,
     source: review.source,
+    avatarUrl: review.avatarUrl,
+    isSpoiler: review.isSpoiler,
 });
 
 export const EMPTY_COMMUNITY_RATING: CommunityRatingSummary = {

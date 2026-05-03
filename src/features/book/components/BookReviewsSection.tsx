@@ -24,6 +24,20 @@ const formatNumber = (value?: number) => {
     return new Intl.NumberFormat().format(value);
 };
 
+const formatReviewDate = (value?: string) => {
+    if (!value) {
+        return "";
+    }
+
+    const timestamp = Date.parse(value);
+
+    if (Number.isNaN(timestamp)) {
+        return value;
+    }
+
+    return new Date(timestamp).toLocaleDateString();
+};
+
 const formatStatusHeading = (status?: string) => {
     switch (status) {
         case "finished_reading":
@@ -111,7 +125,7 @@ const BookReviewsSection = ({
                   avatarUrl: currentUser.avatarUrl,
                   isSpoiler: currentUserReview.isSpoiler ?? false,
                   createdAt: currentUserReview.updatedAt
-                      ? new Date(currentUserReview.updatedAt).toLocaleDateString()
+                      ? formatReviewDate(currentUserReview.updatedAt)
                       : "Just now",
                   source: "bookora" as const,
               }
@@ -250,7 +264,7 @@ const BookReviewsSection = ({
                                 <div className="min-w-0 flex-1 space-y-3">
                                     <div className="flex flex-wrap items-center gap-3">
                                         <BookRatingStars value={review.rating} onChange={() => {}} size="sm" readOnly />
-                                        <p className="text-sm text-slate-400">{review.createdAt}</p>
+                                        <p className="text-sm text-slate-400">{formatReviewDate(review.createdAt)}</p>
                                     </div>
 
                                     <SpoilerReviewContent

@@ -2,6 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../auth/context/AuthContext";
+import {
+    getLibraryEntryByBookId,
+    upsertLibraryEntry,
+} from "../../library/services/libraryService";
+import type {
+    CreateLibraryEntryPayload,
+    UpdateLibraryEntryPayload,
+} from "../../library/types/library.types";
 import BookAboutSection from "../components/BookAboutSection";
 import BookAuthorSection from "../components/BookAuthorSection";
 import BookCoverPanel from "../components/BookCoverPanel";
@@ -34,6 +42,7 @@ const BookPage = () => {
     const [selectedRating, setSelectedRating] = useState<number | null>(null);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const [currentUserReview, setCurrentUserReview] = useState<BookUserReviewEntry | null>(null);
+    const [isSavingReadingStatus, setIsSavingReadingStatus] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -143,6 +152,67 @@ const BookPage = () => {
         navigate(`/books/${book.id}/activity`, { state: activityState });
     };
 
+    const handleUpdateReadingStatus = async (status: string) => {
+        if (!authState.isAuthenticated || !book) {
+            return;
+        }
+
+        try {
+            setIsSavingReadingStatus(true);
+            setError(null);
+
+            const existingEntry = await getLibraryEntryByBookId(book.id);
+            const createPayload: CreateLibraryEntryPayload = {
+                bookSource: "open_library",
+                externalBookId: book.id,
+                title: book.title,
+                author: book.authors[0],
+                cover: book.coverUrl,
+                publishedYear: getPublishedYear(book.publishDate),
+                status: status as CreateLibraryEntryPayload["status"],
+                rating: existingEntry?.rating ?? currentUserReview?.rating,
+                reviewText:
+                    existingEntry?.reviewText ??
+                    existingEntry?.notes ??
+                    currentUserReview?.content,
+                notes:
+                    existingEntry?.notes ??
+                    existingEntry?.reviewText ??
+                    currentUserReview?.content,
+                isSpoiler: existingEntry?.isSpoiler ?? currentUserReview?.isSpoiler,
+                formats: existingEntry?.formats ?? [],
+                customLists: existingEntry?.customLists ?? [],
+                dateStarted: existingEntry?.dateStarted,
+                dateFinished: existingEntry?.dateFinished,
+            };
+            const updatePayload: UpdateLibraryEntryPayload = {
+                status: status as UpdateLibraryEntryPayload["status"],
+            };
+            const savedEntry = await upsertLibraryEntry(
+                existingEntry,
+                createPayload,
+                updatePayload
+            );
+
+            setCurrentUserReview({
+                id: savedEntry.id,
+                status: savedEntry.status,
+                rating: savedEntry.rating,
+                content: savedEntry.reviewText ?? savedEntry.notes,
+                isSpoiler: savedEntry.isSpoiler,
+                updatedAt: savedEntry.updatedAt,
+            });
+
+            if (typeof savedEntry.rating === "number") {
+                setSelectedRating(savedEntry.rating);
+            }
+        } catch {
+            setError("Could not update your shelf right now.");
+        } finally {
+            setIsSavingReadingStatus(false);
+        }
+    };
+
     const handlePersistRating = async (rating: number) => {
         setSelectedRating(rating);
 
@@ -207,6 +277,8 @@ const BookPage = () => {
                             readingStatus={currentUserReview?.status}
                             onChangeRating={handlePersistRating}
                             onEditActivity={() => openActivityEditor()}
+                            onUpdateReadingStatus={handleUpdateReadingStatus}
+                            isSavingReadingStatus={isSavingReadingStatus}
                         />
                     </div>
 

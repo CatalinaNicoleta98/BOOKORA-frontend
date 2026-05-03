@@ -9,6 +9,8 @@ const BookCoverPanel = ({
     readingStatus,
     onChangeRating,
     onEditActivity,
+    onUpdateReadingStatus,
+    isSavingReadingStatus = false,
 }: BookCoverPanelProps) => {
     return (
         <aside className="space-y-5">
@@ -42,9 +44,10 @@ const BookCoverPanel = ({
 
             <BookActions
                 currentStatus={readingStatus}
-                onAddToLibrary={() => console.log("Add to library clicked")}
-                onWantToRead={() => console.log("Want to read clicked")}
+                onAddToLibrary={onUpdateReadingStatus}
+                onWantToRead={() => onUpdateReadingStatus("want_to_read")}
                 onWriteReview={() => console.log("Write review clicked")}
+                isSaving={isSavingReadingStatus}
             />
 
             <div className="mt-2 flex flex-col items-center gap-4">

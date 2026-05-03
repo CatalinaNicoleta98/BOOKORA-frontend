@@ -66,22 +66,29 @@ const statusButtonLabelMap: Record<ReadingStatus, string> = {
 
 const getInitialStatus = (status?: string): ReadingStatus => {
     if (!status) {
-        return "currently_reading";
+        return "want_to_read";
     }
 
     if (status in statusButtonLabelMap) {
         return status as ReadingStatus;
     }
 
-    return "currently_reading";
+    return "want_to_read";
 };
 
-const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookActionsProps) => {
+const BookActions = ({
+    currentStatus,
+    onAddToLibrary,
+    onWantToRead,
+    isSaving = false,
+}: BookActionsProps) => {
     const [isManageOpen, setIsManageOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState<ReadingStatus>(getInitialStatus(currentStatus));
     const [selectedFormats, setSelectedFormats] = useState<OwnershipFormat[]>(["physical"]);
 
-    const activeStatusLabel = statusButtonLabelMap[selectedStatus];
+    const isShelved = Boolean(currentStatus);
+    const activeStatus = currentStatus ? getInitialStatus(currentStatus) : undefined;
+    const activeStatusLabel = activeStatus ? statusButtonLabelMap[activeStatus] : "Want to Read";
     const portalRoot = useMemo(() => {
         if (typeof document === "undefined") {
             return null;
@@ -130,15 +137,22 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
         });
     };
 
-    const handleSelectStatus = (status: ReadingStatus) => {
-        setSelectedStatus(status);
-
-        if (status === "want_to_read") {
-            onWantToRead();
+    const handlePrimaryAction = async () => {
+        if (isShelved || isSaving) {
             return;
         }
 
-        onAddToLibrary();
+        setSelectedStatus("want_to_read");
+        await onWantToRead();
+    };
+
+    const handleSaveChanges = async () => {
+        if (isSaving) {
+            return;
+        }
+
+        await onAddToLibrary(selectedStatus);
+        setIsManageOpen(false);
     };
 
     const manageModal = isManageOpen ? (
@@ -189,7 +203,7 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
                                             <button
                                                 key={option.value}
                                                 type="button"
-                                                onClick={() => handleSelectStatus(option.value)}
+                                                onClick={() => setSelectedStatus(option.value)}
                                                 className={`flex w-full items-center justify-between rounded-full border px-5 py-3 text-left transition-all ${
                                                     isSelected
                                                         ? "border-amber-200/30 bg-amber-200/10 text-white"
@@ -262,7 +276,6 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
                                 <button
                                     type="button"
                                     className="text-sm font-semibold text-slate-400 transition-colors hover:text-white"
-                                    onClick={() => console.log("Remove from shelf")}
                                 >
                                     Remove from shelf
                                 </button>
@@ -277,13 +290,11 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            setIsManageOpen(false);
-                                            onAddToLibrary();
-                                        }}
-                                        className="inline-flex h-12 items-center justify-center rounded-full bg-[#20150f] px-6 text-sm font-medium text-white transition-colors hover:bg-[#2d1d15]"
+                                        onClick={handleSaveChanges}
+                                        disabled={isSaving}
+                                        className="inline-flex h-12 items-center justify-center rounded-full bg-[#20150f] px-6 text-sm font-medium text-white transition-colors hover:bg-[#2d1d15] disabled:cursor-not-allowed disabled:opacity-60"
                                     >
-                                        Save changes
+                                        {isSaving ? "Saving..." : "Save changes"}
                                     </button>
                                 </div>
                             </div>
@@ -296,15 +307,43 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
 
     return (
         <>
-            <div className="mt-2">
+            <div className="mt-2 flex overflow-hidden rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] shadow-[0_14px_30px_rgba(15,23,42,0.18)]">
+                <button
+                    type="button"
+                    onClick={() => void handlePrimaryAction()}
+                    disabled={isSaving}
+                    className={`inline-flex h-12 flex-1 items-center justify-center gap-2 px-5 text-sm font-semibold transition-all duration-300 ${
+                        isShelved
+                            ? "cursor-default text-amber-50"
+                            : "text-amber-100 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))]"
+                    } disabled:cursor-not-allowed disabled:opacity-70`}
+                >
+                    {isShelved ? <span aria-hidden="true">✓</span> : <span aria-hidden="true">＋</span>}
+                    <span>{isSaving ? "Saving..." : activeStatusLabel}</span>
+                </button>
+
                 <button
                     type="button"
                     onClick={() => setIsManageOpen(true)}
-                    className="inline-flex h-12 w-full items-center justify-center rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] px-5 text-sm font-semibold text-amber-100 shadow-[0_14px_30px_rgba(15,23,42,0.18)] transition-all duration-300 hover:border-amber-200/30 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] hover:shadow-[0_18px_40px_rgba(15,23,42,0.24)]"
+                    disabled={isSaving}
+                    className="inline-flex h-12 w-12 items-center justify-center border-l border-amber-200/20 text-amber-100 transition-all duration-300 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] disabled:cursor-not-allowed disabled:opacity-70"
+                    aria-label="Open reading status menu"
                 >
-                    {activeStatusLabel}
+                    <svg
+                        viewBox="0 0 20 20"
+                        aria-hidden="true"
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M5 7l5 6 5-6" />
+                    </svg>
                 </button>
             </div>
+
             {portalRoot ? createPortal(manageModal, portalRoot) : manageModal}
         </>
     );

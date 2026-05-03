@@ -180,6 +180,8 @@ export interface BookCoverPanelProps {
     readingStatus?: string;
     onChangeRating: (rating: number) => void;
     onEditActivity: () => void;
+    onUpdateReadingStatus: (status: string) => Promise<void> | void;
+    isSavingReadingStatus?: boolean;
 }
 
 export interface BookHeroProps {
@@ -192,9 +194,10 @@ export interface BookHeroProps {
 
 export interface BookActionsProps {
     currentStatus?: string;
-    onAddToLibrary: () => void;
-    onWantToRead: () => void;
+    onAddToLibrary: (status: string) => Promise<void> | void;
+    onWantToRead: () => Promise<void> | void;
     onWriteReview: () => void;
+    isSaving?: boolean;
 }
 
 export interface BookAboutSectionProps {

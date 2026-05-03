@@ -298,7 +298,7 @@ const ProfilePage = () => {
                     onBrowseBooks={() => navigate("/search")}
                 />
 
-                <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
+                <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
                     <div className="relative px-6 pb-8 sm:px-8 lg:px-10">
                         <ProfileStatsGrid stats={dashboardData.stats} />
                     </div>

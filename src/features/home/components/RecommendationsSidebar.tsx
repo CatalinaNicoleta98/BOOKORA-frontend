@@ -20,9 +20,9 @@ const CompactBookButton = ({
         <button
             type="button"
             onClick={() => navigate(`/books/${book.id}`)}
-            className="flex w-full items-center gap-3 rounded-[1.15rem] border border-white/10 bg-white/[0.03] p-3 text-left transition-all hover:border-white/16 hover:bg-white/[0.05]"
+            className="theme-content-panel-soft flex w-full items-center gap-3 rounded-[1.15rem] p-3 text-left transition-all hover:border-[var(--bookora-border-strong)]"
         >
-            <div className="h-16 w-12 shrink-0 overflow-hidden rounded-[0.8rem] border border-white/10 bg-white/[0.05]">
+            <div className="theme-cover-shell h-16 w-12 shrink-0 overflow-hidden rounded-[0.8rem]">
                 {book.coverUrl ? (
                     <img
                         src={book.coverUrl}
@@ -60,10 +60,10 @@ const FeaturedRecommendation = ({ item }: { item: HomeRecommendationItem }) => {
         <button
             type="button"
             onClick={() => navigate(`/books/${item.id}`)}
-            className="w-full overflow-hidden rounded-[1.45rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,28,48,0.84)_0%,rgba(12,16,30,0.78)_100%)] text-left transition-all hover:-translate-y-0.5 hover:border-white/16"
+            className="theme-content-panel-soft w-full overflow-hidden rounded-[1.45rem] text-left transition-all hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
         >
             <div className="grid grid-cols-[86px_minmax(0,1fr)] gap-4 p-4">
-                <div className="overflow-hidden rounded-[0.95rem] border border-white/10 bg-white/[0.04]">
+                <div className="theme-cover-shell overflow-hidden rounded-[0.95rem]">
                     {item.coverUrl ? (
                         <img
                             src={item.coverUrl}
@@ -110,7 +110,7 @@ const Panel = ({
     children: ReactNode;
 }) => {
     return (
-        <section className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.78)_0%,rgba(10,14,26,0.72)_100%)] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:p-6">
+        <section className="theme-content-panel rounded-[1.75rem] p-5 sm:p-6">
             <div className="flex items-start justify-between gap-3">
                 <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -154,7 +154,7 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
                     {featuredRecommendation ? (
                         <FeaturedRecommendation item={featuredRecommendation} />
                     ) : (
-                        <div className="rounded-[1.3rem] border border-dashed border-white/10 bg-white/[0.02] p-4 text-sm leading-6 text-slate-400">
+                        <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Rate or finish a few books and Bookora will have stronger recommendations to surface here.
                         </div>
                     )}
@@ -185,7 +185,7 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
                             />
                         ))
                     ) : (
-                        <div className="rounded-[1.3rem] border border-dashed border-white/10 bg-white/[0.02] p-4 text-sm leading-6 text-slate-400">
+                        <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Once you begin tracking more books, your recent momentum shelf will appear here.
                         </div>
                     )}
@@ -208,7 +208,7 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
                             />
                         ))
                     ) : (
-                        <div className="rounded-[1.3rem] border border-dashed border-white/10 bg-white/[0.02] p-4 text-sm leading-6 text-slate-400">
+                        <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Add a few books to Want to Read and this queue will start feeling much more personal.
                         </div>
                     )}

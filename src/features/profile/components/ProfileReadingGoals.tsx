@@ -14,7 +14,7 @@ const ProfileReadingGoals = ({ target, current }: ProfileReadingGoalsProps) => {
             : `${remaining} ${remaining === 1 ? "book" : "books"} left to hit this year's target.`;
 
     return (
-        <section className="rounded-[2rem] border border-white/10 bg-[#0b1020]/70 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl">
+        <section className="theme-content-panel rounded-[2rem] p-6">
             <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">Reading goal</h2>
                 <span className="text-sm text-slate-400">

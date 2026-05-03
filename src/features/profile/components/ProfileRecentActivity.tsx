@@ -9,7 +9,7 @@ interface ProfileRecentActivityProps {
 
 const ProfileRecentActivity = ({ items, onOpenBook, onBrowseBooks }: ProfileRecentActivityProps) => {
     return (
-        <section className="rounded-[2rem] border border-white/10 bg-[#0b1020]/70 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.25)] backdrop-blur-xl">
+        <section className="theme-content-panel rounded-[2rem] p-6">
             <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">Recent activity</h2>
                 <button
@@ -30,9 +30,9 @@ const ProfileRecentActivity = ({ items, onOpenBook, onBrowseBooks }: ProfileRece
                             key={item.id}
                             type="button"
                             onClick={() => item.bookId ? onOpenBook(item.bookId) : undefined}
-                            className="flex w-full items-start gap-4 rounded-[1.4rem] border border-white/10 bg-white/[0.04] p-4 text-left transition-all duration-300 hover:border-white/16 hover:bg-white/[0.06]"
+                            className="theme-content-panel-soft flex w-full items-start gap-4 rounded-[1.4rem] p-4 text-left transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
                         >
-                            <div className="h-16 w-12 shrink-0 overflow-hidden rounded-[0.85rem] border border-white/10 bg-white/6">
+                            <div className="theme-cover-shell h-16 w-12 shrink-0 overflow-hidden rounded-[0.85rem]">
                                 {item.coverUrl ? (
                                     <img
                                         src={item.coverUrl}
@@ -45,7 +45,7 @@ const ProfileRecentActivity = ({ items, onOpenBook, onBrowseBooks }: ProfileRece
                                 <div className="flex flex-wrap items-center gap-2">
                                     <p className="text-sm font-medium text-white">{item.title}</p>
                                     {item.statusLabel ? (
-                                        <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                                        <span className="theme-pill-subtle rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
                                             {item.statusLabel}
                                         </span>
                                     ) : null}

@@ -18,7 +18,7 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
 
     return (
         <div className="space-y-8 py-6 lg:py-10">
-            <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(15,21,38,0.94)_0%,rgba(16,24,45,0.88)_42%,rgba(35,25,20,0.84)_100%)] shadow-[0_32px_90px_rgba(0,0,0,0.3)]">
+            <section className="theme-content-panel overflow-hidden rounded-[2rem] shadow-[0_32px_90px_rgba(0,0,0,0.18)]">
                 <div className="grid gap-8 px-6 py-7 sm:px-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.9fr)] lg:px-10">
                     <div className="space-y-5">
                         <div className="space-y-2">
@@ -53,7 +53,7 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                        <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl">
+                        <div className="theme-content-panel-soft rounded-[1.4rem] p-4">
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                                 Reading now
                             </p>
@@ -65,7 +65,7 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
                             </p>
                         </div>
 
-                        <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl">
+                        <div className="theme-content-panel-soft rounded-[1.4rem] p-4">
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                                 Goal progress
                             </p>
@@ -77,7 +77,7 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
                             </p>
                         </div>
 
-                        <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] p-4 backdrop-blur-xl">
+                        <div className="theme-content-panel-soft rounded-[1.4rem] p-4">
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                                 Written reviews
                             </p>

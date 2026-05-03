@@ -12,8 +12,8 @@ const ProfileLibrarySpotlight = ({
     onBrowseBooks
 }: ProfileLibrarySpotlightProps) => {
     return (
-        <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
-            <div className="border-b border-white/8 px-6 py-5 sm:px-8">
+        <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
+            <div className="border-b border-[var(--bookora-border)] px-6 py-5 sm:px-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
                     Reading spotlight
                 </p>
@@ -24,11 +24,7 @@ const ProfileLibrarySpotlight = ({
                             Jump back into your active stack or pull something forward from Want to Read.
                         </p>
                     </div>
-                    <button
-                        type="button"
-                        onClick={onBrowseBooks}
-                        className="inline-flex h-11 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/10 px-4 text-sm font-medium text-amber-100 transition-all duration-300 hover:border-amber-200/30 hover:bg-amber-200/14"
-                    >
+                    <button type="button" onClick={onBrowseBooks} className="theme-button-primary inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium">
                         Browse books
                     </button>
                 </div>
@@ -36,7 +32,7 @@ const ProfileLibrarySpotlight = ({
 
             {items.length === 0 ? (
                 <div className="px-6 py-8 sm:px-8">
-                    <div className="rounded-[1.8rem] border border-dashed border-white/12 bg-[#0b1020]/74 p-6 text-sm leading-7 text-slate-400">
+                    <div className="theme-content-panel-muted rounded-[1.8rem] border-dashed p-6 text-sm leading-7 text-slate-400">
                         Your profile will start feeling alive once you add books to your library and mark one as in
                         progress.
                     </div>
@@ -48,10 +44,10 @@ const ProfileLibrarySpotlight = ({
                             key={item.id}
                             type="button"
                             onClick={() => onOpenBook(item.id)}
-                            className="group flex h-full flex-col rounded-[1.8rem] border border-white/10 bg-[#0b1020]/76 p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-white/16 hover:bg-[#10172d]"
+                            className="theme-content-panel-soft group flex h-full flex-col rounded-[1.8rem] p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
                         >
                             <div className="flex gap-4">
-                                <div className="h-28 w-20 shrink-0 overflow-hidden rounded-[1rem] border border-white/10 bg-white/6">
+                                <div className="theme-cover-shell h-28 w-20 shrink-0 overflow-hidden rounded-[1rem]">
                                     {item.coverUrl ? (
                                         <img
                                             src={item.coverUrl}

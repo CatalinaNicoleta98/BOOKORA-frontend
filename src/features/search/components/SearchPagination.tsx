@@ -23,7 +23,7 @@ const SearchPagination = ({
                 type="button"
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage <= 1}
-                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40"
             >
                 Previous
             </button>
@@ -37,7 +37,7 @@ const SearchPagination = ({
                     className={`inline-flex h-11 min-w-11 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
                         pageNumber === currentPage
                             ? "border-amber-200/30 bg-amber-200/12 text-amber-100"
-                            : "border-white/10 bg-white/5 text-white hover:border-white/16 hover:bg-white/10"
+                            : "theme-button-ghost"
                     }`}
                 >
                     {pageNumber}
@@ -48,7 +48,7 @@ const SearchPagination = ({
                 type="button"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage >= totalPages}
-                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40"
             >
                 Next
             </button>

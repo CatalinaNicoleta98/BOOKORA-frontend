@@ -56,7 +56,7 @@ const ProfileHeader = ({
     onShareProfile
 }: ProfileHeaderProps) => {
     return (
-        <section className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/5 shadow-[0_28px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
+        <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
             <input
                 ref={avatarInputRef}
                 type="file"
@@ -119,7 +119,7 @@ const ProfileHeader = ({
                                             type="text"
                                             value={editName}
                                             onChange={(event) => onEditNameChange(event.target.value)}
-                                            className="w-full rounded-[1.4rem] border border-white/12 bg-[#0b1020]/76 px-4 py-3 text-lg font-semibold text-white outline-none transition-colors duration-300 placeholder:text-slate-500 focus:border-amber-200/30 sm:text-xl"
+                                            className="theme-input w-full rounded-[1.4rem] px-4 py-3 text-lg font-semibold transition-colors duration-300 sm:text-xl"
                                             placeholder="Your display name"
                                         />
                                     </div>
@@ -145,7 +145,7 @@ const ProfileHeader = ({
                                         value={editBio}
                                         onChange={(event) => onEditBioChange(event.target.value)}
                                         rows={4}
-                                        className="w-full rounded-[1.4rem] border border-white/12 bg-[#0b1020]/76 px-4 py-3 text-sm leading-7 text-slate-100 outline-none transition-colors duration-300 placeholder:text-slate-500 focus:border-amber-200/30"
+                                        className="theme-input w-full rounded-[1.4rem] px-4 py-3 text-sm leading-7 transition-colors duration-300"
                                         placeholder="Tell readers a little about your reading taste."
                                     />
                                 </div>

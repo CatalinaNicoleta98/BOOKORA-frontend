@@ -11,7 +11,7 @@ const ProfileStatsGrid = ({ stats }: ProfileStatsGridProps) => {
             {stats.map((stat) => (
                 <article
                     key={stat.label}
-                    className="rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-5 shadow-[0_18px_50px_rgba(15,23,42,0.16)] backdrop-blur-xl"
+                    className="theme-content-panel-soft rounded-[1.75rem] p-5"
                 >
                     <p className="text-3xl font-semibold text-white">{stat.value}</p>
                     <p className="mt-2 text-sm font-medium text-slate-200">{stat.label}</p>

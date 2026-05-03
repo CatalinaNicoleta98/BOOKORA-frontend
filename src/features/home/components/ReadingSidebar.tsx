@@ -65,7 +65,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
 
     return (
         <aside className="col-span-12 space-y-5">
-            <section className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.82)_0%,rgba(10,14,26,0.76)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+            <section className="theme-content-panel overflow-hidden rounded-[1.75rem]">
                 <div className="border-b border-white/10 px-5 py-4 sm:px-6">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading now</p>
                     <h2 className="mt-3 text-xl font-semibold tracking-[-0.03em] text-white">
@@ -83,10 +83,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
 
                         if (!item) {
                             return (
-                                <article
-                                    key={section.id}
-                                    className="rounded-[1.35rem] border border-white/8 bg-white/[0.035] p-4"
-                                >
+                                <article key={section.id} className="theme-content-panel-soft rounded-[1.35rem] p-4">
                                     <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
                                         {section.label}
                                     </p>
@@ -108,10 +105,10 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                 key={section.id}
                                 type="button"
                                 onClick={() => navigate(`/books/${item.id}`)}
-                                className="group w-full rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.85)_0%,rgba(12,16,30,0.8)_100%)] p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-[linear-gradient(180deg,rgba(24,34,58,0.92)_0%,rgba(12,16,30,0.85)_100%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/60"
+                                className="theme-content-panel-soft group w-full rounded-[1.35rem] p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/60"
                             >
                                 <div className="flex gap-4">
-                                    <div className="flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.04] text-[0.7rem] text-slate-500 shadow-md transition group-hover:shadow-[0_8px_25px_rgba(0,0,0,0.35)]">
+                                    <div className="theme-cover-shell flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] text-[0.7rem] text-slate-500 shadow-md transition group-hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)]">
                                         {item.coverUrl ? (
                                             <img
                                                 src={item.coverUrl}
@@ -157,7 +154,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                 </div>
             </section>
 
-            <section className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.72)_0%,rgba(10,14,26,0.68)_100%)] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur-2xl sm:p-6">
+            <section className="theme-content-panel rounded-[1.75rem] p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Your shelves</p>
@@ -165,7 +162,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                             Library snapshot
                         </h2>
                     </div>
-                    <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs text-slate-300">
+                    <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
                         {data.shelfSummary.length} total
                     </span>
                 </div>
@@ -177,21 +174,21 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                 key={shelf.id}
                                 type="button"
                                 onClick={() => navigate("/profile")}
-                                className="flex w-full items-center justify-between rounded-[1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.75)_0%,rgba(12,16,30,0.7)_100%)] px-4 py-3 text-left transition hover:border-white/15"
+                                className="theme-content-panel-soft flex w-full items-center justify-between rounded-[1rem] px-4 py-3 text-left transition hover:border-[var(--bookora-border-strong)]"
                             >
                                 <span className="text-sm text-slate-200">{shelf.label}</span>
                                 <span className="text-sm font-medium text-white">{shelf.count}</span>
                             </button>
                         ))
                     ) : (
-                        <div className="rounded-[1rem] border border-dashed border-white/10 bg-white/[0.025] px-4 py-4 text-sm leading-6 text-slate-400">
+                        <div className="theme-content-panel-muted rounded-[1rem] border-dashed px-4 py-4 text-sm leading-6 text-slate-400">
                             Your shelf overview will appear here once you start organizing your library.
                         </div>
                     )}
                 </div>
             </section>
 
-            <section className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.72)_0%,rgba(10,14,26,0.68)_100%)] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur-2xl sm:p-6">
+            <section className="theme-content-panel rounded-[1.75rem] p-5 sm:p-6">
                 <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading goal</p>
                 <div className="mt-5 flex items-end justify-between gap-4">
                     <div>
@@ -200,7 +197,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                         </h2>
                         <p className="mt-1 text-sm text-slate-300">{data.challenge.label}</p>
                     </div>
-                    <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs text-slate-300">
+                    <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
                         {Math.round(challengeProgress)}%
                     </span>
                 </div>
@@ -220,7 +217,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                 <button
                     type="button"
                     onClick={() => navigate("/profile")}
-                    className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                    className="theme-button-ghost mt-5 inline-flex h-11 items-center justify-center rounded-full px-4 text-sm font-medium"
                 >
                     See full reading history
                 </button>

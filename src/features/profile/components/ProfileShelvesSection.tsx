@@ -13,7 +13,7 @@ const ProfileShelvesSection = ({
     onOpenBook
 }: ProfileShelvesSectionProps) => {
     return (
-        <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.28)] backdrop-blur-xl sm:p-8">
+        <section className="theme-glass-panel rounded-[2rem] p-6 sm:p-8">
             <div className="flex items-center justify-between gap-4">
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
@@ -34,7 +34,7 @@ const ProfileShelvesSection = ({
                 {shelves.map((shelf) => (
                     <article
                         key={shelf.id}
-                        className="flex h-full min-h-[18rem] flex-col rounded-[1.6rem] border border-white/10 bg-[#0b1020]/76 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.24)]"
+                        className="theme-content-panel-soft flex h-full min-h-[18rem] flex-col rounded-[1.6rem] p-5"
                     >
                         <div className="flex flex-wrap items-start justify-between gap-4">
                             <div className="min-w-0 flex-1">
@@ -56,7 +56,7 @@ const ProfileShelvesSection = ({
                                         key={book.id}
                                         type="button"
                                         onClick={() => onOpenBook(book.id)}
-                                        className="group h-24 w-16 overflow-hidden rounded-[0.9rem] border border-white/10 bg-white/6 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/16"
+                                        className="theme-cover-shell group h-24 w-16 overflow-hidden rounded-[0.9rem] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
                                         aria-label={`Open ${book.title}`}
                                         title={book.title}
                                     >
@@ -76,7 +76,7 @@ const ProfileShelvesSection = ({
                                 </div>
                             </div>
                         ) : (
-                            <div className="mt-auto rounded-[1rem] border border-dashed border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-slate-500">
+                            <div className="theme-content-panel-muted mt-auto rounded-[1rem] border-dashed px-4 py-3 text-sm text-slate-500">
                                 Nothing shelved here yet.
                             </div>
                         )}

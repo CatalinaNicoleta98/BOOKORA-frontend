@@ -36,7 +36,7 @@ const getActivityAccent = (activity: HomeActivityItem) => {
         default:
             return {
                 badge: "Update",
-                badgeClass: "border-white/10 bg-white/5 text-slate-200",
+                badgeClass: "theme-pill-subtle",
                 dotClass: "bg-slate-300",
             };
     }
@@ -49,7 +49,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
 
     return (
         <section className="space-y-6">
-            <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.82)_0%,rgba(11,16,30,0.76)_100%)] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:p-6">
+            <div className="theme-content-panel rounded-[1.9rem] p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-2">
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -63,7 +63,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                     <button
                         type="button"
                         onClick={() => navigate("/profile")}
-                        className="inline-flex h-10 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                        className="theme-button-ghost inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium"
                     >
                         Open profile
                     </button>
@@ -74,10 +74,10 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                         <button
                             type="button"
                             onClick={() => navigate(`/books/${featuredContinue.id}`)}
-                            className="group overflow-hidden rounded-[1.55rem] border border-white/10 bg-[linear-gradient(180deg,rgba(22,31,55,0.84)_0%,rgba(13,18,32,0.82)_100%)] text-left transition-all hover:-translate-y-0.5 hover:border-white/16"
+                            className="theme-content-panel-soft group overflow-hidden rounded-[1.55rem] text-left transition-all hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
                         >
                             <div className="grid sm:grid-cols-[152px_minmax(0,1fr)]">
-                                <div className="relative h-full min-h-[220px] overflow-hidden bg-white/[0.04]">
+                                <div className="theme-cover-shell relative h-full min-h-[220px] overflow-hidden">
                                     {featuredContinue.coverUrl ? (
                                         <img
                                             src={featuredContinue.coverUrl}
@@ -165,9 +165,9 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                         key={item.id}
                                         type="button"
                                         onClick={() => navigate(`/books/${item.id}`)}
-                                        className="flex w-full items-center gap-4 rounded-[1.3rem] border border-white/10 bg-white/[0.035] p-4 text-left transition-all hover:border-white/16 hover:bg-white/[0.05]"
+                                    className="theme-content-panel-soft flex w-full items-center gap-4 rounded-[1.3rem] p-4 text-left transition-all hover:border-[var(--bookora-border-strong)]"
                                     >
-                                        <div className="h-20 w-14 shrink-0 overflow-hidden rounded-[0.85rem] border border-white/10 bg-white/[0.04]">
+                                        <div className="theme-cover-shell h-20 w-14 shrink-0 overflow-hidden rounded-[0.85rem]">
                                             {item.coverUrl ? (
                                                 <img
                                                     src={item.coverUrl}
@@ -195,14 +195,14 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                     </button>
                                 ))
                             ) : (
-                                <div className="rounded-[1.3rem] border border-dashed border-white/10 bg-white/[0.02] p-4 text-sm leading-6 text-slate-400">
+                                <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                                     As you add more active books, they will appear here as a quick-return stack.
                                 </div>
                             )}
                         </div>
                     </div>
                 ) : (
-                    <div className="mt-5 rounded-[1.4rem] border border-dashed border-white/10 bg-white/[0.025] p-5">
+                    <div className="theme-content-panel-muted mt-5 rounded-[1.4rem] border-dashed p-5">
                         <p className="text-base font-medium text-slate-100">
                             No books in progress yet.
                         </p>
@@ -220,7 +220,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                 )}
             </div>
 
-            <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,21,38,0.82)_0%,rgba(11,16,30,0.76)_100%)] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:p-6">
+            <div className="theme-content-panel rounded-[1.9rem] p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-2">
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -234,7 +234,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                     <button
                         type="button"
                         onClick={() => navigate("/profile")}
-                        className="inline-flex h-10 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                        className="theme-button-ghost inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium"
                     >
                         View profile activity
                     </button>
@@ -250,7 +250,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                     key={`${activity.id}-${index}`}
                                     type="button"
                                     onClick={() => navigate(`/books/${activity.book.id}`)}
-                                    className="group flex w-full gap-4 rounded-[1.35rem] border border-white/10 bg-white/[0.03] p-4 text-left transition-all hover:border-white/16 hover:bg-white/[0.05]"
+                                    className="theme-content-panel-soft group flex w-full gap-4 rounded-[1.35rem] p-4 text-left transition-all hover:border-[var(--bookora-border-strong)]"
                                 >
                                     <div className="flex flex-col items-center">
                                         <span className={`h-3 w-3 rounded-full ${accent.dotClass}`} />
@@ -259,7 +259,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                         ) : null}
                                     </div>
 
-                                    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-[0.95rem] border border-white/10 bg-white/[0.04]">
+                                    <div className="theme-cover-shell h-14 w-14 shrink-0 overflow-hidden rounded-[0.95rem]">
                                         {activity.book.coverUrl ? (
                                             <img
                                                 src={activity.book.coverUrl}

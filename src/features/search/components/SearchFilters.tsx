@@ -31,7 +31,7 @@ const SearchFilters = ({ mode, onChange }: SearchFiltersProps) => {
                         className={`inline-flex h-10 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
                             isActive
                                 ? "border-amber-200/30 bg-amber-200/12 text-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.15)]"
-                                : "border-white/10 bg-white/5 text-white hover:border-white/16 hover:bg-white/10"
+                                : "theme-button-ghost"
                         }`}
                     >
                         {option.label}

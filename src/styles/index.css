@@ -139,6 +139,54 @@ h3 {
     backdrop-filter: blur(18px);
 }
 
+.theme-content-panel {
+    border: 1px solid var(--bookora-border);
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--bookora-surface-strong) 92%, transparent),
+            color-mix(in srgb, var(--bookora-surface) 88%, transparent)
+        );
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(22px);
+}
+
+.theme-content-panel-soft {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 88%, transparent);
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(18px);
+}
+
+.theme-content-panel-muted {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface-muted) 88%, transparent);
+    backdrop-filter: blur(14px);
+}
+
+.theme-cover-shell {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface-muted) 94%, transparent);
+}
+
+.theme-pill-subtle {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 86%, transparent);
+    color: var(--bookora-text-soft);
+}
+
+.theme-button-ghost {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 88%, transparent);
+    color: var(--bookora-text);
+}
+
+.theme-button-ghost:hover {
+    border-color: var(--bookora-border-strong);
+    background: color-mix(in srgb, var(--bookora-surface-strong) 82%, transparent);
+    color: var(--bookora-title);
+}
+
 .theme-title {
     color: var(--bookora-title);
 }

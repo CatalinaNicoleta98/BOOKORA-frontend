@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type {
     HomeContinueItem,
     HomePageData,
@@ -61,6 +62,7 @@ const getShelfPreview = (shelfSummary: HomeShelfSummaryItem[]): HomeShelfSummary
 };
 
 const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
+    const navigate = useNavigate();
     const shelfPreview = getShelfPreview(data.shelfSummary);
     const challengeProgress =
         data.challenge.target > 0
@@ -108,9 +110,11 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                         const progressPercentage = getProgressPercentage(item);
 
                         return (
-                            <article
+                            <button
                                 key={section.id}
-                                className="group rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.85)_0%,rgba(12,16,30,0.8)_100%)] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-[linear-gradient(180deg,rgba(24,34,58,0.92)_0%,rgba(12,16,30,0.85)_100%)]"
+                                type="button"
+                                onClick={() => navigate(`/books/${item.id}`)}
+                                className="group w-full rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(20,28,48,0.85)_0%,rgba(12,16,30,0.8)_100%)] p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-[linear-gradient(180deg,rgba(24,34,58,0.92)_0%,rgba(12,16,30,0.85)_100%)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/60"
                             >
                                 <div className="flex gap-4">
                                     <div className="flex h-24 w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-white/10 bg-white/[0.04] text-[0.7rem] text-slate-500 shadow-md transition group-hover:shadow-[0_8px_25px_rgba(0,0,0,0.35)]">
@@ -153,7 +157,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                         </div>
                                     </div>
                                 </div>
-                            </article>
+                            </button>
                         );
                     })}
                 </div>

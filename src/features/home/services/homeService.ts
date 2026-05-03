@@ -3,6 +3,7 @@ import type { HomeContinueItem, HomePageData, HomeReadingStatus } from "../types
 
 // Backend library entry shape (based on your controller)
 type LibraryEntry = {
+    externalBookId?: string; // <-- add this
     _id: string;
     title: string;
     author?: string;
@@ -34,7 +35,7 @@ const mapContinueItems = (entries: LibraryEntry[]): HomePageData["continueItems"
         )
         .slice(0, 6)
         .map((entry) => ({
-            id: entry._id,
+            id: entry.externalBookId ?? entry._id,
             title: entry.title,
             author: entry.author ?? "Unknown author",
             coverUrl: entry.cover ?? "",
@@ -96,7 +97,7 @@ const mapActivity = (entries: LibraryEntry[]): HomePageData["recentActivity"] =>
             subtitle,
             createdAt: new Date(entry.createdAt).toLocaleDateString(),
             book: {
-                id: entry._id,
+                id: entry.externalBookId ?? entry._id,
                 title: entry.title,
                 author: entry.author ?? "Unknown author",
                 coverUrl: entry.cover ?? "",
@@ -114,7 +115,9 @@ const mapShelves = (entries: LibraryEntry[]) => {
 
     return Object.entries(counts).map(([status, count]) => ({
         id: status,
-        label: status.replace(/_/g, " "),
+        label: status
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase()),
         count,
     }));
 };
@@ -130,8 +133,20 @@ export const getHomePageData = async (): Promise<HomePageData> => {
         continueItems: mapContinueItems(entries),
         recentActivity: mapActivity(entries),
 
-        // still mocked for now
-        recommendations: [],
+        // basic recommendations (random from library for now)
+        recommendations: entries
+            .slice()
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 6)
+            .map((entry) => ({
+                id: entry.externalBookId ?? entry._id,
+                title: entry.title,
+                author: entry.author ?? "Unknown author",
+                coverUrl: entry.cover ?? "",
+                reason: "Based on your library",
+                ctaLabel: "View book",
+            })),
+
         trendingBooks: [],
         newReleases: [],
 

@@ -29,13 +29,13 @@ export const OwnershipFormatSelector = ({
   return (
     <div>
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+        <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
           Formats
         </p>
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="theme-title text-xl font-semibold">
           How are you reading this one?
         </h2>
-        <p className="text-sm leading-7 text-slate-400">
+        <p className="theme-text-muted text-sm leading-7">
           Pick every format that applies so your activity feels accurate.
         </p>
       </div>
@@ -52,8 +52,8 @@ export const OwnershipFormatSelector = ({
               className={`inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-medium transition-all
                 ${
                   isActive
-                    ? "border-amber-200/30 bg-amber-200/12 text-amber-100"
-                    : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
+                    ? "theme-button-accent"
+                    : "theme-button-ghost"
                 }`}
             >
               {option.label}

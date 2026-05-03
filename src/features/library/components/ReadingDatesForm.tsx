@@ -55,13 +55,13 @@ export const ReadingDatesForm = ({
   return (
     <div>
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+        <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
           Reading dates
         </p>
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="theme-title text-xl font-semibold">
           Track reads and rereads
         </h2>
-        <p className="text-sm leading-7 text-slate-400">
+        <p className="theme-text-muted text-sm leading-7">
           Keep one timeline for the current read, or add extra sessions when you come back for a reread.
         </p>
       </div>
@@ -70,14 +70,14 @@ export const ReadingDatesForm = ({
         {sessions.map((session, index) => (
           <div
             key={session.id}
-            className="rounded-[1.3rem] border border-white/10 bg-slate-950/25 p-4"
+            className="theme-content-panel-soft rounded-[1.3rem] p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.16em]">
                   {index === 0 ? "Primary read" : `Reread ${index}`}
                 </p>
-                <p className="mt-1 text-sm text-slate-300">
+                <p className="theme-text-soft mt-1 text-sm">
                   Add the dates you started and finished this reading session.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export const ReadingDatesForm = ({
                 <button
                   type="button"
                   onClick={() => removeSession(session.id)}
-                  className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400 transition-colors hover:text-white"
+                  className="theme-text-muted text-xs font-semibold uppercase tracking-[0.14em] transition-colors hover:text-[var(--bookora-title)]"
                 >
                   Remove
                 </button>
@@ -95,7 +95,7 @@ export const ReadingDatesForm = ({
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <label className="theme-text-muted mb-2 block text-xs font-semibold uppercase tracking-[0.16em]">
                   Date started
                 </label>
                 <input
@@ -108,12 +108,12 @@ export const ReadingDatesForm = ({
                       toOptionalDate(event.target.value)
                     )
                   }
-                  className="w-full rounded-[1.1rem] border border-white/10 bg-slate-950/35 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-amber-200/30"
+                  className="theme-input w-full rounded-[1.1rem] px-4 py-3 text-sm"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <label className="theme-text-muted mb-2 block text-xs font-semibold uppercase tracking-[0.16em]">
                   Date finished
                 </label>
                 <input
@@ -126,7 +126,7 @@ export const ReadingDatesForm = ({
                       toOptionalDate(event.target.value)
                     )
                   }
-                  className="w-full rounded-[1.1rem] border border-white/10 bg-slate-950/35 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-amber-200/30"
+                  className="theme-input w-full rounded-[1.1rem] px-4 py-3 text-sm"
                 />
               </div>
             </div>
@@ -136,7 +136,7 @@ export const ReadingDatesForm = ({
         <button
           type="button"
           onClick={addSession}
-          className="inline-flex h-11 items-center justify-center rounded-full border border-amber-200/20 bg-amber-200/10 px-4 text-sm font-semibold text-amber-100 transition-colors hover:bg-amber-200/15"
+          className="theme-button-accent inline-flex h-11 items-center justify-center rounded-full px-4 text-sm font-semibold"
         >
           + Add reread
         </button>

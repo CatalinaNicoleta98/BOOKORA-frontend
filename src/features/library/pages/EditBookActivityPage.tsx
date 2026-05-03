@@ -345,7 +345,7 @@ const EditBookActivityPage = () => {
   if (loading) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center">
-        <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] px-6 py-4 text-sm text-slate-300 shadow-[0_20px_60px_rgba(2,6,23,0.3)]">
+        <div className="theme-content-panel-soft theme-text rounded-[1.5rem] px-6 py-4 text-sm">
           Loading your activity editor...
         </div>
       </div>
@@ -362,7 +362,7 @@ const EditBookActivityPage = () => {
             <button
               type="button"
               onClick={() => navigate(`/books/${bookId}`)}
-              className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-red-200/20 bg-white/5 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+              className="theme-button-ghost mt-5 inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold"
             >
               Back to book
             </button>
@@ -379,32 +379,32 @@ const EditBookActivityPage = () => {
           <div className="space-y-3">
             <Link
               to={bookId ? `/books/${bookId}` : "/"}
-              className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-white"
+              className="theme-text-muted inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-[var(--bookora-title)]"
             >
               <span aria-hidden="true">←</span>
               Back to book
             </Link>
             <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+              <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.22em]">
                 Book activity
               </p>
-              <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+              <h1 className="theme-title text-3xl font-semibold tracking-tight sm:text-4xl">
                 {pageHeading}
               </h1>
-              <p className="max-w-2xl text-sm leading-7 text-slate-400">
+              <p className="theme-text-muted max-w-2xl text-sm leading-7">
                 Save your shelf, formats, dates, and review in one place. Everything here feeds back into your Bookora reading history.
               </p>
             </div>
           </div>
 
-          <div className="inline-flex items-center rounded-full border border-amber-200/20 bg-amber-200/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-100">
+          <div className="theme-button-accent inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
             {getStatusBadgeCopy(status)}
           </div>
         </div>
 
         <div className="mt-8 grid gap-8 xl:grid-cols-[320px_minmax(0,1fr)]">
           <aside className="space-y-5 xl:sticky xl:top-24 xl:self-start">
-            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.66),rgba(15,23,42,0.28))] shadow-[0_30px_90px_rgba(2,6,23,0.38)]">
+            <div className="theme-content-panel overflow-hidden rounded-[2rem]">
               {bookSeed?.cover ? (
                 <img
                   src={bookSeed.cover}
@@ -412,39 +412,39 @@ const EditBookActivityPage = () => {
                   className="aspect-[3/4] w-full object-cover"
                 />
               ) : (
-                <div className="flex aspect-[3/4] w-full items-center justify-center bg-[#0f172a] px-8 text-center text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
+                <div className="theme-cover-shell theme-text-muted flex aspect-[3/4] w-full items-center justify-center px-8 text-center text-sm font-medium uppercase tracking-[0.2em]">
                   No cover available
                 </div>
               )}
 
               <div className="space-y-4 px-5 py-5">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
                     Editing
                   </p>
-                  <h2 className="mt-2 text-xl font-semibold text-white">
+                  <h2 className="theme-title mt-2 text-xl font-semibold">
                     {bookSeed?.title ?? "This book"}
                   </h2>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <p className="theme-text-muted mt-1 text-sm">
                     {bookSeed?.author ?? "Unknown author"}
                     {bookSeed?.publishedYear ? ` · ${bookSeed.publishedYear}` : ""}
                   </p>
                 </div>
 
-                <div className="rounded-[1.25rem] border border-white/10 bg-slate-950/30 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="theme-content-panel-soft rounded-[1.25rem] p-4">
+                  <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
                     Current focus
                   </p>
-                  <p className="mt-2 text-base font-semibold text-slate-100">
+                  <p className="theme-text mt-2 text-base font-semibold">
                     {activeStatusDetails.label}
                   </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                  <p className="theme-text-muted mt-1 text-sm leading-6">
                     {activeStatusDetails.description}
                   </p>
                 </div>
 
-                <div className="rounded-[1.25rem] border border-white/10 bg-slate-950/20 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="theme-content-panel-soft rounded-[1.25rem] p-4">
+                  <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
                     Your rating
                   </p>
                   <div className="mt-3">
@@ -459,12 +459,12 @@ const EditBookActivityPage = () => {
           </aside>
 
           <div className="space-y-6">
-            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(15,23,42,0.22))] p-5 sm:p-6">
+            <section className="theme-content-panel rounded-[2rem] p-5 sm:p-6">
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
                   Reading status
                 </p>
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="theme-title text-xl font-semibold">
                   Choose the shelf that fits best
                 </h2>
               </div>
@@ -480,20 +480,20 @@ const EditBookActivityPage = () => {
                       onClick={() => setStatus(option.value)}
                       className={`rounded-[1.5rem] border px-5 py-4 text-left transition-all ${
                         isSelected
-                          ? "border-amber-200/30 bg-amber-200/10 shadow-[0_18px_40px_rgba(251,191,36,0.08)]"
-                          : "border-white/10 bg-white/[0.03] hover:border-white/16 hover:bg-white/[0.05]"
+                          ? "theme-button-accent shadow-[0_18px_40px_rgba(251,191,36,0.08)]"
+                          : "theme-content-panel-soft hover:border-[color:var(--bookora-border-strong)]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-base font-semibold text-white">
+                          <p className="theme-title text-base font-semibold">
                             {option.label}
                           </p>
-                          <p className="mt-1 text-sm leading-6 text-slate-400">
+                          <p className="theme-text-muted mt-1 text-sm leading-6">
                             {option.description}
                           </p>
                         </div>
-                        <span className="pt-1 text-lg text-amber-200">
+                        <span className="theme-accent-text pt-1 text-lg">
                           {isSelected ? "✓" : ""}
                         </span>
                       </div>
@@ -503,30 +503,30 @@ const EditBookActivityPage = () => {
               </div>
             </section>
 
-            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
+            <section className="theme-content-panel rounded-[2rem] p-5 sm:p-6">
               <OwnershipFormatSelector value={formats} onChange={setFormats} />
             </section>
 
-            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
+            <section className="theme-content-panel rounded-[2rem] p-5 sm:p-6">
               <CustomListsSelector value={customLists} onChange={setCustomLists} />
             </section>
 
-            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
+            <section className="theme-content-panel rounded-[2rem] p-5 sm:p-6">
               <ReadingDatesForm
                 readingSessions={readingSessions}
                 onChange={setReadingSessions}
               />
             </section>
 
-            <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(15,23,42,0.22))] p-5 sm:p-6">
+            <section className="theme-content-panel rounded-[2rem] p-5 sm:p-6">
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
                   Review
                 </p>
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="theme-title text-xl font-semibold">
                   Add your thoughts
                 </h2>
-                <p className="text-sm leading-7 text-slate-400">
+                <p className="theme-text-muted text-sm leading-7">
                   Write a quick reaction or a full review. If you already reviewed this book, it is loaded here for editing.
                 </p>
               </div>
@@ -538,10 +538,10 @@ const EditBookActivityPage = () => {
                   onChange={(event) => setReviewText(event.target.value)}
                   rows={8}
                   placeholder="What stood out to you about this book?"
-                  className="min-h-48 w-full rounded-[1.5rem] border border-white/10 bg-slate-950/35 px-4 py-3 text-sm leading-7 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-amber-200/30 focus:bg-slate-950/45"
+                  className="theme-input min-h-48 w-full rounded-[1.5rem] px-4 py-3 text-sm leading-7"
                 />
 
-                <label className="inline-flex items-center gap-3 text-sm text-slate-300">
+                <label className="theme-text-soft inline-flex items-center gap-3 text-sm">
                   <input
                     type="checkbox"
                     checked={isSpoiler}
@@ -565,8 +565,8 @@ const EditBookActivityPage = () => {
               </div>
             ) : null}
 
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[2rem] border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-              <p className="text-sm text-slate-400">
+            <div className="theme-content-panel-soft flex flex-wrap items-center justify-between gap-3 rounded-[2rem] p-4 sm:p-5">
+              <p className="theme-text-muted text-sm">
                 Changes update your shelf history and your review snapshot for this book.
               </p>
 
@@ -584,7 +584,7 @@ const EditBookActivityPage = () => {
                 <button
                   type="button"
                   onClick={() => navigate(bookId ? `/books/${bookId}` : "/")}
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10"
+                  className="theme-button-ghost inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-medium"
                 >
                   Cancel
                 </button>
@@ -592,7 +592,7 @@ const EditBookActivityPage = () => {
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-[#20150f] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#2d1d15] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="theme-button-primary inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? "Saving..." : entry ? "Save changes" : "Save activity"}
                 </button>

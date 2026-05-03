@@ -375,6 +375,33 @@ h3 {
     background: color-mix(in srgb, var(--bookora-surface-strong) 76%, transparent);
 }
 
+.theme-star-base {
+    color: color-mix(in srgb, var(--bookora-text-muted) 36%, transparent);
+}
+
+.theme-star-fill {
+    color: color-mix(in srgb, var(--bookora-accent) 86%, var(--bookora-accent-strong));
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--bookora-accent) 28%, transparent));
+}
+
+.theme-scroll-fade-left {
+    background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--bookora-bg) 86%, transparent),
+        color-mix(in srgb, var(--bookora-bg) 38%, transparent),
+        transparent
+    );
+}
+
+.theme-scroll-fade-right {
+    background: linear-gradient(
+        to left,
+        color-mix(in srgb, var(--bookora-bg) 86%, transparent),
+        color-mix(in srgb, var(--bookora-bg) 38%, transparent),
+        transparent
+    );
+}
+
 .bookora-brand-mark {
     background:
         radial-gradient(circle at 28% 24%, rgba(255, 244, 207, 0.95), transparent 28%),
@@ -446,18 +473,26 @@ h3 {
 }
 
 .bookora-modal-scroll::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.04);
+    background: color-mix(in srgb, var(--bookora-surface) 88%, transparent);
     border-radius: 999px;
 }
 
 .bookora-modal-scroll::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(251, 191, 36, 0.82), rgba(245, 158, 11, 0.52));
-    border: 2px solid rgba(7, 10, 18, 0.88);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bookora-accent) 88%, #ffd783),
+        color-mix(in srgb, var(--bookora-accent-strong) 76%, #d18a2f)
+    );
+    border: 2px solid color-mix(in srgb, var(--bookora-bg) 72%, transparent);
     border-radius: 999px;
 }
 
 .bookora-modal-scroll::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(252, 211, 77, 0.92), rgba(245, 158, 11, 0.64));
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bookora-accent) 94%, #ffe3a3),
+        color-mix(in srgb, var(--bookora-accent-strong) 82%, #da9334)
+    );
 }
 
 @media (max-width: 640px) {

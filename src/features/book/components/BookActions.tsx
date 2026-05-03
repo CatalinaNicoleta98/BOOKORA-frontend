@@ -178,13 +178,13 @@ const BookActions = ({
                 className="relative z-10 flex w-full max-w-xl justify-center py-2 sm:py-0"
                 onClick={(event) => event.stopPropagation()}
             >
-                <div className="flex max-h-[calc(100vh-3rem)] w-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,24,0.96),rgba(5,8,18,0.98))] text-white shadow-[0_30px_100px_rgba(2,6,23,0.55)] backdrop-blur-xl">
+                <div className="theme-glass-panel-strong flex max-h-[calc(100vh-3rem)] w-full flex-col overflow-hidden rounded-[2rem] text-white">
                     <div className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-6">
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                            <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.22em]">
                                 Manage this book
                             </p>
-                            <h3 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+                            <h3 className="theme-title mt-2 text-3xl font-semibold tracking-tight">
                                 Choose a shelf, format, and lists
                             </h3>
                         </div>
@@ -192,7 +192,7 @@ const BookActions = ({
                         <button
                             type="button"
                             onClick={() => setIsManageOpen(false)}
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                            className="theme-button-ghost inline-flex h-10 w-10 items-center justify-center rounded-full text-lg"
                             aria-label="Close manage book panel"
                         >
                             ×
@@ -202,7 +202,7 @@ const BookActions = ({
                     <div className="bookora-modal-scroll overflow-y-auto px-6 py-6">
                         <div className="space-y-6">
                             <section>
-                                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                <p className="theme-text-muted text-sm font-semibold uppercase tracking-[0.18em]">
                                     Reading status
                                 </p>
                                 <div className="mt-4 space-y-3">
@@ -216,15 +216,15 @@ const BookActions = ({
                                                 onClick={() => setSelectedStatus(option.value)}
                                                 className={`flex w-full items-center justify-between rounded-full border px-5 py-3 text-left transition-all ${
                                                     isSelected
-                                                        ? "border-amber-200/30 bg-amber-200/10 text-white"
-                                                        : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
+                                                        ? "theme-button-accent text-[var(--bookora-title)]"
+                                                        : "theme-button-ghost text-[var(--bookora-text)]"
                                                 }`}
                                             >
                                                 <span>
                                                     <span className="block text-base font-semibold">{option.label}</span>
-                                                    <span className="block text-sm text-slate-400">{option.description}</span>
+                                                    <span className="theme-text-muted block text-sm">{option.description}</span>
                                                 </span>
-                                                <span className="text-lg text-amber-200">{isSelected ? "✓" : ""}</span>
+                                                <span className="theme-accent-text text-lg">{isSelected ? "✓" : ""}</span>
                                             </button>
                                         );
                                     })}
@@ -232,7 +232,7 @@ const BookActions = ({
                             </section>
 
                             <section>
-                                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                <p className="theme-text-muted text-sm font-semibold uppercase tracking-[0.18em]">
                                     Formats you own or use
                                 </p>
                                 <div className="mt-4 flex flex-wrap gap-3">
@@ -246,8 +246,8 @@ const BookActions = ({
                                                 onClick={() => toggleFormat(option.value)}
                                                 className={`inline-flex h-11 items-center justify-center rounded-full border px-4 text-sm font-medium transition-all ${
                                                     isSelected
-                                                        ? "border-amber-200/30 bg-amber-200/12 text-amber-100"
-                                                        : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
+                                                        ? "theme-button-accent"
+                                                        : "theme-button-ghost"
                                                 }`}
                                             >
                                                 {option.label}
@@ -259,12 +259,12 @@ const BookActions = ({
 
                             <section>
                                 <div className="flex items-center justify-between gap-4">
-                                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                    <p className="theme-text-muted text-sm font-semibold uppercase tracking-[0.18em]">
                                         Custom lists
                                     </p>
                                     <button
                                         type="button"
-                                        className="text-sm font-semibold text-amber-200 transition-colors hover:text-amber-100"
+                                        className="theme-accent-text text-sm font-semibold transition-colors hover:text-[var(--bookora-title)]"
                                     >
                                         + Create new list
                                     </button>
@@ -274,7 +274,7 @@ const BookActions = ({
                                         <button
                                             key={listName}
                                             type="button"
-                                            className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-all hover:bg-white/10"
+                                            className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-full px-4 text-sm font-medium"
                                         >
                                             {listName}
                                         </button>
@@ -286,7 +286,7 @@ const BookActions = ({
                                 <button
                                     type="button"
                                     onClick={handleRemoveFromShelf}
-                                    className="text-sm font-semibold text-slate-400 transition-colors hover:text-white"
+                                    className="theme-text-muted text-sm font-semibold transition-colors hover:text-[var(--bookora-title)]"
                                 >
                                     Remove from shelf
                                 </button>
@@ -295,7 +295,7 @@ const BookActions = ({
                                     <button
                                         type="button"
                                         onClick={() => setIsManageOpen(false)}
-                                        className="inline-flex h-12 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10"
+                                        className="theme-button-ghost inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-medium"
                                     >
                                         Cancel
                                     </button>
@@ -303,7 +303,7 @@ const BookActions = ({
                                         type="button"
                                         onClick={handleSaveChanges}
                                         disabled={isSaving}
-                                        className="inline-flex h-12 items-center justify-center rounded-full bg-[#20150f] px-6 text-sm font-medium text-white transition-colors hover:bg-[#2d1d15] disabled:cursor-not-allowed disabled:opacity-60"
+                                        className="theme-button-primary inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60"
                                     >
                                         {isSaving ? "Saving..." : "Save changes"}
                                     </button>
@@ -318,15 +318,15 @@ const BookActions = ({
 
     return (
         <>
-            <div className="mt-2 flex overflow-hidden rounded-full border border-amber-200/20 bg-[linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.08))] shadow-[0_14px_30px_rgba(15,23,42,0.18)]">
+            <div className="theme-button-accent mt-2 flex overflow-hidden rounded-full shadow-[0_14px_30px_rgba(15,23,42,0.12)]">
                 <button
                     type="button"
                     onClick={() => void handlePrimaryAction()}
                     disabled={isSaving}
                     className={`inline-flex h-12 flex-1 items-center justify-center gap-2 px-5 text-sm font-semibold transition-all duration-300 ${
                         isShelved
-                            ? "cursor-default text-amber-50"
-                            : "text-amber-100 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))]"
+                            ? "cursor-default text-[var(--bookora-title)]"
+                            : "text-[var(--bookora-accent-strong)] hover:bg-white/10"
                     } disabled:cursor-not-allowed disabled:opacity-70`}
                 >
                     {isShelved ? <span aria-hidden="true">✓</span> : <span aria-hidden="true">＋</span>}
@@ -338,7 +338,7 @@ const BookActions = ({
                         type="button"
                         onClick={() => setIsManageOpen(true)}
                         disabled={isSaving}
-                        className="inline-flex h-12 w-12 items-center justify-center border-l border-amber-200/20 text-amber-100 transition-all duration-300 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] disabled:cursor-not-allowed disabled:opacity-70"
+                        className="inline-flex h-12 w-12 items-center justify-center border-l border-[color:var(--bookora-border)] text-[var(--bookora-accent-strong)] transition-all duration-300 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-70"
                         aria-label="Open reading status menu"
                     >
                         <svg

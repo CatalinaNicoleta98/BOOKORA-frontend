@@ -55,7 +55,7 @@ const BookCoverPanel = ({
             <div className="mt-2 flex flex-col items-center gap-4">
                 {/* Rating */}
                 <div className="flex flex-col items-center gap-2">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                    <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.22em]">
                         Your rating
                     </p>
                     <BookRatingStars value={rating} onChange={onChangeRating} size="lg" />
@@ -65,7 +65,7 @@ const BookCoverPanel = ({
                 <button
                     type="button"
                     onClick={onEditActivity}
-                    className="inline-flex h-10 items-center justify-center rounded-full border border-slate-700/60 bg-slate-800/60 px-4 text-sm font-semibold text-slate-200 transition-all duration-200 hover:border-slate-500 hover:bg-slate-700/70 hover:text-white"
+                    className="theme-button-ghost inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-semibold"
                 >
                     Edit activity
                 </button>

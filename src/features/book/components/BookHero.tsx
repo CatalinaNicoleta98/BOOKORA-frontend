@@ -25,29 +25,29 @@ const BookHero = ({
             {hasSeries ? (
                 <Link
                     to={seriesHref}
-                    className="inline-flex w-fit items-center text-[1.05rem] font-medium italic text-amber-100/80 transition-colors hover:text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                    className="theme-accent-text inline-flex w-fit items-center text-[1.05rem] font-medium italic transition-colors hover:text-[var(--bookora-title)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                 >
                     {seriesLabel}
                 </Link>
             ) : null}
 
             <div className={hasSeries ? "mt-2.5 space-y-3" : "space-y-3"}>
-                <h1 className="max-w-4xl font-serif text-[2.15rem] font-semibold leading-[1.02] tracking-[-0.025em] text-white sm:text-[2.65rem] lg:text-[3.25rem] xl:text-[3.7rem]">
+                <h1 className="theme-title max-w-4xl font-serif text-[2.15rem] font-semibold leading-[1.02] tracking-[-0.025em] sm:text-[2.65rem] lg:text-[3.25rem] xl:text-[3.7rem]">
                     {title}
                 </h1>
 
-                <p className="text-[1.05rem] leading-snug text-slate-200 sm:text-[1.3rem]">
-                    <span className="font-medium text-slate-100">{authorLabel}</span>
+                <p className="theme-text-soft text-[1.05rem] leading-snug sm:text-[1.3rem]">
+                    <span className="theme-text font-medium">{authorLabel}</span>
                 </p>
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                <div className="theme-text-soft mt-3 flex flex-wrap items-center gap-3 text-sm">
                     <BookRatingStars value={communityRating.average} onChange={() => {}} readOnly />
-                    <span className="font-medium text-slate-100">
+                    <span className="theme-text font-medium">
                         {communityRating.average.toFixed(2)}
                     </span>
-                    <span className="text-slate-400">
+                    <span className="theme-text-muted">
                         {formatNumber(communityRating.ratingsCount)} ratings
                     </span>
-                    <span className="text-slate-400">
+                    <span className="theme-text-muted">
                         · {formatNumber(communityRating.reviewsCount)} reviews
                     </span>
                 </div>

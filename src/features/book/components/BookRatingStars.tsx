@@ -74,13 +74,13 @@ const BookRatingStars = ({
 
                 return (
                     <div key={starNumber} className={`relative ${resolvedSizeClass}`}>
-                        <StarSvg className="absolute inset-0 h-full w-full text-white/20" />
+                        <StarSvg className="theme-star-base absolute inset-0 h-full w-full" />
 
                         <div
                             className="absolute inset-0 overflow-hidden"
                             style={{ clipPath: `inset(0 ${100 - fillPercentage}% 0 0)` }}
                         >
-                            <StarSvg className="h-full w-full text-amber-300 drop-shadow-[0_0_10px_rgba(252,211,77,0.35)]" />
+                            <StarSvg className="theme-star-fill h-full w-full" />
                         </div>
 
                         <div className="relative h-full w-full opacity-0">

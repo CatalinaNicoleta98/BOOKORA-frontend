@@ -12,6 +12,7 @@ interface LibraryEntryRecord {
     rating?: number;
     notes?: string;
     reviewText?: string;
+    isSpoiler?: boolean;
     updatedAt?: string;
 }
 
@@ -36,6 +37,7 @@ const mapLibraryEntryToUserReview = (entry: LibraryEntryRecord): BookUserReviewE
     status: entry.status,
     rating: entry.rating,
     content: entry.notes ?? entry.reviewText,
+    isSpoiler: entry.isSpoiler ?? false,
     updatedAt: entry.updatedAt,
 });
 

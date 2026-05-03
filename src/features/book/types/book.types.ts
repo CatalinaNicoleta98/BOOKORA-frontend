@@ -67,6 +67,8 @@ export interface Review {
     content: string;
     createdAt: string;
     source?: "open_library" | "bookora";
+    avatarUrl?: string;
+    isSpoiler?: boolean;
 }
 
 export interface BookReviewCurrentUser {
@@ -80,6 +82,7 @@ export interface BookUserReviewEntry {
     status: string;
     rating?: number;
     content?: string;
+    isSpoiler?: boolean;
     updatedAt?: string;
 }
 

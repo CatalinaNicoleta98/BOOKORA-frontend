@@ -86,6 +86,29 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
         setSelectedStatus(getInitialStatus(currentStatus));
     }, [currentStatus]);
 
+    useEffect(() => {
+        if (!isManageOpen) {
+            return undefined;
+        }
+
+        const { overflow } = document.body.style;
+
+        document.body.style.overflow = "hidden";
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setIsManageOpen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.body.style.overflow = overflow;
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [isManageOpen]);
+
     const toggleFormat = (format: OwnershipFormat) => {
         setSelectedFormats((currentFormats) => {
             if (currentFormats.includes(format)) {
@@ -120,8 +143,18 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
             </div>
 
             {isManageOpen ? (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020617]/78 px-6 backdrop-blur-md">
-                    <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,24,0.96),rgba(5,8,18,0.98))] p-6 text-white shadow-[0_30px_100px_rgba(2,6,23,0.55)] backdrop-blur-xl">
+                <div
+                    className="fixed inset-0 z-[120] overflow-y-auto bg-[#020617]/78 p-4 backdrop-blur-md sm:p-6"
+                    onClick={() => setIsManageOpen(false)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Manage this book"
+                >
+                    <div
+                        className="mx-auto flex min-h-full w-full max-w-xl items-start py-6 sm:items-center"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="max-h-[calc(100dvh-3rem)] w-full overflow-y-auto rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,24,0.96),rgba(5,8,18,0.98))] p-6 text-white shadow-[0_30px_100px_rgba(2,6,23,0.55)] backdrop-blur-xl sm:max-h-[calc(100dvh-4rem)]">
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -253,6 +286,7 @@ const BookActions = ({ currentStatus, onAddToLibrary, onWantToRead }: BookAction
                                     </button>
                                 </div>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>

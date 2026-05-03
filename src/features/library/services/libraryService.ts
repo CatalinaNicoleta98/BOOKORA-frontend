@@ -128,7 +128,7 @@ export const updateLibraryEntry = async (
   entryId: string,
   payload: UpdateLibraryEntryPayload
 ): Promise<LibraryEntry> => {
-  const { data } = await httpClient.patch<LibraryEntryApiRecord>(
+  const { data } = await httpClient.put<LibraryEntryApiRecord>(
     `${BASE_URL}/${entryId}`,
     buildLibraryPayload(payload)
   );

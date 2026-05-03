@@ -11,6 +11,12 @@ export type ReadingStatus =
 
 export type BookFormat = "physical" | "ebook" | "audiobook";
 
+export interface ReadingSession {
+  id: string;
+  dateStarted?: string;
+  dateFinished?: string;
+}
+
 export interface LibraryBookSeed {
   externalBookId: string;
   title: string;
@@ -57,6 +63,7 @@ export interface LibraryEntry {
   // Reading activity
   dateStarted?: string; // ISO string
   dateFinished?: string; // ISO string
+  readingSessions?: ReadingSession[];
 
   // Progress
   progressValue?: number;
@@ -89,6 +96,7 @@ export interface CreateLibraryEntryPayload {
 
   dateStarted?: string;
   dateFinished?: string;
+  readingSessions?: ReadingSession[];
 
   progressValue?: number;
   progressMax?: number;

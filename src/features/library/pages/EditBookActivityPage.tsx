@@ -8,6 +8,7 @@ import OwnershipFormatSelector from "../components/OwnershipFormatSelector";
 import CustomListsSelector from "../components/CustomListSelector";
 import ReadingDatesForm from "../components/ReadingDatesForm";
 import {
+  deleteLibraryEntry,
   getLibraryEntryByBookId,
   upsertLibraryEntry
 } from "../services/libraryService";
@@ -17,6 +18,7 @@ import type {
   EditBookActivityLocationState,
   LibraryBookSeed,
   LibraryEntry,
+  ReadingSession,
   ReadingStatus,
   UpdateLibraryEntryPayload
 } from "../types/library.types";
@@ -87,6 +89,23 @@ const getBookSeedFromEntry = (libraryEntry: LibraryEntry): LibraryBookSeed => ({
   publishedYear: libraryEntry.publishedYear
 });
 
+const getFallbackReadingSessions = (
+  dateStarted?: string,
+  dateFinished?: string
+): ReadingSession[] => {
+  if (!dateStarted && !dateFinished) {
+    return [];
+  }
+
+  return [
+    {
+      id: "session-existing-0",
+      dateStarted,
+      dateFinished
+    }
+  ];
+};
+
 const getStatusBadgeCopy = (status: ReadingStatus) => {
   switch (status) {
     case "currently_reading":
@@ -130,8 +149,7 @@ const EditBookActivityPage = () => {
   const [rating, setRating] = useState<number | undefined>();
   const [reviewText, setReviewText] = useState("");
   const [isSpoiler, setIsSpoiler] = useState(false);
-  const [dateStarted, setDateStarted] = useState<string | undefined>();
-  const [dateFinished, setDateFinished] = useState<string | undefined>();
+  const [readingSessions, setReadingSessions] = useState<ReadingSession[]>([]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -165,14 +183,18 @@ const EditBookActivityPage = () => {
           setRating(existing.rating);
           setReviewText(existing.reviewText ?? existing.notes ?? "");
           setIsSpoiler(existing.isSpoiler ?? false);
-          setDateStarted(existing.dateStarted);
-          setDateFinished(existing.dateFinished);
+          setReadingSessions(
+            existing.readingSessions?.length
+              ? existing.readingSessions
+              : getFallbackReadingSessions(existing.dateStarted, existing.dateFinished)
+          );
           return;
         }
 
         if (locationState?.book) {
           setBookSeed(locationState.book);
           setStatus(DEFAULT_STATUS);
+          setReadingSessions([]);
           return;
         }
 
@@ -265,8 +287,9 @@ const EditBookActivityPage = () => {
         reviewText,
         notes: reviewText,
         isSpoiler,
-        dateStarted,
-        dateFinished
+        dateStarted: readingSessions[readingSessions.length - 1]?.dateStarted,
+        dateFinished: readingSessions[readingSessions.length - 1]?.dateFinished,
+        readingSessions
       };
 
       const updatePayload: UpdateLibraryEntryPayload = {
@@ -277,8 +300,9 @@ const EditBookActivityPage = () => {
         reviewText,
         notes: reviewText,
         isSpoiler,
-        dateStarted,
-        dateFinished
+        dateStarted: readingSessions[readingSessions.length - 1]?.dateStarted,
+        dateFinished: readingSessions[readingSessions.length - 1]?.dateFinished,
+        readingSessions
       };
 
       const saved = await upsertLibraryEntry(entry, createPayload, updatePayload);
@@ -286,9 +310,33 @@ const EditBookActivityPage = () => {
       setEntry(saved);
       setBookSeed(getBookSeedFromEntry(saved));
       setReviewText(saved.reviewText ?? saved.notes ?? "");
+      setReadingSessions(
+        saved.readingSessions?.length
+          ? saved.readingSessions
+          : getFallbackReadingSessions(saved.dateStarted, saved.dateFinished)
+      );
       setSaveMessage("Activity saved to your library.");
     } catch {
       setSaveError("Could not save activity. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRemoveFromShelf = async () => {
+    if (!entry) {
+      navigate(bookId ? `/books/${bookId}` : "/");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setSaveMessage(null);
+      setSaveError(null);
+      await deleteLibraryEntry(entry.id);
+      navigate(bookId ? `/books/${bookId}` : "/");
+    } catch {
+      setSaveError("Could not remove this book from your shelves right now.");
     } finally {
       setSaving(false);
     }
@@ -465,10 +513,8 @@ const EditBookActivityPage = () => {
 
             <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.18))] p-5 sm:p-6">
               <ReadingDatesForm
-                dateStarted={dateStarted}
-                dateFinished={dateFinished}
-                onDateStartedChange={setDateStarted}
-                onDateFinishedChange={setDateFinished}
+                readingSessions={readingSessions}
+                onChange={setReadingSessions}
               />
             </section>
 
@@ -525,6 +571,16 @@ const EditBookActivityPage = () => {
               </p>
 
               <div className="flex flex-wrap gap-3">
+                {entry ? (
+                  <button
+                    type="button"
+                    onClick={handleRemoveFromShelf}
+                    disabled={saving}
+                    className="inline-flex h-12 items-center justify-center rounded-full border border-red-400/20 bg-red-950/20 px-5 text-sm font-medium text-red-100 transition-colors hover:bg-red-950/30 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Remove from shelf
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => navigate(bookId ? `/books/${bookId}` : "/")}

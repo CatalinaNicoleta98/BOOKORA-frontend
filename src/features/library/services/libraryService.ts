@@ -4,6 +4,7 @@ import type {
   LibraryEntry,
   BookFormat,
   CreateLibraryEntryPayload,
+  ReadingSession,
   UpdateLibraryEntryPayload
 } from "../types/library.types";
 
@@ -31,6 +32,10 @@ type LibraryEntryApiRecord = {
   isSpoiler?: boolean;
   dateStarted?: string;
   dateFinished?: string;
+  readingSessions?: Array<{
+    dateStarted?: string;
+    dateFinished?: string;
+  }>;
   progressValue?: number;
   progressMax?: number;
   progressUnit?: LibraryEntry["progressUnit"];
@@ -44,6 +49,19 @@ type LibraryCollectionResponse = {
 
 const normalizeLibraryEntry = (entry: LibraryEntryApiRecord): LibraryEntry => {
   const resolvedReviewText = entry.reviewText ?? entry.notes;
+  const readingSessions: ReadingSession[] =
+    entry.readingSessions?.map((session, index) => ({
+      id: `${entry._id ?? entry.id ?? "session"}-${index}`,
+      dateStarted: session.dateStarted,
+      dateFinished: session.dateFinished
+    })) ??
+    [
+      {
+        id: `${entry._id ?? entry.id ?? "session"}-0`,
+        dateStarted: entry.dateStarted,
+        dateFinished: entry.dateFinished
+      }
+    ].filter((session) => session.dateStarted || session.dateFinished);
 
   return {
     id: entry._id ?? entry.id ?? "",
@@ -62,6 +80,7 @@ const normalizeLibraryEntry = (entry: LibraryEntryApiRecord): LibraryEntry => {
     notes: entry.notes ?? resolvedReviewText,
     dateStarted: entry.dateStarted,
     dateFinished: entry.dateFinished,
+    readingSessions,
     progressValue: entry.progressValue,
     progressMax: entry.progressMax,
     progressUnit: entry.progressUnit,
@@ -79,7 +98,14 @@ const buildLibraryPayload = (
     ...payload,
     format: payload.formats?.[0],
     reviewText: resolvedReviewText,
-    notes: resolvedReviewText
+    notes: resolvedReviewText,
+    dateStarted: payload.readingSessions?.[payload.readingSessions.length - 1]?.dateStarted ?? payload.dateStarted,
+    dateFinished:
+      payload.readingSessions?.[payload.readingSessions.length - 1]?.dateFinished ?? payload.dateFinished,
+    readingSessions: payload.readingSessions?.map((session) => ({
+      dateStarted: session.dateStarted,
+      dateFinished: session.dateFinished
+    }))
   };
 };
 
@@ -134,6 +160,10 @@ export const updateLibraryEntry = async (
   );
 
   return normalizeLibraryEntry(data);
+};
+
+export const deleteLibraryEntry = async (entryId: string): Promise<void> => {
+  await httpClient.delete(`${BASE_URL}/${entryId}`);
 };
 
 // Create or update helper (used from book page / edit page)

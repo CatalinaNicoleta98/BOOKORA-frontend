@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import type {
@@ -16,6 +16,10 @@ import {
 
 import OwnershipFormatSelector from "../components/OwnershipFormatSelector";
 import CustomListsSelector from "../components/CustomListSelector";
+
+
+import BookRatingStars from "../../../features/book/components/BookRatingStars";
+import ReadingDatesForm from "../components/ReadingDatesForm";
 
 
 // EditBookActivityPage
@@ -153,6 +157,23 @@ export const EditBookActivityPage = () => {
         <CustomListsSelector
           value={customLists}
           onChange={setCustomLists}
+        />
+
+        {/* Rating */}
+        <div>
+          <label className="mb-2 block text-sm font-medium">Your rating</label>
+          <BookRatingStars
+            value={rating ?? 0}
+            onChange={(value: number) => setRating(value)}
+          />
+        </div>
+
+        {/* Reading Dates */}
+        <ReadingDatesForm
+          dateStarted={dateStarted}
+          dateFinished={dateFinished}
+          onDateStartedChange={setDateStarted}
+          onDateFinishedChange={setDateFinished}
         />
 
         {/* Review */}

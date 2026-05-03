@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import {
+    deleteLibraryEntry,
     getLibraryEntryByBookId,
     upsertLibraryEntry,
 } from "../../library/services/libraryService";
@@ -213,6 +214,33 @@ const BookPage = () => {
         }
     };
 
+    const handleRemoveFromLibrary = async () => {
+        if (!authState.isAuthenticated || !book) {
+            return;
+        }
+
+        try {
+            setIsSavingReadingStatus(true);
+            setError(null);
+
+            const existingEntry = await getLibraryEntryByBookId(book.id);
+
+            if (!existingEntry) {
+                setCurrentUserReview(null);
+                setSelectedRating(null);
+                return;
+            }
+
+            await deleteLibraryEntry(existingEntry.id);
+            setCurrentUserReview(null);
+            setSelectedRating(null);
+        } catch {
+            setError("Could not remove this book from your shelves right now.");
+        } finally {
+            setIsSavingReadingStatus(false);
+        }
+    };
+
     const handlePersistRating = async (rating: number) => {
         setSelectedRating(rating);
 
@@ -278,6 +306,7 @@ const BookPage = () => {
                             onChangeRating={handlePersistRating}
                             onEditActivity={() => openActivityEditor()}
                             onUpdateReadingStatus={handleUpdateReadingStatus}
+                            onRemoveFromLibrary={handleRemoveFromLibrary}
                             isSavingReadingStatus={isSavingReadingStatus}
                         />
                     </div>

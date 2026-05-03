@@ -80,6 +80,7 @@ const BookActions = ({
     currentStatus,
     onAddToLibrary,
     onWantToRead,
+    onRemoveFromLibrary,
     isSaving = false,
 }: BookActionsProps) => {
     const [isManageOpen, setIsManageOpen] = useState(false);
@@ -152,6 +153,15 @@ const BookActions = ({
         }
 
         await onAddToLibrary(selectedStatus);
+        setIsManageOpen(false);
+    };
+
+    const handleRemoveFromShelf = async () => {
+        if (isSaving) {
+            return;
+        }
+
+        await onRemoveFromLibrary();
         setIsManageOpen(false);
     };
 
@@ -275,6 +285,7 @@ const BookActions = ({
                             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
                                 <button
                                     type="button"
+                                    onClick={handleRemoveFromShelf}
                                     className="text-sm font-semibold text-slate-400 transition-colors hover:text-white"
                                 >
                                     Remove from shelf
@@ -322,26 +333,28 @@ const BookActions = ({
                     <span>{isSaving ? "Saving..." : activeStatusLabel}</span>
                 </button>
 
-                <button
-                    type="button"
-                    onClick={() => setIsManageOpen(true)}
-                    disabled={isSaving}
-                    className="inline-flex h-12 w-12 items-center justify-center border-l border-amber-200/20 text-amber-100 transition-all duration-300 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] disabled:cursor-not-allowed disabled:opacity-70"
-                    aria-label="Open reading status menu"
-                >
-                    <svg
-                        viewBox="0 0 20 20"
-                        aria-hidden="true"
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                {isShelved ? (
+                    <button
+                        type="button"
+                        onClick={() => setIsManageOpen(true)}
+                        disabled={isSaving}
+                        className="inline-flex h-12 w-12 items-center justify-center border-l border-amber-200/20 text-amber-100 transition-all duration-300 hover:bg-[linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1))] disabled:cursor-not-allowed disabled:opacity-70"
+                        aria-label="Open reading status menu"
                     >
-                        <path d="M5 7l5 6 5-6" />
-                    </svg>
-                </button>
+                        <svg
+                            viewBox="0 0 20 20"
+                            aria-hidden="true"
+                            className="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M5 7l5 6 5-6" />
+                        </svg>
+                    </button>
+                ) : null}
             </div>
 
             {portalRoot ? createPortal(manageModal, portalRoot) : manageModal}

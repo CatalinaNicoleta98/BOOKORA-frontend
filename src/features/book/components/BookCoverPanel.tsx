@@ -10,6 +10,7 @@ const BookCoverPanel = ({
     onChangeRating,
     onEditActivity,
     onUpdateReadingStatus,
+    onRemoveFromLibrary,
     isSavingReadingStatus = false,
 }: BookCoverPanelProps) => {
     return (
@@ -46,6 +47,7 @@ const BookCoverPanel = ({
                 currentStatus={readingStatus}
                 onAddToLibrary={onUpdateReadingStatus}
                 onWantToRead={() => onUpdateReadingStatus("want_to_read")}
+                onRemoveFromLibrary={onRemoveFromLibrary}
                 onWriteReview={() => console.log("Write review clicked")}
                 isSaving={isSavingReadingStatus}
             />

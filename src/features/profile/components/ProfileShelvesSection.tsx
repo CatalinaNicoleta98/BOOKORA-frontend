@@ -16,15 +16,15 @@ const ProfileShelvesSection = ({
         <section className="theme-glass-panel rounded-[2rem] p-6 sm:p-8">
             <div className="flex items-center justify-between gap-4">
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
+                    <p className="theme-eyebrow">
                         Featured shelves
                     </p>
-                    <h2 className="mt-2 text-2xl font-semibold text-white">A quick look into your reading moods</h2>
+                    <h2 className="theme-title mt-2 text-2xl font-semibold">A quick look into your reading moods</h2>
                 </div>
                 <button
                     type="button"
                     onClick={onManageShelves}
-                    className="text-sm font-medium text-amber-100 transition-colors duration-300 hover:text-amber-50"
+                    className="theme-accent-text text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
                 >
                     Browse library
                 </button>
@@ -38,12 +38,12 @@ const ProfileShelvesSection = ({
                     >
                         <div className="flex flex-wrap items-start justify-between gap-4">
                             <div className="min-w-0 flex-1">
-                                <h3 className="max-w-[14rem] text-[1.55rem] font-semibold leading-tight text-white">
+                                <h3 className="theme-title max-w-[14rem] text-[1.55rem] font-semibold leading-tight">
                                     {shelf.name}
                                 </h3>
-                                <p className="mt-3 max-w-md text-sm leading-7 text-slate-400">{shelf.description}</p>
+                                <p className="theme-text-muted mt-3 max-w-md text-sm leading-7">{shelf.description}</p>
                             </div>
-                            <span className="shrink-0 rounded-full border border-white/10 bg-white/7 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+                            <span className="theme-pill-subtle shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
                                 {shelf.count} books
                             </span>
                         </div>

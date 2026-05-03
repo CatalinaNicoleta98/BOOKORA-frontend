@@ -37,7 +37,7 @@ const CompactBookButton = ({
             </div>
 
             <div className="min-w-0 flex-1">
-                <p className="line-clamp-2 text-sm font-semibold leading-6 text-white">
+                <p className="theme-title line-clamp-2 text-sm font-semibold leading-6">
                     {book.title}
                 </p>
                 <p className="mt-1 line-clamp-1 text-xs text-slate-400">
@@ -78,13 +78,13 @@ const FeaturedRecommendation = ({ item }: { item: HomeRecommendationItem }) => {
                 </div>
 
                 <div className="min-w-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100/80">
+                    <p className="theme-accent-text text-[11px] font-semibold uppercase tracking-[0.18em]">
                         Recommended for you
                     </p>
-                    <h3 className="mt-2 line-clamp-2 text-base font-semibold leading-6 text-white">
+                    <h3 className="theme-title mt-2 line-clamp-2 text-base font-semibold leading-6">
                         {item.title}
                     </h3>
-                    <p className="mt-1 line-clamp-1 text-sm text-slate-300">
+                    <p className="theme-text-soft mt-1 line-clamp-1 text-sm">
                         {item.author}
                     </p>
                     <p className="mt-3 line-clamp-3 text-xs leading-6 text-slate-400">
@@ -113,10 +113,10 @@ const Panel = ({
         <section className="theme-content-panel rounded-[1.75rem] p-5 sm:p-6">
             <div className="flex items-start justify-between gap-3">
                 <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.2em]">
                         {eyebrow}
                     </p>
-                    <h3 className="text-lg font-semibold tracking-[-0.03em] text-white">
+                    <h3 className="theme-title text-lg font-semibold tracking-[-0.03em]">
                         {title}
                     </h3>
                 </div>
@@ -125,7 +125,7 @@ const Panel = ({
                     <button
                         type="button"
                         onClick={onAction}
-                        className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 transition-colors hover:text-white"
+                        className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em] transition-colors hover:text-[var(--bookora-title)]"
                     >
                         {actionLabel}
                     </button>

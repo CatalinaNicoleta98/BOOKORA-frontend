@@ -11,11 +11,11 @@ const ProfileRecentActivity = ({ items, onOpenBook, onBrowseBooks }: ProfileRece
     return (
         <section className="theme-content-panel rounded-[2rem] p-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">Recent activity</h2>
+                <h2 className="theme-title text-lg font-semibold">Recent activity</h2>
                 <button
                     type="button"
                     onClick={onBrowseBooks}
-                    className="text-sm font-medium text-amber-100 transition-colors duration-300 hover:text-amber-50"
+                    className="theme-accent-text text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
                 >
                     Find another book
                 </button>
@@ -43,7 +43,7 @@ const ProfileRecentActivity = ({ items, onOpenBook, onBrowseBooks }: ProfileRece
                             </div>
                             <div className="min-w-0 flex-1">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <p className="text-sm font-medium text-white">{item.title}</p>
+                                    <p className="theme-text text-sm font-medium">{item.title}</p>
                                     {item.statusLabel ? (
                                         <span className="theme-pill-subtle rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
                                             {item.statusLabel}

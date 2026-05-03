@@ -14,13 +14,13 @@ const ProfileLibrarySpotlight = ({
     return (
         <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
             <div className="border-b border-[var(--bookora-border)] px-6 py-5 sm:px-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                <p className="theme-eyebrow">
                     Reading spotlight
                 </p>
                 <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                     <div>
-                        <h2 className="text-2xl font-semibold text-white">The books shaping your current reading mood</h2>
-                        <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-400">
+                        <h2 className="theme-title text-2xl font-semibold">The books shaping your current reading mood</h2>
+                        <p className="theme-text-muted mt-2 max-w-2xl text-sm leading-7">
                             Jump back into your active stack or pull something forward from Want to Read.
                         </p>
                     </div>
@@ -62,15 +62,15 @@ const ProfileLibrarySpotlight = ({
                                 </div>
 
                                 <div className="min-w-0 flex-1">
-                                    <span className="inline-flex rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-100">
+                                    <span className="theme-status-pill inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
                                         {item.statusLabel}
                                     </span>
-                                    <h3 className="mt-3 line-clamp-2 text-lg font-semibold text-white">
+                                    <h3 className="theme-title mt-3 line-clamp-2 text-lg font-semibold">
                                         {item.title}
                                     </h3>
-                                    <p className="mt-1 text-sm text-slate-400">{item.author}</p>
+                                    <p className="theme-text-muted mt-1 text-sm">{item.author}</p>
                                     {item.progressLabel ? (
-                                        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-amber-100">
+                                        <p className="theme-accent-text mt-3 text-xs font-semibold uppercase tracking-[0.16em]">
                                             {item.progressLabel}
                                         </p>
                                     ) : null}
@@ -78,7 +78,7 @@ const ProfileLibrarySpotlight = ({
                             </div>
 
                             <p className="mt-4 text-sm leading-7 text-slate-400">{item.detail}</p>
-                            <span className="mt-4 text-sm font-medium text-slate-200 transition-colors duration-300 group-hover:text-white">
+                            <span className="theme-text mt-4 text-sm font-medium transition-colors duration-300 group-hover:text-[var(--bookora-title)]">
                                 Open book page
                             </span>
                         </button>

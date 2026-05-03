@@ -12,25 +12,25 @@ const getActivityAccent = (activity: HomeActivityItem) => {
         case "finished_audiobook":
             return {
                 badge: "Finished",
-                badgeClass: "border-emerald-300/20 bg-emerald-300/10 text-emerald-100",
+                badgeClass: "theme-status-pill",
                 dotClass: "bg-emerald-300",
             };
         case "rated_book":
             return {
                 badge: "Reviewed",
-                badgeClass: "border-amber-200/20 bg-amber-200/10 text-amber-100",
+                badgeClass: "theme-status-pill",
                 dotClass: "bg-amber-200",
             };
         case "started_audiobook":
             return {
                 badge: "Listening",
-                badgeClass: "border-sky-300/20 bg-sky-300/10 text-sky-100",
+                badgeClass: "theme-status-pill",
                 dotClass: "bg-sky-300",
             };
         case "started_book":
             return {
                 badge: "Reading",
-                badgeClass: "border-indigo-300/20 bg-indigo-300/10 text-indigo-100",
+                badgeClass: "theme-status-pill",
                 dotClass: "bg-indigo-300",
             };
         default:
@@ -52,10 +52,10 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
             <div className="theme-content-panel rounded-[1.9rem] p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-2">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.2em]">
                             Continue reading
                         </p>
-                        <h2 className="text-2xl font-semibold tracking-[-0.03em] text-white">
+                        <h2 className="theme-title text-2xl font-semibold tracking-[-0.03em]">
                             Your current stack
                         </h2>
                     </div>
@@ -95,7 +95,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                 <div className="flex min-w-0 flex-col justify-between p-5">
                                     <div>
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <span className="rounded-full border border-amber-200/20 bg-amber-200/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100">
+                                            <span className="theme-status-pill rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
                                                 {featuredContinue.format === "audiobook"
                                                     ? "Audiobook"
                                                     : featuredContinue.format === "ebook"
@@ -107,13 +107,13 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                             </span>
                                         </div>
 
-                                        <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-white">
+                                        <h3 className="theme-title mt-4 text-2xl font-semibold tracking-[-0.03em]">
                                             {featuredContinue.title}
                                         </h3>
-                                        <p className="mt-2 text-sm text-slate-300">
+                                        <p className="theme-text-soft mt-2 text-sm">
                                             {featuredContinue.author}
                                         </p>
-                                        <p className="mt-4 text-sm leading-7 text-slate-400">
+                                        <p className="theme-text-muted mt-4 text-sm leading-7">
                                             {featuredContinue.progressLabel}
                                             {featuredContinue.secondaryLabel
                                                 ? ` • ${featuredContinue.secondaryLabel}`
@@ -182,7 +182,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                         </div>
 
                                         <div className="min-w-0 flex-1">
-                                            <p className="line-clamp-1 text-sm font-semibold text-white">
+                                            <p className="theme-title line-clamp-1 text-sm font-semibold">
                                                 {item.title}
                                             </p>
                                             <p className="mt-1 line-clamp-1 text-xs text-slate-400">
@@ -203,7 +203,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                     </div>
                 ) : (
                     <div className="theme-content-panel-muted mt-5 rounded-[1.4rem] border-dashed p-5">
-                        <p className="text-base font-medium text-slate-100">
+                        <p className="theme-text text-base font-medium">
                             No books in progress yet.
                         </p>
                         <p className="mt-2 text-sm leading-7 text-slate-400">
@@ -212,7 +212,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                         <button
                             type="button"
                             onClick={() => navigate("/search")}
-                            className="mt-4 inline-flex h-11 items-center justify-center rounded-full border border-amber-200/20 bg-amber-200/10 px-4 text-sm font-semibold text-amber-100 transition-colors hover:bg-amber-200/15"
+                            className="theme-button-accent mt-4 inline-flex h-11 items-center justify-center rounded-full px-4 text-sm font-semibold transition-colors"
                         >
                             Browse books
                         </button>
@@ -223,10 +223,10 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
             <div className="theme-content-panel rounded-[1.9rem] p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-2">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.2em]">
                             Activity
                         </p>
-                        <h2 className="text-2xl font-semibold tracking-[-0.03em] text-white">
+                        <h2 className="theme-title text-2xl font-semibold tracking-[-0.03em]">
                             Your reading timeline
                         </h2>
                     </div>
@@ -285,7 +285,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                                             </span>
                                         </div>
 
-                                        <p className="mt-3 text-base font-semibold text-white">
+                                        <p className="theme-title mt-3 text-base font-semibold">
                                             {activity.title}
                                         </p>
                                         <p className="mt-1 text-sm leading-6 text-slate-400">
@@ -300,7 +300,7 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                         })}
                     </div>
                 ) : (
-                    <div className="mt-5 rounded-[1.4rem] border border-dashed border-white/10 bg-white/[0.025] p-5 text-sm leading-7 text-slate-400">
+                    <div className="theme-content-panel-muted mt-5 rounded-[1.4rem] border-dashed p-5 text-sm leading-7 text-slate-400">
                         Once you rate, review, finish, or update progress on books, your personal activity timeline will start filling in here.
                     </div>
                 )}

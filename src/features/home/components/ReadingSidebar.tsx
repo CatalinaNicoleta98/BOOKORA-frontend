@@ -66,12 +66,12 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
     return (
         <aside className="col-span-12 space-y-5">
             <section className="theme-content-panel overflow-hidden rounded-[1.75rem]">
-                <div className="border-b border-white/10 px-5 py-4 sm:px-6">
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading now</p>
-                    <h2 className="mt-3 text-xl font-semibold tracking-[-0.03em] text-white">
+                <div className="border-b border-[var(--bookora-border)] px-5 py-4 sm:px-6">
+                    <p className="theme-text-muted text-xs uppercase tracking-[0.24em]">Reading now</p>
+                    <h2 className="theme-title mt-3 text-xl font-semibold tracking-[-0.03em]">
                         Pick up where you left off
                     </h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                    <p className="theme-text-soft mt-2 text-sm leading-6">
                         Keep physical books, ebooks, and audiobooks clearly separated without losing the
                         full picture.
                     </p>
@@ -84,10 +84,10 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                         if (!item) {
                             return (
                                 <article key={section.id} className="theme-content-panel-soft rounded-[1.35rem] p-4">
-                                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                                    <p className="theme-text-muted text-xs uppercase tracking-[0.22em]">
                                         {section.label}
                                     </p>
-                                    <p className="mt-3 text-sm font-medium text-slate-200">
+                                    <p className="theme-text mt-3 text-sm font-medium">
                                         {section.emptyLabel}
                                     </p>
                                     <p className="mt-2 text-sm leading-6 text-slate-400">
@@ -121,13 +121,13 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                     </div>
 
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-[0.68rem] uppercase tracking-[0.22em] text-slate-400">
+                                        <p className="theme-text-muted text-[0.68rem] uppercase tracking-[0.22em]">
                                             {section.label}
                                         </p>
-                                        <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-white">
+                                        <h3 className="theme-title mt-2 line-clamp-2 text-sm font-semibold leading-6">
                                             {item.title}
                                         </h3>
-                                        <p className="mt-1 text-sm text-slate-300">{item.author}</p>
+                                        <p className="theme-text-soft mt-1 text-sm">{item.author}</p>
 
                                         <div className="mt-4 space-y-2">
                                             <div className="flex items-center justify-between gap-3 text-xs text-slate-400">
@@ -157,8 +157,8 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
             <section className="theme-content-panel rounded-[1.75rem] p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Your shelves</p>
-                        <h2 className="mt-3 text-lg font-semibold tracking-[-0.03em] text-white">
+                        <p className="theme-text-muted text-xs uppercase tracking-[0.24em]">Your shelves</p>
+                        <h2 className="theme-title mt-3 text-lg font-semibold tracking-[-0.03em]">
                             Library snapshot
                         </h2>
                     </div>
@@ -176,8 +176,8 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                 onClick={() => navigate("/profile")}
                                 className="theme-content-panel-soft flex w-full items-center justify-between rounded-[1rem] px-4 py-3 text-left transition hover:border-[var(--bookora-border-strong)]"
                             >
-                                <span className="text-sm text-slate-200">{shelf.label}</span>
-                                <span className="text-sm font-medium text-white">{shelf.count}</span>
+                                <span className="theme-text text-sm">{shelf.label}</span>
+                                <span className="theme-title text-sm font-medium">{shelf.count}</span>
                             </button>
                         ))
                     ) : (
@@ -189,13 +189,13 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
             </section>
 
             <section className="theme-content-panel rounded-[1.75rem] p-5 sm:p-6">
-                <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading goal</p>
+                <p className="theme-text-muted text-xs uppercase tracking-[0.24em]">Reading goal</p>
                 <div className="mt-5 flex items-end justify-between gap-4">
                     <div>
-                        <h2 className="text-lg font-semibold tracking-[-0.03em] text-white">
+                        <h2 className="theme-title text-lg font-semibold tracking-[-0.03em]">
                             {data.challenge.current} / {data.challenge.target}
                         </h2>
-                        <p className="mt-1 text-sm text-slate-300">{data.challenge.label}</p>
+                        <p className="theme-text-soft mt-1 text-sm">{data.challenge.label}</p>
                     </div>
                     <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
                         {Math.round(challengeProgress)}%

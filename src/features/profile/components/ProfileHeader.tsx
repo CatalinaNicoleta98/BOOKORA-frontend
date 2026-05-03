@@ -82,7 +82,7 @@ const ProfileHeader = ({
                 ) : null}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,_rgba(250,204,21,0.22),_transparent_22%),radial-gradient(circle_at_80%_22%,_rgba(192,132,252,0.28),_transparent_26%),radial-gradient(circle_at_50%_72%,_rgba(56,189,248,0.16),_transparent_30%),linear-gradient(135deg,_rgba(12,18,35,0.8),_rgba(22,12,41,0.72),_rgba(6,10,18,0.94))]" />
                 <div className="absolute inset-0 opacity-55 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:72px_72px]" />
-                <div className="absolute left-6 top-6 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-200 backdrop-blur-lg sm:left-8 sm:top-8">
+                <div className="theme-pill-subtle absolute left-6 top-6 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] backdrop-blur-lg sm:left-8 sm:top-8">
                     Reader profile
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#070a12] via-[#070a12]/78 to-transparent" />
@@ -124,14 +124,14 @@ const ProfileHeader = ({
                                         />
                                     </div>
                                 ) : (
-                                    <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem]">
+                                    <h1 className="theme-title text-3xl font-semibold sm:text-4xl lg:text-[2.75rem]">
                                         {profileName}
                                     </h1>
                                 )}
-                                <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                                <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
                                     @{profileName.toLowerCase().replace(/\s+/g, "")}
                                 </span>
-                                <span className="rounded-full border border-amber-200/16 bg-amber-200/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100">
+                                <span className="theme-button-accent rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
                                     {isProfilePublic ? "Public profile" : "Private profile"}
                                 </span>
                             </div>
@@ -150,12 +150,12 @@ const ProfileHeader = ({
                                     />
                                 </div>
                             ) : (
-                                <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-[15px]">
+                                <p className="theme-text-soft mt-3 max-w-3xl text-sm leading-7 sm:text-[15px]">
                                     {profileBio}
                                 </p>
                             )}
 
-                            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-400">
+                            <div className="theme-text-muted mt-4 flex flex-wrap items-center gap-4 text-sm">
                                 <span>{profileEmail}</span>
                                 <span className="h-1 w-1 rounded-full bg-slate-500" />
                                 <span>{isProfilePublic ? "Visible to Bookora readers" : "Only visible to you"}</span>
@@ -169,21 +169,21 @@ const ProfileHeader = ({
                                 <button
                                     type="button"
                                     onClick={() => coverInputRef.current?.click()}
-                                    className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                    className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium"
                                 >
                                     Edit cover
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => avatarInputRef.current?.click()}
-                                    className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                    className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium"
                                 >
                                     Change avatar
                                 </button>
                                 <button
                                     type="button"
                                     onClick={onCancelEditing}
-                                    className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                    className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium"
                                 >
                                     Cancel
                                 </button>
@@ -200,7 +200,7 @@ const ProfileHeader = ({
                             <button
                                 type="button"
                                 onClick={onStartEditing}
-                                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/8 px-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/16 hover:bg-white/12"
+                                className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium"
                             >
                                 Edit profile
                             </button>
@@ -208,7 +208,7 @@ const ProfileHeader = ({
                         <button
                             type="button"
                             onClick={onShareProfile}
-                            className="inline-flex h-11 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/10 px-4 text-sm font-medium text-amber-100 transition-all duration-300 hover:border-amber-200/30 hover:bg-amber-200/14"
+                            className="theme-button-accent inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium transition-all duration-300"
                         >
                             Share profile
                         </button>

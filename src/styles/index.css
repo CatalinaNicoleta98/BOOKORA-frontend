@@ -284,6 +284,28 @@ h3 {
     color: var(--bookora-title);
 }
 
+.theme-button-accent {
+    border: 1px solid color-mix(in srgb, var(--bookora-accent) 28%, transparent);
+    background: color-mix(in srgb, var(--bookora-accent) 12%, transparent);
+    color: var(--bookora-accent-strong);
+}
+
+.theme-button-accent:hover {
+    border-color: color-mix(in srgb, var(--bookora-accent) 38%, transparent);
+    background: color-mix(in srgb, var(--bookora-accent) 18%, transparent);
+    color: var(--bookora-title);
+}
+
+.theme-accent-text {
+    color: var(--bookora-accent-strong);
+}
+
+.theme-status-pill {
+    border: 1px solid var(--bookora-border);
+    background: color-mix(in srgb, var(--bookora-surface) 86%, transparent);
+    color: var(--bookora-text-soft);
+}
+
 .theme-title {
     color: var(--bookora-title);
 }

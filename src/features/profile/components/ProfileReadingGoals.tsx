@@ -16,8 +16,8 @@ const ProfileReadingGoals = ({ target, current }: ProfileReadingGoalsProps) => {
     return (
         <section className="theme-content-panel rounded-[2rem] p-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">Reading goal</h2>
-                <span className="text-sm text-slate-400">
+                <h2 className="theme-title text-lg font-semibold">Reading goal</h2>
+                <span className="theme-text-muted text-sm">
                     {current} / {target}
                 </span>
             </div>
@@ -29,10 +29,10 @@ const ProfileReadingGoals = ({ target, current }: ProfileReadingGoalsProps) => {
                 />
             </div>
 
-            <p className="mt-3 text-sm text-slate-400">
+            <p className="theme-text-muted mt-3 text-sm">
                 {progress}% completed
             </p>
-            <p className="mt-1 text-sm text-slate-500">{helperText}</p>
+            <p className="theme-text-muted mt-1 text-sm">{helperText}</p>
         </section>
     );
 };

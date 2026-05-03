@@ -22,13 +22,13 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
                 <div className="grid gap-8 px-6 py-7 sm:px-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.9fr)] lg:px-10">
                     <div className="space-y-5">
                         <div className="space-y-2">
-                            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-100/70">
+                            <p className="theme-eyebrow">
                                 Home
                             </p>
-                            <h1 className="max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
+                            <h1 className="theme-title max-w-3xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
                                 Welcome back, {data.userName.split(" ")[0]}.
                             </h1>
-                            <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-[0.95rem]">
+                            <p className="theme-text-soft max-w-2xl text-sm leading-7 sm:text-[0.95rem]">
                                 Your shelves, in-progress reads, and recent review activity all live here.
                                 Pick up a book, browse your profile, or jump into something new.
                             </p>
@@ -38,14 +38,14 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
                             <button
                                 type="button"
                                 onClick={() => navigate("/search")}
-                                className="inline-flex h-12 items-center justify-center rounded-full border border-amber-200/25 bg-amber-200/12 px-5 text-sm font-semibold text-amber-50 transition-all hover:border-amber-200/35 hover:bg-amber-200/18"
+                                className="theme-button-accent inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-semibold transition-all"
                             >
                                 Find your next book
                             </button>
                             <button
                                 type="button"
                                 onClick={() => navigate("/profile")}
-                                className="inline-flex h-12 items-center justify-center rounded-full border border-white/12 bg-white/6 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                                className="theme-button-ghost inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-semibold"
                             >
                                 Visit profile
                             </button>
@@ -54,37 +54,37 @@ const HomeLayout = ({ data }: HomeLayoutProps) => {
 
                     <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
                         <div className="theme-content-panel-soft rounded-[1.4rem] p-4">
-                            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                            <p className="theme-text-muted text-xs uppercase tracking-[0.2em]">
                                 Reading now
                             </p>
-                            <p className="mt-3 text-2xl font-semibold text-white">
+                            <p className="theme-title mt-3 text-2xl font-semibold">
                                 {activeReadsCount}
                             </p>
-                            <p className="mt-1 text-sm text-slate-300">
+                            <p className="theme-text-soft mt-1 text-sm">
                                 active books across print and audio
                             </p>
                         </div>
 
                         <div className="theme-content-panel-soft rounded-[1.4rem] p-4">
-                            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                            <p className="theme-text-muted text-xs uppercase tracking-[0.2em]">
                                 Goal progress
                             </p>
-                            <p className="mt-3 text-2xl font-semibold text-white">
+                            <p className="theme-title mt-3 text-2xl font-semibold">
                                 {data.challenge.current}/{data.challenge.target}
                             </p>
-                            <p className="mt-1 text-sm text-slate-300">
+                            <p className="theme-text-soft mt-1 text-sm">
                                 books completed toward your target
                             </p>
                         </div>
 
                         <div className="theme-content-panel-soft rounded-[1.4rem] p-4">
-                            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                            <p className="theme-text-muted text-xs uppercase tracking-[0.2em]">
                                 Written reviews
                             </p>
-                            <p className="mt-3 text-2xl font-semibold text-white">
+                            <p className="theme-title mt-3 text-2xl font-semibold">
                                 {writtenReviewsCount}
                             </p>
-                            <p className="mt-1 text-sm text-slate-300">
+                            <p className="theme-text-soft mt-1 text-sm">
                                 recent review moments in your activity
                             </p>
                         </div>

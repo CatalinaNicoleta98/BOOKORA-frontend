@@ -3,6 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import LibraryGrid from "../components/LibraryGrid";
+import LibraryList from "../components/LibraryList";
+import LibraryShelfTabs from "../components/LibraryShelfTabs";
+import LibraryToolbar, {
+    type LibrarySortOption,
+    type LibraryViewMode,
+} from "../components/LibraryToolbar";
 import { getLibrary } from "../services/libraryService";
 import type { LibraryEntry, ReadingStatus } from "../types/library.types";
 
@@ -20,11 +27,31 @@ const getBookRouteId = (entry: LibraryEntry) => {
     return entry.externalBookId ?? entry.id;
 };
 
+const formatLibraryDate = (value?: string) => {
+    if (!value) {
+        return "-";
+    }
+
+    const parsed = new Date(value);
+
+    if (Number.isNaN(parsed.getTime())) {
+        return "-";
+    }
+
+    return parsed.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+};
+
 const LibraryPage = () => {
     const navigate = useNavigate();
 
     const [entries, setEntries] = useState<LibraryEntry[]>([]);
     const [activeShelf, setActiveShelf] = useState<ReadingStatus>("want_to_read");
+    const [viewMode, setViewMode] = useState<LibraryViewMode>("grid");
+    const [sortBy, setSortBy] = useState<LibrarySortOption>("recent");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -54,8 +81,47 @@ const LibraryPage = () => {
     }, [entries]);
 
     const visibleEntries = useMemo(() => {
-        return entries.filter((entry) => entry.status === activeShelf);
-    }, [activeShelf, entries]);
+        const shelfEntries = entries.filter((entry) => entry.status === activeShelf);
+
+        return [...shelfEntries].sort((leftEntry, rightEntry) => {
+            if (sortBy === "title") {
+                return leftEntry.title.localeCompare(rightEntry.title, undefined, { sensitivity: "base" });
+            }
+
+            if (sortBy === "author") {
+                const leftAuthor = leftEntry.author ?? "";
+                const rightAuthor = rightEntry.author ?? "";
+                const authorComparison = leftAuthor.localeCompare(rightAuthor, undefined, { sensitivity: "base" });
+
+                if (authorComparison !== 0) {
+                    return authorComparison;
+                }
+
+                return leftEntry.title.localeCompare(rightEntry.title, undefined, { sensitivity: "base" });
+            }
+
+            if (sortBy === "rating") {
+                const leftRating = leftEntry.rating ?? -1;
+                const rightRating = rightEntry.rating ?? -1;
+
+                if (rightRating !== leftRating) {
+                    return rightRating - leftRating;
+                }
+
+                return leftEntry.title.localeCompare(rightEntry.title, undefined, { sensitivity: "base" });
+            }
+
+            const leftCreatedAt = new Date(leftEntry.createdAt).getTime();
+            const rightCreatedAt = new Date(rightEntry.createdAt).getTime();
+            return rightCreatedAt - leftCreatedAt;
+        });
+    }, [activeShelf, entries, sortBy]);
+
+    const activeShelfLabel = SHELF_TABS.find((shelf) => shelf.value === activeShelf)?.label ?? "Shelf";
+
+    const handleSelectBook = (entry: LibraryEntry) => {
+        navigate(`/books/${getBookRouteId(entry)}`);
+    };
 
     return (
         <main className="mx-auto w-full max-w-7xl px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
@@ -93,47 +159,22 @@ const LibraryPage = () => {
 
             {!isLoading && !error && (
                 <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-                    <aside className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-3 lg:sticky lg:top-24 lg:self-start">
-                        <nav className="space-y-1" aria-label="Library shelves">
-                            {SHELF_TABS.map((shelf) => {
-                                const isActive = shelf.value === activeShelf;
-
-                                return (
-                                    <button
-                                        key={shelf.value}
-                                        type="button"
-                                        onClick={() => setActiveShelf(shelf.value)}
-                                        className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-sm transition ${
-                                            isActive
-                                                ? "bg-amber-200 text-slate-950 shadow-[0_10px_30px_rgba(251,191,36,0.18)]"
-                                                : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
-                                        }`}
-                                    >
-                                        <span className="font-medium">{shelf.label}</span>
-                                        <span
-                                            className={`rounded-full px-2 py-0.5 text-xs ${
-                                                isActive ? "bg-slate-950/10" : "bg-white/[0.06] text-slate-400"
-                                            }`}
-                                        >
-                                            {shelfCounts[shelf.value] ?? 0}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </nav>
-                    </aside>
+                    <LibraryShelfTabs
+                        tabs={SHELF_TABS}
+                        activeShelf={activeShelf}
+                        counts={shelfCounts}
+                        onChange={setActiveShelf}
+                    />
 
                     <section className="min-w-0 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 sm:p-5">
-                        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <h2 className="text-xl font-semibold text-white">
-                                    {SHELF_TABS.find((shelf) => shelf.value === activeShelf)?.label}
-                                </h2>
-                                <p className="text-sm text-slate-400">
-                                    {visibleEntries.length} {visibleEntries.length === 1 ? "book" : "books"} on this shelf
-                                </p>
-                            </div>
-                        </div>
+                        <LibraryToolbar
+                            shelfLabel={activeShelfLabel}
+                            itemCount={visibleEntries.length}
+                            viewMode={viewMode}
+                            sortBy={sortBy}
+                            onViewModeChange={setViewMode}
+                            onSortChange={setSortBy}
+                        />
 
                         {visibleEntries.length === 0 ? (
                             <div className="rounded-2xl border border-dashed border-white/15 bg-slate-950/30 px-5 py-12 text-center">
@@ -142,59 +183,14 @@ const LibraryPage = () => {
                                     Add books from the book page and they will appear on this shelf.
                                 </p>
                             </div>
+                        ) : viewMode === "grid" ? (
+                            <LibraryGrid entries={visibleEntries} onSelectBook={handleSelectBook} />
                         ) : (
-                            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                                {visibleEntries.map((entry) => (
-                                    <button
-                                        key={entry.id}
-                                        type="button"
-                                        onClick={() => navigate(`/books/${getBookRouteId(entry)}`)}
-                                        className="group flex gap-4 rounded-2xl border border-white/10 bg-slate-950/30 p-3 text-left transition hover:-translate-y-0.5 hover:border-amber-200/30 hover:bg-slate-900/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
-                                    >
-                                        <div className="h-28 w-20 flex-shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white/[0.05]">
-                                            {entry.cover ? (
-                                                <img
-                                                    src={entry.cover}
-                                                    alt={entry.title}
-                                                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                                                />
-                                            ) : (
-                                                <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                                                    No cover
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="min-w-0 flex-1 py-1">
-                                            <h3 className="line-clamp-2 text-sm font-semibold leading-5 text-white">
-                                                {entry.title}
-                                            </h3>
-                                            <p className="mt-1 line-clamp-1 text-xs text-slate-400">
-                                                {entry.author ?? "Unknown author"}
-                                            </p>
-
-                                            {typeof entry.rating === "number" && (
-                                                <p className="mt-3 text-xs font-medium text-amber-200">
-                                                    Rated {entry.rating}/5
-                                                </p>
-                                            )}
-
-                                            {entry.formats.length > 0 && (
-                                                <div className="mt-3 flex flex-wrap gap-1.5">
-                                                    {entry.formats.map((format) => (
-                                                        <span
-                                                            key={format}
-                                                            className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] capitalize text-slate-300"
-                                                        >
-                                                            {format}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
+                            <LibraryList
+                                entries={visibleEntries}
+                                onSelectBook={handleSelectBook}
+                                formatDate={formatLibraryDate}
+                            />
                         )}
                     </section>
                 </div>

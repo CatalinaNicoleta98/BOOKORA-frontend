@@ -11,7 +11,7 @@ const navigationItems: NavigationItem[] = [
     { label: "Home", to: "/" },
     { label: "Browse", to: "/search" },
     { label: "Profile", to: "/profile" },
-    { label: "Shelves", to: "/profile" },
+    { label: "Shelves", to: "/library" },
 ];
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) => {

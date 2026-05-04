@@ -29,6 +29,34 @@
         radial-gradient(circle at 86% 16%, rgba(244, 208, 140, 0.14), transparent 18%),
         radial-gradient(circle at 18% 78%, rgba(125, 211, 252, 0.09), transparent 18%),
         linear-gradient(180deg, #0b1020 0%, #090d18 42%, #060811 100%);
+    --bookora-auth-grid-soft: rgba(255, 255, 255, 0.22);
+    --bookora-auth-grid-strong: rgba(255, 255, 255, 0.42);
+    --bookora-auth-grid-accent: rgba(244, 208, 140, 0.42);
+    --bookora-auth-sheen: rgba(255, 255, 255, 0.035);
+    --bookora-auth-orb-violet: rgba(139, 92, 246, 0.12);
+    --bookora-auth-orb-amber: rgba(252, 211, 77, 0.12);
+    --bookora-auth-orb-sky: rgba(125, 211, 252, 0.08);
+    --bookora-auth-orb-fuchsia: rgba(244, 114, 182, 0.07);
+    --bookora-auth-showcase-overlay:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 30%),
+        linear-gradient(180deg, rgba(13, 18, 34, 0.65) 0%, rgba(9, 11, 20, 0.82) 100%);
+    --bookora-auth-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 28%, transparent 72%, rgba(255, 255, 255, 0.03));
+    --bookora-auth-form-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    --bookora-auth-illustration-primary: rgba(244, 208, 140, 0.92);
+    --bookora-auth-illustration-secondary: rgba(196, 181, 253, 0.86);
+    --bookora-auth-illustration-soft: rgba(255, 255, 255, 0.62);
+    --bookora-auth-illustration-solid: rgba(255, 255, 255, 0.85);
+    --bookora-auth-illustration-soft-fill: rgba(255, 255, 255, 0.32);
+    --bookora-auth-illustration-accent-fill: rgba(216, 196, 148, 0.26);
+    --bookora-auth-spark-primary: rgba(255, 255, 255, 0.9);
+    --bookora-auth-spark-accent: rgba(216, 196, 148, 0.94);
+    --bookora-auth-divider: rgba(255, 255, 255, 0.1);
+    --bookora-status-error-border: rgba(253, 164, 175, 0.16);
+    --bookora-status-error-bg: rgba(251, 113, 133, 0.12);
+    --bookora-status-error-text: #ffe4e6;
+    --bookora-status-success-border: rgba(110, 231, 183, 0.18);
+    --bookora-status-success-bg: rgba(52, 211, 153, 0.12);
+    --bookora-status-success-text: #d1fae5;
 }
 
 :root[data-theme="light"] {
@@ -58,6 +86,34 @@
         radial-gradient(circle at 88% 14%, rgba(240, 191, 128, 0.25), transparent 18%),
         radial-gradient(circle at 16% 78%, rgba(198, 219, 229, 0.18), transparent 16%),
         linear-gradient(180deg, #fffaf4 0%, #f7efe3 44%, #efe3d3 100%);
+    --bookora-auth-grid-soft: rgba(140, 108, 76, 0.12);
+    --bookora-auth-grid-strong: rgba(140, 108, 76, 0.18);
+    --bookora-auth-grid-accent: rgba(166, 106, 49, 0.2);
+    --bookora-auth-sheen: rgba(255, 255, 255, 0.32);
+    --bookora-auth-orb-violet: rgba(182, 150, 223, 0.16);
+    --bookora-auth-orb-amber: rgba(232, 178, 96, 0.18);
+    --bookora-auth-orb-sky: rgba(137, 181, 198, 0.16);
+    --bookora-auth-orb-fuchsia: rgba(214, 152, 173, 0.12);
+    --bookora-auth-showcase-overlay:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.44), transparent 30%),
+        linear-gradient(180deg, rgba(255, 248, 241, 0.78) 0%, rgba(243, 233, 220, 0.88) 100%);
+    --bookora-auth-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.4), transparent 28%, transparent 72%, rgba(255, 255, 255, 0.2));
+    --bookora-auth-form-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.16) 100%);
+    --bookora-auth-illustration-primary: rgba(166, 106, 49, 0.82);
+    --bookora-auth-illustration-secondary: rgba(156, 121, 201, 0.74);
+    --bookora-auth-illustration-soft: rgba(91, 70, 54, 0.46);
+    --bookora-auth-illustration-solid: rgba(91, 70, 54, 0.62);
+    --bookora-auth-illustration-soft-fill: rgba(255, 255, 255, 0.28);
+    --bookora-auth-illustration-accent-fill: rgba(166, 106, 49, 0.14);
+    --bookora-auth-spark-primary: rgba(91, 70, 54, 0.7);
+    --bookora-auth-spark-accent: rgba(166, 106, 49, 0.8);
+    --bookora-auth-divider: rgba(104, 67, 44, 0.14);
+    --bookora-status-error-border: rgba(190, 24, 93, 0.18);
+    --bookora-status-error-bg: rgba(244, 114, 182, 0.1);
+    --bookora-status-error-text: #8f1d43;
+    --bookora-status-success-border: rgba(5, 150, 105, 0.2);
+    --bookora-status-success-bg: rgba(16, 185, 129, 0.1);
+    --bookora-status-success-text: #166534;
 }
 
 :root[data-theme="light"] .text-white {
@@ -210,6 +266,25 @@ h3 {
     color: var(--bookora-text);
 }
 
+.theme-auth-dot-grid-soft {
+    background-image: radial-gradient(var(--bookora-auth-grid-soft) 0.7px, transparent 0.7px);
+    background-size: 30px 30px;
+}
+
+.theme-auth-dot-grid-strong {
+    background-image: radial-gradient(var(--bookora-auth-grid-strong) 1.2px, transparent 1.2px);
+    background-size: 150px 150px;
+}
+
+.theme-auth-dot-grid-accent {
+    background-image: radial-gradient(var(--bookora-auth-grid-accent) 1.1px, transparent 1.1px);
+    background-size: 210px 210px;
+}
+
+.theme-auth-sheen {
+    background: linear-gradient(120deg, transparent 0%, var(--bookora-auth-sheen) 18%, transparent 38%);
+}
+
 .theme-page-shell {
     background: transparent;
     color: var(--bookora-text);
@@ -220,6 +295,22 @@ h3 {
     background: var(--bookora-surface);
     box-shadow: var(--bookora-shadow);
     backdrop-filter: blur(22px);
+}
+
+.theme-auth-orb-violet {
+    background: var(--bookora-auth-orb-violet);
+}
+
+.theme-auth-orb-amber {
+    background: var(--bookora-auth-orb-amber);
+}
+
+.theme-auth-orb-sky {
+    background: var(--bookora-auth-orb-sky);
+}
+
+.theme-auth-orb-fuchsia {
+    background: var(--bookora-auth-orb-fuchsia);
 }
 
 .theme-glass-panel-strong {
@@ -234,6 +325,18 @@ h3 {
     background: var(--bookora-bg-soft);
     box-shadow: 0 18px 60px rgba(15, 23, 42, 0.16);
     backdrop-filter: blur(18px);
+}
+
+.theme-auth-showcase-overlay {
+    background: var(--bookora-auth-showcase-overlay);
+}
+
+.theme-auth-panel-highlight::before {
+    background: var(--bookora-auth-highlight);
+}
+
+.theme-auth-form-surface {
+    background: var(--bookora-auth-form-overlay);
 }
 
 .theme-content-panel {
@@ -322,6 +425,10 @@ h3 {
     color: var(--bookora-text-muted);
 }
 
+.theme-divider-line {
+    background: var(--bookora-auth-divider);
+}
+
 .theme-eyebrow {
     color: color-mix(in srgb, var(--bookora-accent) 65%, var(--bookora-text-muted));
     letter-spacing: 0.3em;
@@ -362,6 +469,18 @@ h3 {
 .theme-button-primary:hover {
     transform: translateY(-1px);
     filter: brightness(1.03);
+}
+
+.theme-status-error {
+    border: 1px solid var(--bookora-status-error-border);
+    background: var(--bookora-status-error-bg);
+    color: var(--bookora-status-error-text);
+}
+
+.theme-status-success {
+    border: 1px solid var(--bookora-status-success-border);
+    background: var(--bookora-status-success-bg);
+    color: var(--bookora-status-success-text);
 }
 
 .theme-button-secondary {

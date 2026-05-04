@@ -3,8 +3,8 @@ import BookoraBrand from "../../../shared/components/branding/BookoraBrand";
 
 const AuthShowcase = () => {
     return (
-        <section className="relative hidden min-h-[820px] overflow-hidden border-r border-white/10 lg:block">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_30%),linear-gradient(180deg,_rgba(13,18,34,0.65)_0%,_rgba(9,11,20,0.82)_100%)]" />
+        <section className="relative hidden min-h-[820px] overflow-hidden border-r border-[var(--bookora-border)] lg:block">
+            <div className="theme-auth-showcase-overlay absolute inset-0" />
 
             <div className="absolute inset-x-10 top-10 flex items-center justify-between xl:inset-x-12 xl:top-12">
                 <BookoraBrand tagline="Personal reading sanctuary" />

@@ -84,7 +84,7 @@ const Navbar = (_props: NavbarProps) => {
         { label: "Home", to: "/" },
         { label: "Browse", to: "/search" },
         { label: "Profile", to: "/profile" },
-        { label: "Shelves", to: "/profile" },
+        { label: "Shelves", to: "/library" },
     ];
 
     

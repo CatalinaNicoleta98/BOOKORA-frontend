@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import BookoraBrand from "../branding/BookoraBrand";
+import { PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -23,18 +24,15 @@ const Footer = () => {
                             Navigation
                         </p>
 
-                        <Link to="/" className="text-sm text-[var(--bookora-text-soft)] transition-colors duration-200 hover:text-[var(--bookora-title)]">
-                            Home
-                        </Link>
-                        <Link to="/search" className="text-sm text-[var(--bookora-text-soft)] transition-colors duration-200 hover:text-[var(--bookora-title)]">
-                            Browse
-                        </Link>
-                        <Link to="/profile" className="text-sm text-[var(--bookora-text-soft)] transition-colors duration-200 hover:text-[var(--bookora-title)]">
-                            Profile
-                        </Link>
-                        <Link to="/profile" className="text-sm text-[var(--bookora-text-soft)] transition-colors duration-200 hover:text-[var(--bookora-title)]">
-                            Shelves
-                        </Link>
+                        {PRIMARY_NAV_ITEMS.map((item) => (
+                            <Link
+                                key={item.to}
+                                to={item.to}
+                                className="text-sm text-[var(--bookora-text-soft)] transition-colors duration-200 hover:text-[var(--bookora-title)]"
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
                     </div>
 
                     <div className="flex flex-col gap-2">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { APP_ROUTES } from "../../navigation/navigation";
 
 const getImageSource = (imagePath?: string | null) => {
     if (!imagePath) {
@@ -56,7 +57,7 @@ const ProfileMenu = ({
                         type="button"
                         onClick={() => {
                             setIsOpen(false);
-                            navigate("/profile");
+                            navigate(APP_ROUTES.profile);
                         }}
                         className="w-full px-4 py-3 text-left text-sm text-[var(--bookora-text)] hover:bg-[var(--bookora-surface)]"
                     >

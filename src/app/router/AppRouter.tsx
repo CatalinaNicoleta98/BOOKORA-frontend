@@ -10,10 +10,11 @@ import AppShell from "../../shared/components/layout/AppShell";
 import BookPage from "../../features/book/pages/BookPage";
 import EditBookActivityPage from "../../features/library/pages/EditBookActivityPage";
 import LibraryPage from "../../features/library/pages/LibraryPage";
+import { APP_ROUTES } from "../../shared/navigation/navigation";
 
 const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: ReactElement }) => {
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={APP_ROUTES.login} replace />;
     }
 
     return children;
@@ -21,7 +22,7 @@ const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolea
 
 const PublicOnlyRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: ReactElement }) => {
     if (isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to={APP_ROUTES.home} replace />;
     }
 
     return children;
@@ -43,16 +44,16 @@ const AppRouter = () => {
                     </ProtectedRoute>
                 }
             >
-                <Route path="/" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/books/:id" element={<BookPage />} />
-                <Route path="/books/:bookId/activity" element={<EditBookActivityPage />} />
-                <Route path="/library" element={<LibraryPage />} />
+                <Route path={APP_ROUTES.home} element={<HomePage />} />
+                <Route path={APP_ROUTES.profile} element={<ProfilePage />} />
+                <Route path={APP_ROUTES.search} element={<SearchPage />} />
+                <Route path={APP_ROUTES.bookDetails} element={<BookPage />} />
+                <Route path={APP_ROUTES.bookActivity} element={<EditBookActivityPage />} />
+                <Route path={APP_ROUTES.library} element={<LibraryPage />} />
             </Route>
 
             <Route
-                path="/login"
+                path={APP_ROUTES.login}
                 element={
                     <PublicOnlyRoute isAuthenticated={state.isAuthenticated}>
                         <LoginPage />
@@ -61,7 +62,7 @@ const AppRouter = () => {
             />
 
             <Route
-                path="/register"
+                path={APP_ROUTES.register}
                 element={
                     <PublicOnlyRoute isAuthenticated={state.isAuthenticated}>
                         <RegisterPage />
@@ -69,7 +70,7 @@ const AppRouter = () => {
                 }
             />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to={APP_ROUTES.home} replace />} />
         </Routes>
     );
 };

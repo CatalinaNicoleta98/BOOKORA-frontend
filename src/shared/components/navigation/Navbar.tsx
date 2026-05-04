@@ -8,6 +8,7 @@ import DesktopNavLinks from "./DesktopNavLinks";
 import ProfileMenu from "./ProfileMenu";
 import MobileNavMenu from "./MobileNavMenu";
 import ThemeToggle from "./ThemeToggle";
+import { APP_ROUTES, PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
 
 interface NavbarUser {
     id?: string;
@@ -77,17 +78,8 @@ const Navbar = (_props: NavbarProps) => {
     const handleLogout = () => {
         authStorage.removeToken();
         logout();
-        navigate("/login");
+        navigate(APP_ROUTES.login);
     };
-
-    const navigationItems = [
-        { label: "Home", to: "/" },
-        { label: "Browse", to: "/search" },
-        { label: "Profile", to: "/profile" },
-        { label: "Shelves", to: "/library" },
-    ];
-
-    
 
     return (
         <header className="theme-navbar sticky top-0 z-50 border-b backdrop-blur-2xl">
@@ -153,7 +145,7 @@ const Navbar = (_props: NavbarProps) => {
 
             <MobileNavMenu
                 isOpen={isMobileMenuOpen}
-                navigationItems={navigationItems}
+                navigationItems={PRIMARY_NAV_ITEMS}
                 onClose={closeMobileMenu}
                 onLogout={handleLogout}
                 userDisplayName={userDisplayName}

@@ -1,18 +1,5 @@
-
-
 import { NavLink } from "react-router-dom";
-
-interface NavigationItem {
-    label: string;
-    to: string;
-}
-
-const navigationItems: NavigationItem[] = [
-    { label: "Home", to: "/" },
-    { label: "Browse", to: "/search" },
-    { label: "Profile", to: "/profile" },
-    { label: "Shelves", to: "/library" },
-];
+import { PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) => {
     const baseClassName =
@@ -28,7 +15,7 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) => {
 const DesktopNavLinks = () => {
     return (
         <nav className="hidden flex-1 items-center justify-center gap-2 lg:flex">
-            {navigationItems.map((item) => (
+            {PRIMARY_NAV_ITEMS.map((item) => (
                 <NavLink key={item.to} to={item.to} className={navLinkClassName}>
                     <span>{item.label}</span>
                     <span className="absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-gradient-to-r from-amber-200/0 via-amber-200/80 to-amber-200/0 opacity-0 transition-all duration-300 group-hover:scale-x-100 group-hover:opacity-100" />

@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { APP_ROUTES, type NavigationItem } from "../../navigation/navigation";
 
 const getImageSource = (imagePath?: string | null) => {
     if (!imagePath) {
@@ -11,11 +12,6 @@ const getImageSource = (imagePath?: string | null) => {
 
     return `http://localhost:4000${imagePath}`;
 };
-
-interface NavigationItem {
-    label: string;
-    to: string;
-}
 
 interface MobileNavMenuProps {
     isOpen: boolean;
@@ -62,7 +58,7 @@ const MobileNavMenu = ({
                         type="button"
                         onClick={() => {
                             onClose();
-                            navigate("/profile");
+                            navigate(APP_ROUTES.profile);
                         }}
                         className="group flex w-full items-center gap-3 rounded-2xl px-1 py-1 text-left transition-all duration-300"
                     >
@@ -105,7 +101,7 @@ const MobileNavMenu = ({
                             type="button"
                             onClick={() => {
                                 onClose();
-                                navigate("/search");
+                                navigate(APP_ROUTES.search);
                             }}
                             className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface)] px-4 text-sm font-medium text-[var(--bookora-text)] transition-all duration-300 hover:border-[var(--bookora-border-strong)] hover:bg-[var(--bookora-surface-strong)] hover:text-[var(--bookora-title)]"
                         >

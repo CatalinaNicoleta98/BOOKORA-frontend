@@ -56,7 +56,7 @@ const LoginForm = ({
             </div>
 
             {error ? (
-                <div className="rounded-2xl border border-rose-300/15 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
+                <div className="theme-status-error rounded-2xl px-4 py-3 text-sm">
                     {error}
                 </div>
             ) : null}

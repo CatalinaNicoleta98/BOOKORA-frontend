@@ -52,12 +52,12 @@ const LoginPage = () => {
                 footer={(
                     <>
                         <div className="flex items-center gap-4">
-                            <div className="h-px flex-1 bg-white/10" />
-                            <span className="text-xs uppercase tracking-[0.24em] text-slate-500">New to Bookora</span>
-                            <div className="h-px flex-1 bg-white/10" />
+                            <div className="theme-divider-line h-px flex-1" />
+                            <span className="theme-text-muted text-xs uppercase tracking-[0.24em]">New to Bookora</span>
+                            <div className="theme-divider-line h-px flex-1" />
                         </div>
 
-                        <div className="mt-7 text-center text-sm leading-7 text-slate-300">
+                        <div className="theme-text-soft mt-7 text-center text-sm leading-7">
                             Don&apos;t have an account yet?{" "}
                             <Link
                                 to="/register"

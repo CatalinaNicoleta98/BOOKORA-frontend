@@ -110,13 +110,13 @@ const RegisterForm = ({
                 </div>
 
                 {error ? (
-                    <div className="rounded-2xl border border-rose-300/15 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
+                    <div className="theme-status-error rounded-2xl px-4 py-3 text-sm">
                         {error}
                     </div>
                 ) : null}
 
                 {successMessage ? (
-                    <div className="rounded-2xl border border-emerald-300/15 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+                    <div className="theme-status-success rounded-2xl px-4 py-3 text-sm">
                         {successMessage}
                     </div>
                 ) : null}
@@ -131,9 +131,9 @@ const RegisterForm = ({
             </form>
 
             <div className="mt-10 flex items-center gap-4">
-                <div className="h-px flex-1 bg-white/10" />
+                <div className="theme-divider-line h-px flex-1" />
                 <span className="theme-text-muted text-xs uppercase tracking-[0.24em]">Already with us</span>
-                <div className="h-px flex-1 bg-white/10" />
+                <div className="theme-divider-line h-px flex-1" />
             </div>
 
             <div className="theme-text-soft mt-7 text-center text-sm leading-7">

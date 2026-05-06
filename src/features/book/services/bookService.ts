@@ -23,7 +23,7 @@ interface SaveBookReviewInput {
     cover?: string;
     publishedYear?: number;
     rating?: number;
-    notes?: string;
+    reviewText?: string;
 }
 
 const BOOK_BASE_PATH = "/books";
@@ -36,7 +36,7 @@ const mapLibraryEntryToUserReview = (entry: LibraryEntryRecord): BookUserReviewE
     id: entry._id,
     status: entry.status,
     rating: entry.rating,
-    content: entry.notes ?? entry.reviewText,
+    content: entry.reviewText,
     isSpoiler: entry.isSpoiler ?? false,
     updatedAt: entry.updatedAt,
 });
@@ -77,7 +77,7 @@ export const saveCurrentUserBookReview = async ({
     cover,
     publishedYear,
     rating,
-    notes,
+    reviewText,
 }: SaveBookReviewInput): Promise<BookUserReviewEntry> => {
     const existingEntry = await getCurrentUserBookReview(externalBookId);
 
@@ -87,7 +87,7 @@ export const saveCurrentUserBookReview = async ({
             {
                 status: getStatusForSavedReview(existingEntry.status, rating),
                 rating,
-                notes,
+                reviewText,
             }
         );
 
@@ -105,7 +105,7 @@ export const saveCurrentUserBookReview = async ({
             publishedYear,
             status: getStatusForSavedReview(undefined, rating),
             rating,
-            notes,
+            reviewText,
         }
     );
 

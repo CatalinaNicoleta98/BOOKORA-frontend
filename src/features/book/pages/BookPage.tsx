@@ -172,14 +172,8 @@ const BookPage = () => {
                 publishedYear: getPublishedYear(book.publishDate),
                 status: status as CreateLibraryEntryPayload["status"],
                 rating: existingEntry?.rating ?? currentUserReview?.rating,
-                reviewText:
-                    existingEntry?.reviewText ??
-                    existingEntry?.notes ??
-                    currentUserReview?.content,
-                notes:
-                    existingEntry?.notes ??
-                    existingEntry?.reviewText ??
-                    currentUserReview?.content,
+                reviewText: existingEntry?.reviewText ?? currentUserReview?.content,
+                notes: existingEntry?.notes,
                 isSpoiler: existingEntry?.isSpoiler ?? currentUserReview?.isSpoiler,
                 formats: existingEntry?.formats ?? [],
                 customLists: existingEntry?.customLists ?? [],
@@ -199,7 +193,7 @@ const BookPage = () => {
                 id: savedEntry.id,
                 status: savedEntry.status,
                 rating: savedEntry.rating,
-                content: savedEntry.reviewText ?? savedEntry.notes,
+                content: savedEntry.reviewText,
                 isSpoiler: savedEntry.isSpoiler,
                 updatedAt: savedEntry.updatedAt,
             });
@@ -258,7 +252,7 @@ const BookPage = () => {
                 cover: book.coverUrl,
                 publishedYear: getPublishedYear(book.publishDate),
                 rating,
-                notes: currentUserReview?.content,
+                reviewText: currentUserReview?.content,
             });
 
             setBook((currentBook) => {

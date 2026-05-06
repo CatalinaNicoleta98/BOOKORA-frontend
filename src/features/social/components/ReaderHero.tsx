@@ -1,7 +1,10 @@
 import type { PublicReader } from "../types/social.types";
+import FollowButton from "./FollowButton";
+import type { FollowMutationResult } from "../services/followService";
 
 interface ReaderHeroProps {
     reader: PublicReader;
+    onFollowStateChange: (result: FollowMutationResult) => void;
 }
 
 const getInitials = (name?: string) => {
@@ -31,7 +34,7 @@ const getImageSource = (imagePath?: string) => {
     return `http://localhost:4000${imagePath}`;
 };
 
-const ReaderHero = ({ reader }: ReaderHeroProps) => {
+const ReaderHero = ({ reader, onFollowStateChange }: ReaderHeroProps) => {
     const avatarSource = getImageSource(reader.avatarUrl);
     const coverSource = getImageSource(reader.coverImageUrl);
     const profileBio =
@@ -97,11 +100,28 @@ const ReaderHero = ({ reader }: ReaderHeroProps) => {
                                     <span className="h-1 w-1 rounded-full bg-slate-500" />
                                     <span>Reading activity shown here is shared from public updates only</span>
                                 </div>
+
+                                <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">
+                                    <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                        {reader.followerCount} followers
+                                    </span>
+                                    <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                        {reader.followingCount} following
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="theme-content-panel-soft rounded-[1.5rem] px-4 py-3 text-sm text-slate-300">
-                            A look at this reader&apos;s shelves, recent activity, and current highlights.
+                        <div className="flex flex-col items-start gap-3 lg:items-end">
+                            <FollowButton
+                                readerId={reader.id}
+                                isFollowing={reader.isFollowing}
+                                isOwnProfile={reader.isOwnProfile}
+                                onFollowStateChange={onFollowStateChange}
+                            />
+                            <div className="theme-content-panel-soft rounded-[1.5rem] px-4 py-3 text-sm text-slate-300">
+                                A look at this reader&apos;s shelves, recent activity, and current highlights.
+                            </div>
                         </div>
                     </div>
                 </div>

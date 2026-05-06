@@ -9,6 +9,7 @@ import ReaderSpotlight from "../components/ReaderSpotlight";
 import ReaderStats from "../components/ReaderStats";
 import { getPublicReaderProfile } from "../services/socialProfileService";
 import type { PublicReaderProfileResponse } from "../types/social.types";
+import type { FollowMutationResult } from "../services/followService";
 
 const PublicReaderProfilePage = () => {
     const navigate = useNavigate();
@@ -78,6 +79,24 @@ const PublicReaderProfilePage = () => {
         navigate(`/books/${encodeURIComponent(externalBookId)}`);
     };
 
+    const handleFollowStateChange = (result: FollowMutationResult) => {
+        setProfile((currentProfile) => {
+            if (!currentProfile || currentProfile.reader.id !== result.targetUserId) {
+                return currentProfile;
+            }
+
+            return {
+                ...currentProfile,
+                reader: {
+                    ...currentProfile.reader,
+                    isFollowing: result.following,
+                    followerCount: result.followerCount,
+                    followingCount: result.followingCount
+                }
+            };
+        });
+    };
+
     if (isLoading) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center">
@@ -112,7 +131,10 @@ const PublicReaderProfilePage = () => {
 
     return (
         <div className="space-y-8 py-6">
-            <ReaderHero reader={profile.reader} />
+            <ReaderHero
+                reader={profile.reader}
+                onFollowStateChange={handleFollowStateChange}
+            />
             <ReaderStats summary={profile.summary} />
             <ReaderShelvesPreview shelves={profile.shelves} />
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">

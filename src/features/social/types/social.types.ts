@@ -6,6 +6,10 @@ export interface PublicReader {
   coverImageUrl?: string;
   bio?: string;
   isProfilePublic: boolean;
+  followerCount: number;
+  followingCount: number;
+  isFollowing: boolean;
+  isOwnProfile: boolean;
 }
 
 export interface ReaderSummary {

@@ -97,12 +97,14 @@ const mapAuthorDetails = (authorDetails?: AuthorDetails): AuthorDetails | undefi
 
 const mapReview = (review: Review): Review => ({
     id: review.id,
-    userName: review.userName,
+    userName: review.userName || review.author?.name || "Bookora Reader",
     rating: review.rating,
     content: review.content,
     createdAt: review.createdAt,
     source: review.source,
-    avatarUrl: review.avatarUrl,
+    avatarUrl: review.avatarUrl ?? review.author?.avatarUrl,
+    handle: review.handle ?? review.author?.handle,
+    author: review.author,
     isSpoiler: review.isSpoiler,
 });
 

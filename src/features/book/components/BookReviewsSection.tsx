@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import type { BookReviewsSectionProps, Review } from "../types/book.types";
 
@@ -36,6 +37,14 @@ const formatReviewDate = (value?: string) => {
     }
 
     return new Date(timestamp).toLocaleDateString();
+};
+
+const getReaderProfilePath = (handle?: string) => {
+    if (!handle?.trim()) {
+        return undefined;
+    }
+
+    return `/readers/${encodeURIComponent(handle.trim())}`;
 };
 
 const formatStatusHeading = (status?: string) => {
@@ -240,25 +249,54 @@ const BookReviewsSection = ({
                         >
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                                 <div className="flex items-center gap-3 sm:w-52 sm:flex-col sm:items-start sm:gap-2">
-                                    {getImageSource(review.avatarUrl) ? (
-                                        <img
-                                            src={getImageSource(review.avatarUrl)}
-                                            alt={review.userName}
-                                            className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10"
-                                        />
+                                    {getReaderProfilePath(review.handle) ? (
+                                        <Link
+                                            to={getReaderProfilePath(review.handle) as string}
+                                            className="flex items-center gap-3 sm:flex-col sm:items-start sm:gap-2"
+                                        >
+                                            {getImageSource(review.avatarUrl) ? (
+                                                <img
+                                                    src={getImageSource(review.avatarUrl)}
+                                                    alt={review.userName}
+                                                    className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10 transition-opacity hover:opacity-90"
+                                                />
+                                            ) : (
+                                                <div className="theme-cover-shell flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold text-slate-200 ring-1 ring-[var(--bookora-border)] transition-colors hover:border-[var(--bookora-border-strong)]">
+                                                    {review.userName.slice(0, 1).toUpperCase()}
+                                                </div>
+                                            )}
+                                            <div className="space-y-1">
+                                                <p className="theme-text text-sm font-semibold transition-colors hover:text-[var(--bookora-title)]">
+                                                    {review.userName}
+                                                </p>
+                                                <p className="theme-text-muted text-xs uppercase tracking-[0.14em]">
+                                                    {review.source === "bookora" ? "Bookora reader" : "Open Library"}
+                                                </p>
+                                            </div>
+                                        </Link>
                                     ) : (
-                                        <div className="theme-cover-shell flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold text-slate-200 ring-1 ring-[var(--bookora-border)]">
-                                            {review.userName.slice(0, 1).toUpperCase()}
-                                        </div>
+                                        <>
+                                            {getImageSource(review.avatarUrl) ? (
+                                                <img
+                                                    src={getImageSource(review.avatarUrl)}
+                                                    alt={review.userName}
+                                                    className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10"
+                                                />
+                                            ) : (
+                                                <div className="theme-cover-shell flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold text-slate-200 ring-1 ring-[var(--bookora-border)]">
+                                                    {review.userName.slice(0, 1).toUpperCase()}
+                                                </div>
+                                            )}
+                                            <div className="space-y-1">
+                                                <p className="theme-text text-sm font-semibold">
+                                                    {review.userName}
+                                                </p>
+                                                <p className="theme-text-muted text-xs uppercase tracking-[0.14em]">
+                                                    {review.source === "bookora" ? "Bookora reader" : "Open Library"}
+                                                </p>
+                                            </div>
+                                        </>
                                     )}
-                                    <div className="space-y-1">
-                                        <p className="theme-text text-sm font-semibold">
-                                            {review.userName}
-                                        </p>
-                                        <p className="theme-text-muted text-xs uppercase tracking-[0.14em]">
-                                            {review.source === "bookora" ? "Bookora reader" : "Open Library"}
-                                        </p>
-                                    </div>
                                 </div>
 
                                 <div className="min-w-0 flex-1 space-y-3">

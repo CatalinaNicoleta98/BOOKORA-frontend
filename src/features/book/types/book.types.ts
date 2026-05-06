@@ -68,6 +68,13 @@ export interface Review {
     createdAt: string;
     source?: "open_library" | "bookora";
     avatarUrl?: string;
+    handle?: string;
+    author?: {
+        id?: string;
+        name?: string;
+        avatarUrl?: string;
+        handle?: string;
+    };
     isSpoiler?: boolean;
 }
 

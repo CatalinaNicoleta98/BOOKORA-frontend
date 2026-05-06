@@ -181,7 +181,7 @@ const EditBookActivityPage = () => {
           setFormats(existing.formats ?? []);
           setCustomLists(existing.customLists ?? []);
           setRating(existing.rating);
-          setReviewText(existing.reviewText ?? existing.notes ?? "");
+          setReviewText(existing.reviewText ?? "");
           setIsSpoiler(existing.isSpoiler ?? false);
           setReadingSessions(
             existing.readingSessions?.length
@@ -285,7 +285,6 @@ const EditBookActivityPage = () => {
         customLists,
         rating,
         reviewText,
-        notes: reviewText,
         isSpoiler,
         dateStarted: readingSessions[readingSessions.length - 1]?.dateStarted,
         dateFinished: readingSessions[readingSessions.length - 1]?.dateFinished,
@@ -298,7 +297,6 @@ const EditBookActivityPage = () => {
         customLists,
         rating,
         reviewText,
-        notes: reviewText,
         isSpoiler,
         dateStarted: readingSessions[readingSessions.length - 1]?.dateStarted,
         dateFinished: readingSessions[readingSessions.length - 1]?.dateFinished,
@@ -309,7 +307,7 @@ const EditBookActivityPage = () => {
 
       setEntry(saved);
       setBookSeed(getBookSeedFromEntry(saved));
-      setReviewText(saved.reviewText ?? saved.notes ?? "");
+      setReviewText(saved.reviewText ?? "");
       setReadingSessions(
         saved.readingSessions?.length
           ? saved.readingSessions

@@ -103,7 +103,7 @@ const mapActivity = (entries: LibraryEntry[]): HomePageData["recentActivity"] =>
             entry.progressValue && entry.progressUnit
                 ? getProgressLabel(entry)
                 : undefined;
-        const hasWrittenReview = Boolean((entry.reviewText ?? entry.notes)?.trim());
+        const hasWrittenReview = Boolean(entry.reviewText?.trim());
         let type: HomePageData["recentActivity"][number]["type"] = "progress_updated";
         let title = "Updated your activity";
         let subtitle = `${entry.title} • ${formatStatusLabel(entry.status)}`;

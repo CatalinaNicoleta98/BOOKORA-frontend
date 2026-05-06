@@ -3,6 +3,7 @@ export const APP_ROUTES = {
     login: "/login",
     register: "/register",
     profile: "/profile",
+    readerProfile: "/readers/:handle",
     search: "/search",
     library: "/library",
     bookDetails: "/books/:id",

@@ -1,22 +1,11 @@
 import { useState } from "react";
 import type { ReaderActivityItem } from "../types/social.types";
+import { getAssetUrl } from "../../../shared/api/apiConfig";
 
 interface ReaderRecentActivityProps {
     items: ReaderActivityItem[];
     onOpenBook: (externalBookId: string) => void;
 }
-
-const getImageSource = (imagePath?: string) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
 
 const formatDate = (value: string) => {
     const timestamp = Date.parse(value);
@@ -131,7 +120,7 @@ const ReaderRecentActivity = ({ items, onOpenBook }: ReaderRecentActivityProps) 
                 ) : (
                     items.map((item, index) => {
                         const activityCopy = formatActivityCopy(item);
-                        const coverSource = getImageSource(item.book.cover);
+                        const coverSource = getAssetUrl(item.book.cover);
                         const canOpenBook = Boolean(item.book.externalBookId);
                         const Container = canOpenBook ? "button" : "article";
 

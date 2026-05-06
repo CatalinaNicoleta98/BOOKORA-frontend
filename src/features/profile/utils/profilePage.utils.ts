@@ -1,5 +1,6 @@
 import type { AuthUser } from "../../auth/types/auth.types";
 import type { LibraryEntry } from "../../library/types/library.types";
+import { getAssetUrl } from "../../../shared/api/apiConfig";
 import type {
     ProfileActivityItem,
     ProfileDashboardData,
@@ -259,15 +260,7 @@ export const getInitials = (name?: string) => {
 };
 
 export const getImageSource = (imagePath?: string) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
+    return getAssetUrl(imagePath);
 };
 
 export const buildProfileFallback = (

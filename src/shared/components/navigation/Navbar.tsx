@@ -9,6 +9,7 @@ import ProfileMenu from "./ProfileMenu";
 import MobileNavMenu from "./MobileNavMenu";
 import ThemeToggle from "./ThemeToggle";
 import { APP_ROUTES, PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
+import { getAssetUrl } from "../../api/apiConfig";
 
 interface NavbarUser {
     id?: string;
@@ -36,18 +37,6 @@ const getInitials = (name?: string) => {
     return initials || "BK";
 };
 
-const getImageSource = (imagePath?: string | null) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
-
 const Navbar = (_props: NavbarProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -64,7 +53,7 @@ const Navbar = (_props: NavbarProps) => {
     const userInitials = useMemo(() => getInitials(state.user?.name), [state.user?.name]);
 
     const mobileAvatarSource = useMemo(() => {
-        return getImageSource((state.user as any)?.avatarUrl ?? null);
+        return getAssetUrl((state.user as any)?.avatarUrl ?? null);
     }, [(state.user as any)?.avatarUrl]);
 
     const toggleMobileMenu = () => {

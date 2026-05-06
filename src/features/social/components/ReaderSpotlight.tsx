@@ -1,22 +1,11 @@
 import { useState } from "react";
 import type { ReaderSpotlightItem } from "../types/social.types";
+import { getAssetUrl } from "../../../shared/api/apiConfig";
 
 interface ReaderSpotlightProps {
     items: ReaderSpotlightItem[];
     onOpenBook: (externalBookId: string) => void;
 }
-
-const getImageSource = (imagePath?: string) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
 
 const formatDate = (value: string) => {
     const timestamp = Date.parse(value);
@@ -113,7 +102,7 @@ const ReaderSpotlight = ({ items, onOpenBook }: ReaderSpotlightProps) => {
                 <div className="grid gap-4 px-6 py-6 md:grid-cols-2 xl:grid-cols-3 sm:px-8">
                     {items.map((item, index) => {
                         const canOpenBook = Boolean(item.book.externalBookId);
-                        const coverSource = getImageSource(item.book.cover);
+                        const coverSource = getAssetUrl(item.book.cover);
                         const Container = canOpenBook ? "button" : "article";
 
                         return (

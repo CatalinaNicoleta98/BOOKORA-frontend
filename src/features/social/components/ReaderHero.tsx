@@ -1,6 +1,7 @@
 import type { PublicReader } from "../types/social.types";
 import FollowButton from "./FollowButton";
 import type { FollowMutationResult } from "../services/followService";
+import { getAssetUrl } from "../../../shared/api/apiConfig";
 
 interface ReaderHeroProps {
     reader: PublicReader;
@@ -22,21 +23,9 @@ const getInitials = (name?: string) => {
     return initials || "BK";
 };
 
-const getImageSource = (imagePath?: string) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
-
 const ReaderHero = ({ reader, onFollowStateChange }: ReaderHeroProps) => {
-    const avatarSource = getImageSource(reader.avatarUrl);
-    const coverSource = getImageSource(reader.coverImageUrl);
+    const avatarSource = getAssetUrl(reader.avatarUrl);
+    const coverSource = getAssetUrl(reader.coverImageUrl);
     const profileBio =
         reader.bio?.trim() ||
         "This reader has not added a public bio yet, but their shelves and activity still tell a story.";

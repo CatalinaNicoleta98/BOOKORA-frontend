@@ -1,18 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { APP_ROUTES } from "../../navigation/navigation";
-
-const getImageSource = (imagePath?: string | null) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
+import { getAssetUrl } from "../../api/apiConfig";
 
 interface ProfileMenuProps {
     userDisplayName: string;
@@ -29,7 +18,7 @@ const ProfileMenu = ({
 }: ProfileMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
-    const avatarSource = getImageSource(avatarUrl);
+    const avatarSource = getAssetUrl(avatarUrl);
 
     return (
         <div className="relative">

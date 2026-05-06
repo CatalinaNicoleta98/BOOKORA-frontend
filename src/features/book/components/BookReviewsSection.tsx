@@ -4,18 +4,7 @@ import { Link } from "react-router-dom";
 import type { BookReviewsSectionProps, Review } from "../types/book.types";
 
 import BookRatingStars from "./BookRatingStars";
-
-const getImageSource = (imagePath?: string | null) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
+import { getAssetUrl } from "../../../shared/api/apiConfig";
 
 const formatNumber = (value?: number) => {
     if (typeof value !== "number") {
@@ -123,7 +112,7 @@ const BookReviewsSection = ({
 }: BookReviewsSectionProps) => {
     const formattedRatingsCount = formatNumber(communityRating.ratingsCount);
     const formattedReviewsCount = formatNumber(communityRating.reviewsCount);
-    const currentUserAvatarSource = getImageSource(currentUser?.avatarUrl);
+    const currentUserAvatarSource = getAssetUrl(currentUser?.avatarUrl);
     const currentUserReviewCardReview =
         currentUser && currentUserReview?.content
             ? {
@@ -254,9 +243,9 @@ const BookReviewsSection = ({
                                             to={getReaderProfilePath(review.handle) as string}
                                             className="flex items-center gap-3 sm:flex-col sm:items-start sm:gap-2"
                                         >
-                                            {getImageSource(review.avatarUrl) ? (
+                                            {getAssetUrl(review.avatarUrl) ? (
                                                 <img
-                                                    src={getImageSource(review.avatarUrl)}
+                                                    src={getAssetUrl(review.avatarUrl)}
                                                     alt={review.userName}
                                                     className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10 transition-opacity hover:opacity-90"
                                                 />
@@ -276,9 +265,9 @@ const BookReviewsSection = ({
                                         </Link>
                                     ) : (
                                         <>
-                                            {getImageSource(review.avatarUrl) ? (
+                                            {getAssetUrl(review.avatarUrl) ? (
                                                 <img
-                                                    src={getImageSource(review.avatarUrl)}
+                                                    src={getAssetUrl(review.avatarUrl)}
                                                     alt={review.userName}
                                                     className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10"
                                                 />

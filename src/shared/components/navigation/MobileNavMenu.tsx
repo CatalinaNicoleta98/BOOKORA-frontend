@@ -1,17 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { APP_ROUTES, type NavigationItem } from "../../navigation/navigation";
-
-const getImageSource = (imagePath?: string | null) => {
-    if (!imagePath) {
-        return undefined;
-    }
-
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-        return imagePath;
-    }
-
-    return `http://localhost:4000${imagePath}`;
-};
+import { getAssetUrl } from "../../api/apiConfig";
 
 interface MobileNavMenuProps {
     isOpen: boolean;
@@ -44,7 +33,7 @@ const MobileNavMenu = ({
     avatarUrl,
 }: MobileNavMenuProps) => {
     const navigate = useNavigate();
-    const avatarSource = getImageSource(avatarUrl);
+    const avatarSource = getAssetUrl(avatarUrl);
 
     return (
         <div

@@ -48,7 +48,6 @@ type LibraryCollectionResponse = {
 };
 
 const normalizeLibraryEntry = (entry: LibraryEntryApiRecord): LibraryEntry => {
-  const resolvedReviewText = entry.reviewText ?? entry.notes;
   const readingSessions: ReadingSession[] =
     entry.readingSessions?.map((session, index) => ({
       id: `${entry._id ?? entry.id ?? "session"}-${index}`,
@@ -75,9 +74,9 @@ const normalizeLibraryEntry = (entry: LibraryEntryApiRecord): LibraryEntry => {
     formats: entry.formats ?? (entry.format ? [entry.format] : []),
     customLists: entry.customLists ?? [],
     rating: entry.rating,
-    reviewText: resolvedReviewText,
+    reviewText: entry.reviewText,
     isSpoiler: entry.isSpoiler ?? false,
-    notes: entry.notes ?? resolvedReviewText,
+    notes: entry.notes,
     dateStarted: entry.dateStarted,
     dateFinished: entry.dateFinished,
     readingSessions,
@@ -92,13 +91,9 @@ const normalizeLibraryEntry = (entry: LibraryEntryApiRecord): LibraryEntry => {
 const buildLibraryPayload = (
   payload: CreateLibraryEntryPayload | UpdateLibraryEntryPayload
 ) => {
-  const resolvedReviewText = payload.reviewText ?? payload.notes;
-
   return {
     ...payload,
     format: payload.formats?.[0],
-    reviewText: resolvedReviewText,
-    notes: resolvedReviewText,
     dateStarted: payload.readingSessions?.[payload.readingSessions.length - 1]?.dateStarted ?? payload.dateStarted,
     dateFinished:
       payload.readingSessions?.[payload.readingSessions.length - 1]?.dateFinished ?? payload.dateFinished,

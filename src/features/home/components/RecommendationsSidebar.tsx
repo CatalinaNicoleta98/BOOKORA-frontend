@@ -53,6 +53,39 @@ const CompactBookButton = ({
     );
 };
 
+const CoverRow = ({
+    books,
+}: {
+    books: HomeBookCard[];
+}) => {
+    const navigate = useNavigate();
+
+    if (books.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="grid grid-cols-4 gap-2">
+            {books.slice(0, 4).map((book) => (
+                <button
+                    key={book.id}
+                    type="button"
+                    onClick={() => navigate(`/books/${book.id}`)}
+                    className="theme-cover-shell aspect-[3/4] overflow-hidden rounded-[0.9rem] transition-transform duration-300 hover:-translate-y-1"
+                >
+                    {book.coverUrl ? (
+                        <img src={book.coverUrl} alt={book.title} className="h-full w-full object-cover" />
+                    ) : (
+                        <div className="flex h-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                            {book.title}
+                        </div>
+                    )}
+                </button>
+            ))}
+        </div>
+    );
+};
+
 const FeaturedRecommendation = ({ item }: { item: HomeRecommendationItem }) => {
     const navigate = useNavigate();
 
@@ -141,6 +174,8 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
     const navigate = useNavigate();
     const featuredRecommendation = data.recommendations[0];
     const remainingRecommendations = data.recommendations.slice(1, 4);
+    const trendingPreview = data.trendingBooks.slice(0, 4);
+    const queuePreview = data.newReleases.slice(0, 4);
 
     return (
         <aside className="space-y-5">
@@ -152,7 +187,17 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
             >
                 <div className="space-y-3">
                     {featuredRecommendation ? (
-                        <FeaturedRecommendation item={featuredRecommendation} />
+                        <>
+                            <FeaturedRecommendation item={featuredRecommendation} />
+                            <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
+                                <p className="theme-text-muted text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                    Visual picks
+                                </p>
+                                <div className="mt-3">
+                                    <CoverRow books={data.recommendations} />
+                                </div>
+                            </div>
+                        </>
                     ) : (
                         <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Rate or finish a few books and Bookora will have stronger recommendations to surface here.
@@ -177,13 +222,23 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
             >
                 <div className="space-y-3">
                     {data.trendingBooks.length > 0 ? (
-                        data.trendingBooks.slice(0, 4).map((book) => (
-                            <CompactBookButton
-                                key={book.id}
-                                book={book}
-                                subtitle="Opened from your recent reading and rating activity."
-                            />
-                        ))
+                        <>
+                            <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
+                                <p className="theme-text-muted text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                    Recently active
+                                </p>
+                                <div className="mt-3">
+                                    <CoverRow books={trendingPreview} />
+                                </div>
+                            </div>
+                            {trendingPreview.map((book) => (
+                                <CompactBookButton
+                                    key={book.id}
+                                    book={book}
+                                    subtitle="Opened from your recent reading and rating activity."
+                                />
+                            ))}
+                        </>
                     ) : (
                         <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Once you begin tracking more books, your recent momentum shelf will appear here.
@@ -200,13 +255,23 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
             >
                 <div className="space-y-3">
                     {data.newReleases.length > 0 ? (
-                        data.newReleases.slice(0, 4).map((book) => (
-                            <CompactBookButton
-                                key={book.id}
-                                book={book}
-                                subtitle="A title to revisit next from your saved queue."
-                            />
-                        ))
+                        <>
+                            <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
+                                <p className="theme-text-muted text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                    Queue preview
+                                </p>
+                                <div className="mt-3">
+                                    <CoverRow books={queuePreview} />
+                                </div>
+                            </div>
+                            {queuePreview.map((book) => (
+                                <CompactBookButton
+                                    key={book.id}
+                                    book={book}
+                                    subtitle="A title to revisit next from your saved queue."
+                                />
+                            ))}
+                        </>
                     ) : (
                         <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Add a few books to Want to Read and this queue will start feeling much more personal.

@@ -25,48 +25,48 @@ const getActivityCopy = (item: FeedItem) => {
     switch (item.type) {
         case "published_review":
             return {
-                title: item.rating ? "Published a review and rating" : "Published a review",
+                title: item.rating ? "shared a review and rating" : "shared a review",
                 badge: "Review"
             };
         case "updated_review":
             return {
-                title: "Updated a review",
+                title: "updated a review",
                 badge: "Review"
             };
         case "rated_book":
             return {
-                title: item.rating ? `Rated this book ${item.rating}★` : "Left a rating",
+                title: item.rating ? `rated this book ${item.rating}★` : "left a rating",
                 badge: "Rating"
             };
         case "finished_reading":
             return {
-                title: "Finished reading",
+                title: "finished reading",
                 badge: "Finished"
             };
         case "finished_listening":
             return {
-                title: "Finished listening",
+                title: "finished listening",
                 badge: "Finished"
             };
         case "started_listening":
             return {
-                title: "Started listening",
+                title: "started listening",
                 badge: "Listening"
             };
         case "started_reading":
             return {
-                title: "Started reading",
+                title: "started reading",
                 badge: "Reading"
             };
         case "reread_logged":
             return {
-                title: "Logged a reread",
+                title: "logged a reread",
                 badge: "Reread"
             };
         case "added_to_shelf":
         default:
             return {
-                title: "Added a book to their shelf",
+                title: "added a book to their shelf",
                 badge: "Shelf"
             };
     }
@@ -91,7 +91,7 @@ const SpoilerReviewPreview = ({
 
     if (isSpoiler && !isRevealed) {
         return (
-            <div className="theme-content-panel-muted rounded-[1.1rem] border-dashed px-4 py-3">
+            <div className="theme-content-panel-muted rounded-[1.15rem] border-dashed px-4 py-4">
                 <p className="theme-accent-text text-xs font-semibold uppercase tracking-[0.16em]">
                     Spoiler review
                 </p>
@@ -110,8 +110,8 @@ const SpoilerReviewPreview = ({
     }
 
     return (
-        <div className="theme-content-panel-muted rounded-[1.1rem] px-4 py-3">
-            <p className="theme-text text-sm leading-7">{text}</p>
+        <div className="theme-content-panel-muted rounded-[1.15rem] px-4 py-4">
+            <p className="theme-text line-clamp-5 text-sm leading-7">{text}</p>
             {isSpoiler ? (
                 <button
                     type="button"
@@ -130,49 +130,55 @@ const SocialFeedCard = ({ item }: SocialFeedCardProps) => {
     const actorUrl = `/readers/${encodeURIComponent(item.actor.handle)}`;
     const bookUrl = getBookUrl(item);
     const activityCopy = getActivityCopy(item);
+    const statusLabel = item.status?.replace(/_/g, " ");
+    const previousStatusLabel = item.previousStatus?.replace(/_/g, " ");
 
     return (
-        <article className="theme-content-panel-soft rounded-[1.35rem] p-4 transition-all hover:border-[var(--bookora-border-strong)]">
-            <div className="flex gap-4">
-                <Link
-                    to={actorUrl}
-                    className="block h-14 w-14 shrink-0 overflow-hidden rounded-[0.95rem] border border-[var(--bookora-border)]"
-                >
-                    {item.actor.avatarUrl ? (
-                        <img
-                            src={getAssetUrl(item.actor.avatarUrl)}
-                            alt={item.actor.name}
-                            className="h-full w-full object-cover"
-                        />
-                    ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-300/90 via-indigo-300/85 to-fuchsia-300/85 text-sm font-semibold text-slate-950">
-                            {item.actor.name.slice(0, 1).toUpperCase()}
-                        </div>
-                    )}
-                </Link>
+        <article className="theme-content-panel-soft rounded-[1.5rem] p-4 transition-all hover:border-[var(--bookora-border-strong)] sm:p-5">
+            <div className="flex flex-col gap-4">
+                <div className="flex items-start gap-3 sm:gap-4">
+                    <Link
+                        to={actorUrl}
+                        className="block h-12 w-12 shrink-0 overflow-hidden rounded-[1rem] border border-[var(--bookora-border)] sm:h-14 sm:w-14"
+                    >
+                        {item.actor.avatarUrl ? (
+                            <img
+                                src={getAssetUrl(item.actor.avatarUrl)}
+                                alt={item.actor.name}
+                                className="h-full w-full object-cover"
+                            />
+                        ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-300/90 via-indigo-300/85 to-fuchsia-300/85 text-sm font-semibold text-slate-950">
+                                {item.actor.name.slice(0, 1).toUpperCase()}
+                            </div>
+                        )}
+                    </Link>
 
-                <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <span className="theme-status-pill rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                            {activityCopy.badge}
-                        </span>
-                        <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>
-                        {typeof item.rating === "number" ? (
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                {item.rating}★
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="theme-status-pill rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                {activityCopy.badge}
                             </span>
-                        ) : null}
+                            {typeof item.rating === "number" ? (
+                                <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                    {item.rating}★
+                                </span>
+                            ) : null}
+                            <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>
+                        </div>
+
+                        <p className="mt-3 text-sm leading-7 text-slate-300">
+                            <Link to={actorUrl} className="theme-title font-semibold hover:underline">
+                                {item.actor.name}
+                            </Link>{" "}
+                            <span className="text-slate-400">{activityCopy.title}</span>
+                        </p>
                     </div>
+                </div>
 
-                    <p className="mt-3 text-sm leading-6 text-slate-300">
-                        <Link to={actorUrl} className="theme-title font-semibold hover:underline">
-                            {item.actor.name}
-                        </Link>{" "}
-                        <span className="text-slate-400">{activityCopy.title.toLowerCase()}</span>
-                    </p>
-
-                    <div className="mt-3 flex gap-4">
-                        <div className="theme-cover-shell h-20 w-14 shrink-0 overflow-hidden rounded-[0.85rem]">
+                <div className="theme-content-panel-muted overflow-hidden rounded-[1.25rem] p-3 sm:p-4">
+                    <div className="flex gap-3 sm:gap-4">
+                        <div className="theme-cover-shell h-24 w-16 shrink-0 overflow-hidden rounded-[0.95rem] sm:h-28 sm:w-[4.75rem]">
                             {coverSource ? (
                                 bookUrl ? (
                                     <Link to={bookUrl} className="block h-full w-full">
@@ -198,35 +204,37 @@ const SocialFeedCard = ({ item }: SocialFeedCardProps) => {
 
                         <div className="min-w-0 flex-1">
                             {bookUrl ? (
-                                <Link to={bookUrl} className="theme-title text-base font-semibold hover:underline">
+                                <Link to={bookUrl} className="theme-title line-clamp-2 text-base font-semibold leading-6 hover:underline">
                                     {item.book.title}
                                 </Link>
                             ) : (
-                                <p className="theme-title text-base font-semibold">{item.book.title}</p>
+                                <p className="theme-title line-clamp-2 text-base font-semibold leading-6">{item.book.title}</p>
                             )}
                             <p className="mt-1 text-sm text-slate-400">
                                 {item.book.author ?? "Unknown author"}
                             </p>
 
-                            {item.status ? (
-                                <p className="mt-2 text-xs uppercase tracking-[0.16em] text-slate-500">
-                                    {item.status.replace(/_/g, " ")}
-                                    {item.previousStatus ? ` from ${item.previousStatus.replace(/_/g, " ")}` : ""}
+                            {(statusLabel || previousStatusLabel) ? (
+                                <p className="mt-3 text-xs uppercase tracking-[0.16em] text-slate-500">
+                                    {statusLabel}
+                                    {previousStatusLabel ? ` from ${previousStatusLabel}` : ""}
                                 </p>
                             ) : null}
 
-                            {!bookUrl ? (
-                                <p className="theme-text-muted mt-3 text-xs uppercase tracking-[0.14em]">
-                                    Custom book
-                                </p>
-                            ) : (
-                                <Link
-                                    to={bookUrl}
-                                    className="theme-text-muted mt-3 inline-flex text-xs uppercase tracking-[0.14em] hover:text-slate-300"
-                                >
-                                    Open book page
-                                </Link>
-                            )}
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                {!bookUrl ? (
+                                    <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em]">
+                                        Custom book
+                                    </span>
+                                ) : (
+                                    <Link
+                                        to={bookUrl}
+                                        className="theme-pill-subtle inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-slate-200"
+                                    >
+                                        Open book page
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </div>
 

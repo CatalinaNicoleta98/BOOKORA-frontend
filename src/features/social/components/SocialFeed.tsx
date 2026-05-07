@@ -36,7 +36,7 @@ const SocialFeed = ({ feed, error }: SocialFeedProps) => {
     }
 
     return (
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-5">
             {feed.items.map((item) => (
                 <SocialFeedCard key={item.id} item={item} />
             ))}

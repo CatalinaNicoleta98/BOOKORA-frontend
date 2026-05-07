@@ -1,48 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
-import type { HomeActivityItem, HomePageData } from "../types/home.types";
+import type { HomePageData } from "../types/home.types";
+import SocialFeed from "../../social/components/SocialFeed";
+import type { HomeFeedData } from "../../social/types/feed.types";
 
 type ActivityFeedProps = {
     data: HomePageData;
+    feed: HomeFeedData | null;
+    feedError?: string | null;
 };
 
-const getActivityAccent = (activity: HomeActivityItem) => {
-    switch (activity.type) {
-        case "finished_book":
-        case "finished_audiobook":
-            return {
-                badge: "Finished",
-                badgeClass: "theme-status-pill",
-                dotClass: "bg-emerald-300",
-            };
-        case "rated_book":
-            return {
-                badge: "Reviewed",
-                badgeClass: "theme-status-pill",
-                dotClass: "bg-amber-200",
-            };
-        case "started_audiobook":
-            return {
-                badge: "Listening",
-                badgeClass: "theme-status-pill",
-                dotClass: "bg-sky-300",
-            };
-        case "started_book":
-            return {
-                badge: "Reading",
-                badgeClass: "theme-status-pill",
-                dotClass: "bg-indigo-300",
-            };
-        default:
-            return {
-                badge: "Update",
-                badgeClass: "theme-pill-subtle",
-                dotClass: "bg-slate-300",
-            };
-    }
-};
-
-const ActivityFeed = ({ data }: ActivityFeedProps) => {
+const ActivityFeed = ({ data, feed, feedError }: ActivityFeedProps) => {
     const navigate = useNavigate();
     const featuredContinue = data.continueItems[0];
     const secondaryContinueItems = data.continueItems.slice(1);
@@ -224,86 +192,24 @@ const ActivityFeed = ({ data }: ActivityFeedProps) => {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-2">
                         <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.2em]">
-                            Activity
+                            Feed
                         </p>
                         <h2 className="theme-title text-2xl font-semibold tracking-[-0.03em]">
-                            Your reading timeline
+                            Followed reader updates
                         </h2>
+                        <p className="theme-text-soft text-sm leading-7">
+                            Public reading moments, reviews, ratings, and finished books from the readers you follow.
+                        </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={() => navigate("/profile")}
-                        className="theme-button-ghost inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium"
-                    >
-                        View profile activity
-                    </button>
+                    {feed?.meta.includeSelf ? (
+                        <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                            Your updates included
+                        </span>
+                    ) : null}
                 </div>
 
-                {data.recentActivity.length > 0 ? (
-                    <div className="mt-6 space-y-4">
-                        {data.recentActivity.map((activity, index) => {
-                            const accent = getActivityAccent(activity);
-
-                            return (
-                                <button
-                                    key={`${activity.id}-${index}`}
-                                    type="button"
-                                    onClick={() => navigate(`/books/${activity.book.id}`)}
-                                    className="theme-content-panel-soft group flex w-full gap-4 rounded-[1.35rem] p-4 text-left transition-all hover:border-[var(--bookora-border-strong)]"
-                                >
-                                    <div className="flex flex-col items-center">
-                                        <span className={`h-3 w-3 rounded-full ${accent.dotClass}`} />
-                                        {index < data.recentActivity.length - 1 ? (
-                                            <span className="mt-2 h-full min-h-10 w-px bg-[var(--bookora-border)]" />
-                                        ) : null}
-                                    </div>
-
-                                    <div className="theme-cover-shell h-14 w-14 shrink-0 overflow-hidden rounded-[0.95rem]">
-                                        {activity.book.coverUrl ? (
-                                            <img
-                                                src={activity.book.coverUrl}
-                                                alt={activity.book.title}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-[11px] text-slate-400">
-                                                No cover
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            <span
-                                                className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${accent.badgeClass}`}
-                                            >
-                                                {accent.badge}
-                                            </span>
-                                            <span className="text-xs text-slate-500">
-                                                {activity.createdAt}
-                                            </span>
-                                        </div>
-
-                                        <p className="theme-title mt-3 text-base font-semibold">
-                                            {activity.title}
-                                        </p>
-                                        <p className="mt-1 text-sm leading-6 text-slate-400">
-                                            {activity.subtitle}
-                                        </p>
-                                        <p className="mt-3 text-xs uppercase tracking-[0.18em] text-slate-500">
-                                            Open {activity.book.title}
-                                        </p>
-                                    </div>
-                                </button>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <div className="theme-content-panel-muted mt-5 rounded-[1.4rem] border-dashed p-5 text-sm leading-7 text-slate-400">
-                        Once you rate, review, finish, or update progress on books, your personal activity timeline will start filling in here.
-                    </div>
-                )}
+                <SocialFeed feed={feed} error={feedError} />
             </div>
         </section>
     );

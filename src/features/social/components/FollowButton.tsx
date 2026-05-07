@@ -18,13 +18,20 @@ const FollowButton = ({
     const [error, setError] = useState<string | null>(null);
 
     const handleToggleFollow = async () => {
+        const normalizedReaderId = readerId.trim();
+
+        if (!normalizedReaderId) {
+            setError("Reader profile is missing a valid id.");
+            return;
+        }
+
         try {
             setIsSubmitting(true);
             setError(null);
 
             const result = isFollowing
-                ? await unfollowReader(readerId)
-                : await followReader(readerId);
+                ? await unfollowReader(normalizedReaderId)
+                : await followReader(normalizedReaderId);
 
             onFollowStateChange(result);
         } catch (toggleError) {

@@ -174,8 +174,6 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
     const navigate = useNavigate();
     const featuredRecommendation = data.recommendations[0];
     const remainingRecommendations = data.recommendations.slice(1, 4);
-    const trendingPreview = data.trendingBooks.slice(0, 4);
-    const queuePreview = data.newReleases.slice(0, 4);
 
     return (
         <aside className="space-y-5">
@@ -211,72 +209,6 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
                             subtitle={book.reason}
                         />
                     ))}
-                </div>
-            </Panel>
-
-            <Panel
-                eyebrow="Momentum"
-                title="Recently active books"
-                actionLabel="Profile"
-                onAction={() => navigate("/profile")}
-            >
-                <div className="space-y-3">
-                    {data.trendingBooks.length > 0 ? (
-                        <>
-                            <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
-                                <p className="theme-text-muted text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                    Recently active
-                                </p>
-                                <div className="mt-3">
-                                    <CoverRow books={trendingPreview} />
-                                </div>
-                            </div>
-                            {trendingPreview.map((book) => (
-                                <CompactBookButton
-                                    key={book.id}
-                                    book={book}
-                                    subtitle="Opened from your recent reading and rating activity."
-                                />
-                            ))}
-                        </>
-                    ) : (
-                        <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
-                            Once you begin tracking more books, your recent momentum shelf will appear here.
-                        </div>
-                    )}
-                </div>
-            </Panel>
-
-            <Panel
-                eyebrow="Queue"
-                title="Pulled from Want to Read"
-                actionLabel="Browse"
-                onAction={() => navigate("/search")}
-            >
-                <div className="space-y-3">
-                    {data.newReleases.length > 0 ? (
-                        <>
-                            <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
-                                <p className="theme-text-muted text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                    Queue preview
-                                </p>
-                                <div className="mt-3">
-                                    <CoverRow books={queuePreview} />
-                                </div>
-                            </div>
-                            {queuePreview.map((book) => (
-                                <CompactBookButton
-                                    key={book.id}
-                                    book={book}
-                                    subtitle="A title to revisit next from your saved queue."
-                                />
-                            ))}
-                        </>
-                    ) : (
-                        <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
-                            Add a few books to Want to Read and this queue will start feeling much more personal.
-                        </div>
-                    )}
                 </div>
             </Panel>
         </aside>

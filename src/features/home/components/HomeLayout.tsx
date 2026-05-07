@@ -102,9 +102,6 @@ const HomeLayout = ({ data, feed, feedError }: HomeLayoutProps) => {
                                     Your dashboard at a glance
                                 </h2>
                             </div>
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                Covers first
-                            </span>
                         </div>
 
                         {heroBooks.length > 0 ? (

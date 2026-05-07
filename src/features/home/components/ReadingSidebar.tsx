@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import type {
     HomeContinueItem,
-    HomeBookCard,
     HomePageData,
     HomeReadingStatus,
-    HomeShelfSummaryItem,
 } from "../types/home.types";
 
 type ReadingSidebarProps = {
@@ -50,69 +48,13 @@ const getProgressPercentage = (item: HomeContinueItem): number => {
     return Math.max(0, Math.min(100, percentage));
 };
 
-const getShelfPreview = (shelfSummary: HomeShelfSummaryItem[]): HomeShelfSummaryItem[] => {
-    return [...shelfSummary]
-        .sort((left, right) => right.count - left.count)
-        .slice(0, 4);
-};
-
-const getUniqueBooks = (books: HomeBookCard[]) =>
-    books.filter((book, index, values) => values.findIndex((item) => item.id === book.id) === index);
-
-const CoverCluster = ({
-    books,
-    emptyLabel,
-    onOpenBook,
-}: {
-    books: HomeBookCard[];
-    emptyLabel: string;
-    onOpenBook: (bookId: string) => void;
-}) => {
-    if (books.length === 0) {
-        return (
-            <div className="theme-content-panel-muted rounded-[1rem] border-dashed px-4 py-4 text-sm leading-6 text-slate-400">
-                {emptyLabel}
-            </div>
-        );
-    }
-
-    return (
-        <div className="grid grid-cols-4 gap-2">
-            {books.slice(0, 4).map((book) => (
-                <button
-                    key={book.id}
-                    type="button"
-                    onClick={() => onOpenBook(book.id)}
-                    className="theme-cover-shell aspect-[3/4] overflow-hidden rounded-[0.95rem] transition-transform duration-300 hover:-translate-y-1"
-                >
-                    {book.coverUrl ? (
-                        <img
-                            src={book.coverUrl}
-                            alt={book.title}
-                            className="h-full w-full object-cover"
-                        />
-                    ) : (
-                        <div className="flex h-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                            {book.title}
-                        </div>
-                    )}
-                </button>
-            ))}
-        </div>
-    );
-};
-
 const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
     const navigate = useNavigate();
-    const shelfPreview = getShelfPreview(data.shelfSummary);
     const challengeProgress =
         data.challenge.target > 0
             ? Math.max(0, Math.min(100, (data.challenge.current / data.challenge.target) * 100))
             : 0;
     const featuredRead = data.continueItems[0] ?? null;
-    const inProgressBooks = getUniqueBooks(data.continueItems);
-    const queueBooks = getUniqueBooks(data.newReleases);
-    const momentumBooks = getUniqueBooks(data.trendingBooks);
 
     return (
         <aside className="col-span-12 space-y-5">
@@ -260,87 +202,6 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                 </div>
             </section>
 
-            <section className="theme-content-panel rounded-[1.8rem] p-5 sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                    <div>
-                        <p className="theme-text-muted text-xs uppercase tracking-[0.24em]">Shelf preview</p>
-                        <h2 className="theme-title mt-3 text-lg font-semibold tracking-[-0.03em]">
-                            Your reading lanes
-                        </h2>
-                    </div>
-                    <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
-                        {shelfPreview.length} tracked
-                    </span>
-                </div>
-
-                <div className="mt-5 space-y-4">
-                    <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                            <div>
-                                <p className="theme-title text-sm font-semibold">In progress</p>
-                                <p className="theme-text-muted text-xs">Current reading and listening</p>
-                            </div>
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
-                                {inProgressBooks.length}
-                            </span>
-                        </div>
-                        <CoverCluster
-                            books={inProgressBooks}
-                            emptyLabel="Start a book to build your in-progress shelf."
-                            onOpenBook={(bookId) => navigate(`/books/${bookId}`)}
-                        />
-                    </div>
-
-                    <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                            <div>
-                                <p className="theme-title text-sm font-semibold">Momentum</p>
-                                <p className="theme-text-muted text-xs">Books from recent activity</p>
-                            </div>
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
-                                {momentumBooks.length}
-                            </span>
-                        </div>
-                        <CoverCluster
-                            books={momentumBooks}
-                            emptyLabel="Your recently active books will show up here."
-                            onOpenBook={(bookId) => navigate(`/books/${bookId}`)}
-                        />
-                    </div>
-
-                    <div className="theme-content-panel-soft rounded-[1.2rem] p-4">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                            <div>
-                                <p className="theme-title text-sm font-semibold">Want to read</p>
-                                <p className="theme-text-muted text-xs">Pulled from your saved queue</p>
-                            </div>
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-xs">
-                                {queueBooks.length}
-                            </span>
-                        </div>
-                        <CoverCluster
-                            books={queueBooks}
-                            emptyLabel="Save books for later and your queue will become more visual."
-                            onOpenBook={(bookId) => navigate(`/books/${bookId}`)}
-                        />
-                    </div>
-                </div>
-
-                {shelfPreview.length > 0 ? (
-                    <div className="mt-5 flex flex-wrap gap-2">
-                        {shelfPreview.map((shelf) => (
-                            <button
-                                key={shelf.id}
-                                type="button"
-                                onClick={() => navigate("/profile")}
-                                className="theme-content-panel-soft rounded-full px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-[var(--bookora-border-strong)]"
-                            >
-                                {shelf.label} · {shelf.count}
-                            </button>
-                        ))}
-                    </div>
-                ) : null}
-            </section>
         </aside>
     );
 };

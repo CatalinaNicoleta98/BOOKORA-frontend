@@ -7,6 +7,8 @@ interface ReaderRecentActivityProps {
     onOpenBook: (externalBookId: string) => void;
 }
 
+type ActivityFilter = "all" | "reviews" | "ratings" | "finished" | "started";
+
 const formatDate = (value: string) => {
     const timestamp = Date.parse(value);
 
@@ -103,22 +105,64 @@ const SpoilerReviewPreview = ({
 };
 
 const ReaderRecentActivity = ({ items, onOpenBook }: ReaderRecentActivityProps) => {
+    const [activeFilter, setActiveFilter] = useState<ActivityFilter>("all");
+    const filters: Array<{ id: ActivityFilter; label: string }> = [
+        { id: "all", label: "All updates" },
+        { id: "reviews", label: "Reviews" },
+        { id: "ratings", label: "Ratings" },
+        { id: "finished", label: "Finished" },
+        { id: "started", label: "Started" }
+    ];
+    const filteredItems = items.filter((item) => {
+        switch (activeFilter) {
+            case "reviews":
+                return item.type === "reviewed";
+            case "ratings":
+                return item.type === "rated" || (item.type === "reviewed" && typeof item.rating === "number");
+            case "finished":
+                return item.type === "finished_reading" || item.type === "finished_listening";
+            case "started":
+                return item.type === "currently_reading" || item.type === "currently_listening";
+            case "all":
+            default:
+                return true;
+        }
+    });
+
     return (
         <section className="theme-content-panel rounded-[2rem] p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <h2 className="theme-title text-lg font-semibold">Recent activity</h2>
                     <p className="theme-text-muted mt-2 text-sm leading-7">
-                        Public reading updates, ratings, and review moments from this reader.
+                        One running stream of this reader&apos;s public books, reviews, ratings, and reading updates.
                     </p>
                 </div>
+                <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                    {filteredItems.length} visible
+                </span>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+                {filters.map((filter) => (
+                    <button
+                        key={filter.id}
+                        type="button"
+                        onClick={() => setActiveFilter(filter.id)}
+                        className={`inline-flex h-10 items-center justify-center rounded-full px-3 text-sm font-medium transition-all sm:px-4 ${
+                            activeFilter === filter.id ? "theme-button-accent" : "theme-button-ghost"
+                        }`}
+                    >
+                        {filter.label}
+                    </button>
+                ))}
             </div>
 
             <div className="mt-6 space-y-4">
-                {items.length === 0 ? (
+                {filteredItems.length === 0 ? (
                     <p className="text-sm text-slate-400">No public activity yet.</p>
                 ) : (
-                    items.map((item, index) => {
+                    filteredItems.map((item, index) => {
                         const activityCopy = formatActivityCopy(item);
                         const coverSource = getAssetUrl(item.book.cover);
                         const canOpenBook = Boolean(item.book.externalBookId);
@@ -133,9 +177,9 @@ const ReaderRecentActivity = ({ items, onOpenBook }: ReaderRecentActivityProps) 
                                           onClick: () => onOpenBook(item.book.externalBookId as string)
                                       }
                                     : {})}
-                                className="theme-content-panel-soft flex w-full items-start gap-4 rounded-[1.4rem] p-4 text-left transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+                                className="theme-content-panel-soft flex w-full items-start gap-3 rounded-[1.25rem] p-3.5 text-left transition-all duration-300 hover:border-[var(--bookora-border-strong)] sm:gap-4 sm:rounded-[1.4rem] sm:p-4"
                             >
-                                <div className="theme-cover-shell h-20 w-14 shrink-0 overflow-hidden rounded-[0.85rem]">
+                                <div className="theme-cover-shell h-18 w-12 shrink-0 overflow-hidden rounded-[0.8rem] sm:h-20 sm:w-14 sm:rounded-[0.85rem]">
                                     {coverSource ? (
                                         <img
                                             src={coverSource}
@@ -155,8 +199,13 @@ const ReaderRecentActivity = ({ items, onOpenBook }: ReaderRecentActivityProps) 
                                         <span className="theme-pill-subtle rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
                                             {activityCopy.badge}
                                         </span>
+                                        {typeof item.rating === "number" ? (
+                                            <span className="theme-status-pill rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
+                                                {item.rating}★
+                                            </span>
+                                        ) : null}
                                     </div>
-                                    <p className="theme-title mt-2 text-base font-semibold">{item.book.title}</p>
+                                    <p className="theme-title mt-2 text-sm font-semibold sm:text-base">{item.book.title}</p>
                                     <p className="mt-1 text-sm text-slate-400">
                                         {item.book.author ?? "Unknown author"}
                                     </p>

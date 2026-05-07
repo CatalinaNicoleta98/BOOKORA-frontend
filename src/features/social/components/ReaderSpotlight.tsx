@@ -7,6 +7,8 @@ interface ReaderSpotlightProps {
     onOpenBook: (externalBookId: string) => void;
 }
 
+type SpotlightFilter = "all" | "reviews" | "ratings" | "finished";
+
 const formatDate = (value: string) => {
     const timestamp = Date.parse(value);
 
@@ -82,28 +84,69 @@ const SpoilerSpotlightReview = ({
 };
 
 const ReaderSpotlight = ({ items, onOpenBook }: ReaderSpotlightProps) => {
+    const [activeFilter, setActiveFilter] = useState<SpotlightFilter>("all");
+    const filters: Array<{ id: SpotlightFilter; label: string }> = [
+        { id: "all", label: "All picks" },
+        { id: "reviews", label: "Reviews" },
+        { id: "ratings", label: "Ratings" },
+        { id: "finished", label: "Finished" }
+    ];
+    const filteredItems = items.filter((item) => {
+        switch (activeFilter) {
+            case "reviews":
+                return Boolean(item.reviewText?.trim());
+            case "ratings":
+                return typeof item.rating === "number";
+            case "finished":
+                return item.status === "finished_reading" || item.status === "finished_listening";
+            case "all":
+            default:
+                return true;
+        }
+    });
+
     return (
-        <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
-            <div className="border-b border-[var(--bookora-border)] px-6 py-5 sm:px-8">
-                <p className="theme-eyebrow">Reader spotlight</p>
-                <h2 className="theme-title mt-3 text-2xl font-semibold">A closer look at a few public reading moments</h2>
+        <section className="theme-content-panel rounded-[2rem] p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                <p className="theme-eyebrow">Reviews and ratings</p>
+                <h2 className="theme-title mt-3 text-2xl font-semibold">A closer look at this reader&apos;s strongest public opinions</h2>
                 <p className="theme-text-muted mt-2 max-w-2xl text-sm leading-7">
-                    Highlights from this reader&apos;s recent public activity, including ratings and review snippets when available.
+                    Highlights from this reader&apos;s public bookshelf, with review snippets, star ratings, and finished-book moments when available.
                 </p>
+                </div>
+                <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                    {filteredItems.length} visible
+                </span>
             </div>
 
-            {items.length === 0 ? (
-                <div className="px-6 py-8 sm:px-8">
-                    <div className="theme-content-panel-muted rounded-[1.8rem] border-dashed p-6 text-sm leading-7 text-slate-400">
-                        Nothing is in the spotlight yet.
-                    </div>
+            <div className="mt-5 flex flex-wrap gap-2">
+                {filters.map((filter) => (
+                    <button
+                        key={filter.id}
+                        type="button"
+                        onClick={() => setActiveFilter(filter.id)}
+                        className={`inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium transition-all ${
+                            activeFilter === filter.id ? "theme-button-accent" : "theme-button-ghost"
+                        }`}
+                    >
+                        {filter.label}
+                    </button>
+                ))}
+            </div>
+
+            {filteredItems.length === 0 ? (
+                <div className="theme-content-panel-muted mt-6 rounded-[1.4rem] border-dashed p-5 text-sm leading-7 text-slate-400">
+                    Nothing matches this filter yet.
                 </div>
             ) : (
-                <div className="grid gap-4 px-6 py-6 md:grid-cols-2 xl:grid-cols-3 sm:px-8">
-                    {items.map((item, index) => {
+                <div className="mt-6 space-y-4">
+                    {filteredItems.map((item, index) => {
                         const canOpenBook = Boolean(item.book.externalBookId);
                         const coverSource = getAssetUrl(item.book.cover);
                         const Container = canOpenBook ? "button" : "article";
+                        const ratingLabel =
+                            typeof item.rating === "number" ? `${item.rating}★` : null;
 
                         return (
                             <Container
@@ -114,41 +157,45 @@ const ReaderSpotlight = ({ items, onOpenBook }: ReaderSpotlightProps) => {
                                           onClick: () => onOpenBook(item.book.externalBookId as string)
                                       }
                                     : {})}
-                                className="theme-content-panel-soft group flex h-full flex-col rounded-[1.8rem] p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
+                                className="theme-content-panel-soft flex w-full items-start gap-4 rounded-[1.4rem] p-4 text-left transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
                             >
-                                <div className="flex gap-4">
-                                    <div className="theme-cover-shell h-28 w-20 shrink-0 overflow-hidden rounded-[1rem]">
-                                        {coverSource ? (
-                                            <img
-                                                src={coverSource}
-                                                alt={item.book.title}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full w-full items-center justify-center px-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                                No cover
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="min-w-0 flex-1">
-                                        <span className="theme-status-pill inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                            {formatStatusLabel(item.status)}
-                                        </span>
-                                        <h3 className="theme-title mt-3 line-clamp-2 text-lg font-semibold">
+                                <div className="theme-cover-shell h-20 w-14 shrink-0 overflow-hidden rounded-[0.85rem]">
+                                    {coverSource ? (
+                                        <img
+                                            src={coverSource}
+                                            alt={item.book.title}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                                             {item.book.title}
-                                        </h3>
-                                        <p className="theme-text-muted mt-1 text-sm">
-                                            {item.book.author ?? "Unknown author"}
-                                        </p>
-                                        {typeof item.rating === "number" ? (
-                                            <p className="theme-accent-text mt-3 text-xs font-semibold uppercase tracking-[0.16em]">
-                                                {item.rating}★ rating
-                                            </p>
-                                        ) : null}
-                                        <p className="mt-3 text-xs text-slate-500">{formatDate(item.createdAt)}</p>
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
+
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <p className="theme-text text-sm font-medium">
+                                            {item.reviewText?.trim() ? "Shared a review highlight" : "Shared a rating moment"}
+                                        </p>
+                                        <span className="theme-pill-subtle rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
+                                            {item.reviewText?.trim() ? "Review" : "Rating"}
+                                        </span>
+                                        {ratingLabel ? (
+                                            <span className="theme-status-pill rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]">
+                                                {ratingLabel}
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                    <p className="theme-title mt-2 text-base font-semibold">{item.book.title}</p>
+                                    <p className="mt-1 text-sm text-slate-400">
+                                        {item.book.author ?? "Unknown author"}
+                                    </p>
+                                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                                        <span>{formatDate(item.createdAt)}</span>
+                                        <span className="h-1 w-1 rounded-full bg-slate-500" />
+                                        <span>{formatStatusLabel(item.status)}</span>
+                                    </div>
 
                                 {item.reviewText?.trim() ? (
                                     <div className="mt-4">
@@ -159,13 +206,14 @@ const ReaderSpotlight = ({ items, onOpenBook }: ReaderSpotlightProps) => {
                                     </div>
                                 ) : (
                                     <p className="mt-4 text-sm leading-7 text-slate-400">
-                                        Public activity on this title is available without a written review snippet.
+                                        Public activity on this title is visible even without a written review snippet.
                                     </p>
                                 )}
 
-                                <span className="theme-text mt-4 text-sm font-medium transition-colors duration-300 group-hover:text-[var(--bookora-title)]">
+                                <span className="theme-text mt-4 inline-block text-sm font-medium">
                                     {canOpenBook ? "Open book page" : "Custom book"}
                                 </span>
+                                </div>
                             </Container>
                         );
                     })}

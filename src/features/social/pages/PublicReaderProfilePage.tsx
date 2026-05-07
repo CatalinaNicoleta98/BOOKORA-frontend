@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import ReaderChallengePanel from "../components/ReaderChallengePanel";
 import ReaderEmptyState from "../components/ReaderEmptyState";
 import ReaderHero from "../components/ReaderHero";
 import ReaderRecentActivity from "../components/ReaderRecentActivity";
 import ReaderShelvesPreview from "../components/ReaderShelvesPreview";
-import ReaderSpotlight from "../components/ReaderSpotlight";
-import ReaderStats from "../components/ReaderStats";
 import { getPublicReaderProfile } from "../services/socialProfileService";
 import type { PublicReaderProfileResponse } from "../types/social.types";
 import type { FollowMutationResult } from "../services/followService";
@@ -130,16 +129,24 @@ const PublicReaderProfilePage = () => {
     }
 
     return (
-        <div className="space-y-8 py-6">
+        <div className="space-y-6 py-5 sm:space-y-8 sm:py-6">
             <ReaderHero
                 reader={profile.reader}
                 onFollowStateChange={handleFollowStateChange}
             />
-            <ReaderStats summary={profile.summary} />
-            <ReaderShelvesPreview shelves={profile.shelves} />
-            <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-                <ReaderRecentActivity items={profile.recentActivity} onOpenBook={openBook} />
-                <ReaderSpotlight items={profile.spotlight} onOpenBook={openBook} />
+            <ReaderChallengePanel summary={profile.summary} />
+            <div className="grid gap-5 xl:grid-cols-[minmax(290px,0.78fr)_minmax(0,1.22fr)] xl:gap-6">
+                <aside className="order-2 xl:order-1">
+                    <ReaderShelvesPreview
+                        shelves={profile.shelves}
+                        recentActivity={profile.recentActivity}
+                        spotlight={profile.spotlight}
+                        onOpenBook={openBook}
+                    />
+                </aside>
+                <div className="order-1 space-y-6 xl:order-2">
+                    <ReaderRecentActivity items={profile.recentActivity} onOpenBook={openBook} />
+                </div>
             </div>
         </div>
     );

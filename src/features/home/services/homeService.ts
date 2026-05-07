@@ -26,6 +26,30 @@ type LibraryEntry = {
     progressUnit?: "pages" | "percent" | "minutes" | "hours";
 };
 
+type SearchRecommendationResult = {
+    source: "open_library";
+    externalBookId: string;
+    title: string;
+    author?: string;
+    cover?: string;
+    publishedYear?: number;
+};
+
+type SearchRecommendationResponse = {
+    results: SearchRecommendationResult[];
+    pagination: {
+        page: number;
+        limit: number;
+        numFound: number;
+    };
+};
+
+type SearchRecommendationEnvelope = {
+    error: string | null;
+    data: SearchRecommendationResponse;
+    message?: string;
+};
+
 const getPrimaryFormat = (entry: LibraryEntry): HomeBookFormat | undefined => {
     return entry.formats?.[0] ?? entry.format;
 };
@@ -168,6 +192,115 @@ const mapShelves = (entries: LibraryEntry[]) => {
     }));
 };
 
+const getNormalizedTitle = (title: string) => title.trim().toLowerCase();
+
+const getUniqueRecommendationSeedAuthors = (entries: LibraryEntry[]) => {
+    const weightedEntries = [...entries].sort((left, right) => {
+        const leftScore = (left.rating ?? 0) + (left.status.startsWith("finished_") ? 1 : 0);
+        const rightScore = (right.rating ?? 0) + (right.status.startsWith("finished_") ? 1 : 0);
+
+        return rightScore - leftScore;
+    });
+
+    return weightedEntries
+        .map((entry) => entry.author?.trim())
+        .filter((author): author is string => Boolean(author))
+        .filter((author, index, authors) => authors.findIndex((value) => value === author) === index)
+        .slice(0, 4);
+};
+
+const mapSearchResultToRecommendation = (
+    result: SearchRecommendationResult,
+    reason: string
+): HomePageData["recommendations"][number] => ({
+    id: result.externalBookId,
+    title: result.title,
+    author: result.author ?? "Unknown author",
+    coverUrl: result.cover ?? "",
+    reason,
+    ctaLabel: "Open book",
+});
+
+const getFallbackRecommendations = (
+    sortedEntries: LibraryEntry[],
+    excludedIds: Set<string>
+): HomePageData["recommendations"] =>
+    sortedEntries
+        .filter((entry) => !excludedIds.has(entry.externalBookId ?? entry._id))
+        .slice(0, 6)
+        .map((entry) => ({
+            ...toHomeBookCard(entry),
+            reason:
+                typeof entry.rating === "number" && entry.rating >= 4
+                    ? "A highly rated favorite worth revisiting"
+                    : "Pulled from your recent library activity",
+            ctaLabel: "Open book",
+        }));
+
+const getAuthorBasedRecommendations = async (
+    entries: LibraryEntry[]
+): Promise<HomePageData["recommendations"]> => {
+    const existingBookIds = new Set(entries.map((entry) => entry.externalBookId ?? entry._id));
+    const existingTitles = new Set(entries.map((entry) => getNormalizedTitle(entry.title)));
+    const seedAuthors = getUniqueRecommendationSeedAuthors(entries);
+
+    if (seedAuthors.length === 0) {
+        return [];
+    }
+
+    const searchResponses = await Promise.allSettled(
+        seedAuthors.map(async (author) => {
+            const response = await httpClient.get<SearchRecommendationEnvelope>("/books/search", {
+                params: {
+                    author,
+                    limit: 8,
+                },
+            });
+
+            if (response.data.error) {
+                throw new Error(response.data.message ?? "Failed to fetch recommendations");
+            }
+
+            return {
+                author,
+                results: response.data.data.results,
+            };
+        })
+    );
+
+    const recommendations: HomePageData["recommendations"] = [];
+    const seenRecommendationIds = new Set<string>();
+
+    for (const response of searchResponses) {
+        if (response.status !== "fulfilled") {
+            continue;
+        }
+
+        for (const result of response.value.results) {
+            const normalizedTitle = getNormalizedTitle(result.title);
+
+            if (
+                existingBookIds.has(result.externalBookId) ||
+                existingTitles.has(normalizedTitle) ||
+                seenRecommendationIds.has(result.externalBookId)
+            ) {
+                continue;
+            }
+
+            recommendations.push(
+                mapSearchResultToRecommendation(result, `Because you read ${response.value.author}`)
+            );
+            seenRecommendationIds.add(result.externalBookId);
+
+            if (recommendations.length >= 6) {
+                return recommendations;
+            }
+        }
+    }
+
+    return recommendations;
+};
+
 export const getHomePageData = async (): Promise<HomePageData> => {
     const response = await httpClient.get("/library");
     const entries: LibraryEntry[] = response.data.data;
@@ -184,21 +317,28 @@ export const getHomePageData = async (): Promise<HomePageData> => {
     const completedEntries = sortedEntries.filter((entry) =>
         ["finished_reading", "finished_listening"].includes(entry.status)
     );
+    const recommendations = await getAuthorBasedRecommendations(sortedEntries);
+    const fallbackExclusions = new Set([
+        ...sortedEntries
+            .filter((entry) =>
+                ["finished_reading", "finished_listening", "currently_reading", "currently_listening"].includes(
+                    entry.status
+                )
+            )
+            .map((entry) => entry.externalBookId ?? entry._id),
+    ]);
 
     return {
         userName: "Reader",
         continueItems: mapContinueItems(sortedEntries),
         recentActivity: mapActivity(sortedEntries),
-        recommendations: (highlyRatedEntries.length > 0 ? highlyRatedEntries : sortedEntries)
-            .slice(0, 6)
-            .map((entry) => ({
-                ...toHomeBookCard(entry),
-                reason:
-                    typeof entry.rating === "number" && entry.rating >= 4
-                        ? "Because you rated similar books highly"
-                        : "Pulled from your recent library activity",
-                ctaLabel: "Open book",
-            })),
+        recommendations:
+            recommendations.length > 0
+                ? recommendations
+                : getFallbackRecommendations(
+                      highlyRatedEntries.length > 0 ? highlyRatedEntries : sortedEntries,
+                      fallbackExclusions
+                  ),
         trendingBooks: sortedEntries
             .filter((entry) => entry.status !== "want_to_read")
             .slice(0, 6)

@@ -1,8 +1,8 @@
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import AuthorBookGroups from "../../authors/components/AuthorBookGroups";
-import SeriesReadingOrder from "./SeriesReadingOrder";
+import AuthorBookGroups from "../../../features/authors/components/AuthorBookGroups";
+import SeriesReadingOrder from "../../../features/series/components/SeriesReadingOrder";
 
 describe("author and series rendering", () => {
     it("renders series books in backend-provided order and falls back gracefully when a position is missing", () => {
@@ -76,5 +76,25 @@ describe("author and series rendering", () => {
         expect(screen.getByText("Standalone books")).toBeInTheDocument();
         expect(screen.getByRole("link", { name: /the final empire/i })).toBeInTheDocument();
         expect(screen.getByRole("link", { name: /warbreaker/i })).toBeInTheDocument();
+    });
+
+    it("renders a series page without numbering noise when backend omits a position", () => {
+        render(
+            <MemoryRouter>
+                <SeriesReadingOrder
+                    books={[
+                        {
+                            key: "OL5W",
+                            title: "Unnumbered Collection",
+                            authors: [{ name: "Author" }],
+                        },
+                    ]}
+                />
+            </MemoryRouter>
+        );
+
+        expect(screen.queryByText(/^#/)).not.toBeInTheDocument();
+        expect(screen.getByText("Book 1")).toBeInTheDocument();
+        expect(screen.getByRole("link", { name: /unnumbered collection/i })).toBeInTheDocument();
     });
 });

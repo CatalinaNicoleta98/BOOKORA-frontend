@@ -1,9 +1,9 @@
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import BookEditionsSection from "./BookEditionsSection";
-import BookHero from "./BookHero";
-import SearchReasultsCard from "../../search/components/SearchReasultsCard";
+import BookEditionsSection from "../../../features/book/components/BookEditionsSection";
+import BookHero from "../../../features/book/components/BookHero";
+import SearchReasultsCard from "../../../features/search/components/SearchReasultsCard";
 
 describe("book relationship links", () => {
     it("uses editionKey links for edition cards instead of collapsing to the work key", () => {

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 
 import LibraryGrid from "../components/LibraryGrid";
 import LibraryList from "../components/LibraryList";
@@ -120,7 +121,7 @@ const LibraryPage = () => {
     const activeShelfLabel = SHELF_TABS.find((shelf) => shelf.value === activeShelf)?.label ?? "Shelf";
 
     const handleSelectBook = (entry: LibraryEntry) => {
-        navigate(`/books/${getBookRouteId(entry)}`);
+        navigate(buildBookDetailsRoute(getBookRouteId(entry)));
     };
 
     return (

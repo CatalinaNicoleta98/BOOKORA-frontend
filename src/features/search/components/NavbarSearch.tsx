@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 import { searchBooks } from "../services/searchService";
 import type { SearchResult } from "../services/searchService";
 
@@ -113,7 +114,7 @@ const NavbarSearch = () => {
     }, [searchQuery]);
 
     const handleResultClick = (result: SearchResult) => {
-        navigate(`/books/${result.externalBookId}`);
+        navigate(buildBookDetailsRoute(result.externalBookId));
         clearSearch();
     };
 

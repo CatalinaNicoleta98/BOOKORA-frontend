@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 import type {
     HomeContinueItem,
     HomePageData,
@@ -122,7 +123,7 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                     {featuredRead ? (
                         <button
                             type="button"
-                            onClick={() => navigate(`/books/${featuredRead.id}`)}
+                            onClick={() => navigate(buildBookDetailsRoute(featuredRead.id))}
                             className="theme-content-panel-soft group w-full rounded-[1.35rem] p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
                         >
                             <div className="flex gap-4">

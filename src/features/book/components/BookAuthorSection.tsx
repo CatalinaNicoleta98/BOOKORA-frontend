@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
+import { buildBookDetailsRoute } from "../utils/bookRouting";
 
 import type { BookAuthorSectionProps } from "../types/book.types";
 
@@ -54,7 +55,7 @@ const BookAuthorSection = ({ authorDetails }: BookAuthorSectionProps) => {
                                 {authorDetails.topWorks.map((work) => (
                                     <Link
                                         key={work.id}
-                                        to={`/books/${encodeURIComponent(work.id)}`}
+                                        to={buildBookDetailsRoute(work.id)}
                                         className="inline-flex items-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.5),rgba(15,23,42,0.24))] px-4 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
                                     >
                                         {work.title}

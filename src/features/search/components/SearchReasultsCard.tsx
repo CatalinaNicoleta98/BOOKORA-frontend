@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 
 interface SearchResultCardProps {
     id: string;
@@ -86,7 +87,7 @@ const SearchReasultsCard = ({
 
                     <div className="mt-5 flex flex-wrap gap-3">
                         <Link
-                            to={`/books/${encodeURIComponent(id)}`}
+                            to={buildBookDetailsRoute(id)}
                             className="theme-button-primary inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium transition-all duration-300"
                         >
                             View book

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 
 import BookRatingStars from "../../book/components/BookRatingStars";
 import { getBookDetail } from "../../book/services/bookService";
@@ -323,7 +324,7 @@ const EditBookActivityPage = () => {
 
   const handleRemoveFromShelf = async () => {
     if (!entry) {
-      navigate(bookId ? `/books/${bookId}` : "/");
+      navigate(bookId ? buildBookDetailsRoute(bookId) : "/");
       return;
     }
 
@@ -332,7 +333,7 @@ const EditBookActivityPage = () => {
       setSaveMessage(null);
       setSaveError(null);
       await deleteLibraryEntry(entry.id);
-      navigate(bookId ? `/books/${bookId}` : "/");
+      navigate(bookId ? buildBookDetailsRoute(bookId) : "/");
     } catch {
       setSaveError("Could not remove this book from your shelves right now.");
     } finally {
@@ -359,7 +360,7 @@ const EditBookActivityPage = () => {
           {bookId ? (
             <button
               type="button"
-              onClick={() => navigate(`/books/${bookId}`)}
+              onClick={() => navigate(buildBookDetailsRoute(bookId))}
               className="theme-button-ghost mt-5 inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold"
             >
               Back to book
@@ -376,7 +377,7 @@ const EditBookActivityPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-3">
             <Link
-              to={bookId ? `/books/${bookId}` : "/"}
+              to={bookId ? buildBookDetailsRoute(bookId) : "/"}
               className="theme-text-muted inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-[var(--bookora-title)]"
             >
               <span aria-hidden="true">←</span>
@@ -581,7 +582,7 @@ const EditBookActivityPage = () => {
                 ) : null}
                 <button
                   type="button"
-                  onClick={() => navigate(bookId ? `/books/${bookId}` : "/")}
+                  onClick={() => navigate(bookId ? buildBookDetailsRoute(bookId) : "/")}
                   className="theme-button-ghost inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-medium"
                 >
                   Cancel

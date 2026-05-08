@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 import ReaderChallengePanel from "../components/ReaderChallengePanel";
 import ReaderEmptyState from "../components/ReaderEmptyState";
 import ReaderHero from "../components/ReaderHero";
@@ -75,7 +76,7 @@ const PublicReaderProfilePage = () => {
     }, [handle]);
 
     const openBook = (externalBookId: string) => {
-        navigate(`/books/${encodeURIComponent(externalBookId)}`);
+        navigate(buildBookDetailsRoute(externalBookId));
     };
 
     const handleFollowStateChange = (result: FollowMutationResult) => {

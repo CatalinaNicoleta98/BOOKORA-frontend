@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { buildBookDetailsRoute } from "../utils/bookRouting";
 
 import type { BookEditionsSectionProps } from "../types/book.types";
 
@@ -18,7 +19,7 @@ const ChevronIcon = ({ direction }: { direction: "left" | "right" }) => (
     </svg>
 );
 
-const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
+const BookEditionsSection = ({ currentEditionKey, editions }: BookEditionsSectionProps) => {
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
@@ -119,9 +120,13 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                 >
                     {editions.map((edition) => (
                         <Link
-                            key={edition.id}
-                            to={`/books/${encodeURIComponent(edition.id)}`}
-                            className="theme-content-panel group block w-56 shrink-0 rounded-[1.25rem] p-4 transition-all hover:-translate-y-1 hover:border-[color:var(--bookora-border-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/40"
+                            key={edition.editionKey}
+                            to={buildBookDetailsRoute(edition.editionKey)}
+                            className={`theme-content-panel group block w-56 shrink-0 rounded-[1.25rem] p-4 transition-all hover:-translate-y-1 hover:border-[color:var(--bookora-border-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/40 ${
+                                currentEditionKey === edition.editionKey
+                                    ? "border-[color:var(--bookora-border-strong)]"
+                                    : ""
+                            }`}
                         >
                             {edition.coverUrl ? (
                                 <img
@@ -145,6 +150,11 @@ const BookEditionsSection = ({ editions }: BookEditionsSectionProps) => {
                                 </h3>
 
                                 <div className="theme-text-muted flex flex-wrap gap-2 text-[0.72rem] font-medium uppercase tracking-[0.14em]">
+                                    {currentEditionKey === edition.editionKey ? (
+                                        <span className="theme-button-primary rounded-full px-2.5 py-1">
+                                            Viewing
+                                        </span>
+                                    ) : null}
                                     {edition.publishDate ? (
                                         <span className="theme-pill-subtle rounded-full px-2.5 py-1">
                                             {edition.publishDate}

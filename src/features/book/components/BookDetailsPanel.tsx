@@ -26,6 +26,7 @@ const formatListValue = (values?: string[], limit = 3) => {
 const BookDetailsPanel = ({
     authorLabel,
     publishLabel,
+    selectedEdition,
     pageCount,
     editionCount,
     languages,
@@ -50,6 +51,18 @@ const BookDetailsPanel = ({
                 ? {
                       label: "First published",
                       value: publishLabel,
+                  }
+                : null,
+            selectedEdition
+                ? {
+                      label: "Viewing edition",
+                      value: [
+                          selectedEdition.title,
+                          selectedEdition.publishDate,
+                          selectedEdition.publisher,
+                      ]
+                          .filter(Boolean)
+                          .join(" · "),
                   }
                 : null,
             typeof pageCount === "number"
@@ -112,6 +125,7 @@ const BookDetailsPanel = ({
     }, [
         authorLabel,
         publishLabel,
+        selectedEdition,
         pageCount,
         editionCount,
         languages,

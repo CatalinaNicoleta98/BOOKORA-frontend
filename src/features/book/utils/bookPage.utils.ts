@@ -72,10 +72,12 @@ const mapBookSummary = (summary: BookSummary): BookSummary => ({
 });
 
 const mapEditionSummary = (edition: EditionSummary): EditionSummary => ({
-    id: edition.id,
+    editionKey: edition.editionKey,
+    workKey: edition.workKey,
     title: edition.title,
     format: edition.format,
     publishDate: edition.publishDate,
+    publishedYear: edition.publishedYear,
     publisher: edition.publisher,
     language: edition.language,
     coverUrl: edition.coverUrl,
@@ -176,6 +178,7 @@ export const mapBookToViewModel = (
 
     return {
         id,
+        routeKey: id,
         title: book.title,
         description: getBookDescription(book.description),
         coverUrl: getCoverUrl(book.covers?.[0]),
@@ -189,6 +192,7 @@ export const mapBookToViewModel = (
 
         // prepared sections (no data yet)
         seriesBooks: undefined,
+        selectedEdition: undefined,
         editions: undefined,
         authorDetails: undefined,
         similarBooks: undefined,
@@ -216,7 +220,9 @@ export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookVie
         .filter((author): author is NonNullable<typeof author> => Boolean(author));
 
     return {
-        id: payload.externalBookId,
+        id: payload.workKey,
+        routeKey: payload.requestedKey,
+        editionKey: payload.editionKey,
         title: payload.title,
         description: getNormalizedText(payload.description) ?? "No description available yet.",
         coverUrl: payload.cover ?? undefined,
@@ -239,6 +245,7 @@ export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookVie
         subjectPlaces: payload.subjectPlaces,
         subjectTimes: payload.subjectTimes,
         excerpts: payload.excerpts,
+        selectedEdition: payload.selectedEdition ? mapEditionSummary(payload.selectedEdition) : undefined,
         editions: payload.editions?.map(mapEditionSummary),
         authorDetails: mapAuthorDetails(payload.authorDetails),
         similarBooks: payload.similarBooks?.map(mapBookSummary),

@@ -60,6 +60,11 @@ export interface AuthorDetails {
     topWorks?: BookSummary[];
 }
 
+export interface BookAuthorCredit {
+    name: string;
+    key?: string;
+}
+
 export interface Review {
     id: string;
     userName: string;
@@ -99,6 +104,7 @@ export interface BookViewModel {
     description: string;
     coverUrl?: string;
     authors: string[];
+    authorCredits: BookAuthorCredit[];
     publishDate: string;
     subjects: string[];
     series?: BookSeries;
@@ -195,6 +201,7 @@ export interface BookCoverPanelProps {
 export interface BookHeroProps {
     title: string;
     authorLabel: string;
+    authorCredits?: BookAuthorCredit[];
     series?: BookSeries;
     seriesPositionLabel?: string;
     communityRating: CommunityRatingSummary;

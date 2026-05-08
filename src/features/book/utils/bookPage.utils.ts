@@ -180,6 +180,7 @@ export const mapBookToViewModel = (
         description: getBookDescription(book.description),
         coverUrl: getCoverUrl(book.covers?.[0]),
         authors,
+        authorCredits: authors.map((authorName) => ({ name: authorName })),
         publishDate: book.first_publish_date ?? "Unknown publication date",
         subjects: getDisplaySubjects(book.subjects),
         series,
@@ -199,6 +200,20 @@ export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookVie
     const authorNames = payload.authors
         .map((author) => getNormalizedText(author.name))
         .filter((authorName): authorName is string => Boolean(authorName));
+    const authorCredits = payload.authors
+        .map((author) => {
+            const normalizedName = getNormalizedText(author.name);
+
+            if (!normalizedName) {
+                return undefined;
+            }
+
+            return {
+                name: normalizedName,
+                key: getNormalizedText(author.key),
+            };
+        })
+        .filter((author): author is NonNullable<typeof author> => Boolean(author));
 
     return {
         id: payload.externalBookId,
@@ -206,6 +221,7 @@ export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookVie
         description: getNormalizedText(payload.description) ?? "No description available yet.",
         coverUrl: payload.cover ?? undefined,
         authors: authorNames,
+        authorCredits,
         publishDate: payload.firstPublishDate ?? "Unknown publication date",
         subjects: getDisplaySubjects(payload.subjects),
         series: payload.series,

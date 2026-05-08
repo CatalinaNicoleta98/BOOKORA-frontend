@@ -1,4 +1,5 @@
- import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
 
 import type { BookAuthorSectionProps } from "../types/book.types";
 
@@ -29,7 +30,12 @@ const BookAuthorSection = ({ authorDetails }: BookAuthorSectionProps) => {
 
                 <div className="min-w-0 space-y-3">
                     <p className="text-[1.05rem] font-medium text-slate-100">
-                        {authorDetails.name}
+                        <Link
+                            to={buildAuthorDetailsRoute(authorDetails.id)}
+                            className="transition-colors hover:text-white"
+                        >
+                            {authorDetails.name}
+                        </Link>
                     </p>
 
                     {authorDetails.bio ? (

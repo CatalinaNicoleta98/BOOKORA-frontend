@@ -309,6 +309,7 @@ const BookPage = () => {
                         <BookHero
                             title={book.title}
                             authorLabel={authorLabel}
+                            authorCredits={book.authorCredits}
                             series={book.series}
                             seriesPositionLabel={book.seriesPositionLabel}
                             communityRating={book.communityRating}

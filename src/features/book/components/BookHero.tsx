@@ -1,4 +1,6 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
 
 import type { BookHeroProps } from "../types/book.types";
 
@@ -7,6 +9,7 @@ import BookRatingStars from "./BookRatingStars";
 const BookHero = ({
     title,
     authorLabel,
+    authorCredits,
     series,
     seriesPositionLabel,
     communityRating,
@@ -37,7 +40,25 @@ const BookHero = ({
                 </h1>
 
                 <p className="theme-text-soft text-[1.05rem] leading-snug sm:text-[1.3rem]">
-                    <span className="theme-text font-medium">{authorLabel}</span>
+                    <span className="theme-text font-medium">
+                        {authorCredits?.length
+                            ? authorCredits.map((author, index) => (
+                                  <Fragment key={`${author.key ?? author.name}-${index}`}>
+                                      {index > 0 ? ", " : null}
+                                      {author.key ? (
+                                          <Link
+                                              to={buildAuthorDetailsRoute(author.key)}
+                                              className="transition-colors hover:text-white"
+                                          >
+                                              {author.name}
+                                          </Link>
+                                      ) : (
+                                          author.name
+                                      )}
+                                  </Fragment>
+                              ))
+                            : authorLabel}
+                    </span>
                 </p>
                 <div className="theme-text-soft mt-3 flex flex-wrap items-center gap-3 text-sm">
                     <BookRatingStars value={communityRating.average} onChange={() => {}} readOnly />

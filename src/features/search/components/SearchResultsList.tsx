@@ -6,6 +6,7 @@ interface SearchResultItem {
     id: string;
     title: string;
     author: string;
+    authorKey?: string;
     coverUrl?: string;
     publishYear?: string;
     averageRating?: number;
@@ -30,6 +31,7 @@ const SearchResultsList = ({ results }: SearchResultsListProps) => {
                     id={result.id}
                     title={result.title}
                     author={result.author}
+                    authorKey={result.authorKey}
                     coverUrl={result.coverUrl}
                     publishYear={result.publishYear}
                     averageRating={result.averageRating}

@@ -13,6 +13,7 @@ export interface SearchResult {
     externalBookId: string;
     title: string;
     author?: string;
+    authorKey?: string;
     cover?: string;
     publishedYear?: number;
     isbn?: string[];

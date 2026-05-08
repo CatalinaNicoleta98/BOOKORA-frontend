@@ -11,6 +11,7 @@ import BookPage from "../../features/book/pages/BookPage";
 import EditBookActivityPage from "../../features/library/pages/EditBookActivityPage";
 import LibraryPage from "../../features/library/pages/LibraryPage";
 import PublicReaderProfilePage from "../../features/social/pages/PublicReaderProfilePage";
+import AuthorDetailsPage from "../../features/authors/pages/AuthorDetailsPage";
 import { APP_ROUTES } from "../../shared/navigation/navigation";
 
 const ProtectedRoute = ({ isAuthenticated, children }: { isAuthenticated: boolean; children: ReactElement }) => {
@@ -48,6 +49,7 @@ const AppRouter = () => {
                 <Route path={APP_ROUTES.home} element={<HomePage />} />
                 <Route path={APP_ROUTES.profile} element={<ProfilePage />} />
                 <Route path={APP_ROUTES.search} element={<SearchPage />} />
+                <Route path={APP_ROUTES.authorDetails} element={<AuthorDetailsPage />} />
                 <Route path={APP_ROUTES.bookDetails} element={<BookPage />} />
                 <Route path={APP_ROUTES.bookActivity} element={<EditBookActivityPage />} />
                 <Route path={APP_ROUTES.library} element={<LibraryPage />} />

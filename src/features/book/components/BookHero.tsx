@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
+import { buildSeriesDetailsRoute } from "../../series/utils/seriesRouting";
 
 import type { BookHeroProps } from "../types/book.types";
 
@@ -15,7 +16,7 @@ const BookHero = ({
     communityRating,
 }: BookHeroProps) => {
     const hasSeries = Boolean(series?.key && series?.name);
-    const seriesHref = hasSeries ? `/series/${encodeURIComponent(series!.key)}` : "#";
+    const seriesHref = hasSeries ? buildSeriesDetailsRoute(series!.key) : "#";
     const seriesLabel = [series?.name, seriesPositionLabel].filter(Boolean).join(" ");
 
     const formatNumber = (value?: number) => {

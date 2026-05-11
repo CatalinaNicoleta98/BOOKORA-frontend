@@ -34,6 +34,7 @@ const ProfileShelvesSection = ({
                 {shelves.map((shelf) => (
                     <article
                         key={shelf.id}
+                        id={shelf.id}
                         className="theme-content-panel-soft flex h-full min-h-[18rem] flex-col rounded-[1.6rem] p-5"
                     >
                         <div className="flex flex-wrap items-start justify-between gap-4">

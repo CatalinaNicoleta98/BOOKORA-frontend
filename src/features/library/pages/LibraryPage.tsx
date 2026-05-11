@@ -1,7 +1,7 @@
 
 
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 
 import LibraryGrid from "../components/LibraryGrid";
@@ -28,6 +28,12 @@ const getBookRouteId = (entry: LibraryEntry) => {
     return entry.externalBookId ?? entry.id;
 };
 
+const getShelfFromHash = (hash: string): ReadingStatus | null => {
+    const normalizedHash = hash.replace(/^#/, "");
+
+    return SHELF_TABS.find((shelf) => shelf.value === normalizedHash)?.value ?? null;
+};
+
 const formatLibraryDate = (value?: string) => {
     if (!value) {
         return "-";
@@ -48,6 +54,7 @@ const formatLibraryDate = (value?: string) => {
 
 const LibraryPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [entries, setEntries] = useState<LibraryEntry[]>([]);
     const [activeShelf, setActiveShelf] = useState<ReadingStatus>("want_to_read");
@@ -73,6 +80,14 @@ const LibraryPage = () => {
 
         void loadLibrary();
     }, []);
+
+    useEffect(() => {
+        const hashedShelf = getShelfFromHash(location.hash);
+
+        if (hashedShelf) {
+            setActiveShelf(hashedShelf);
+        }
+    }, [location.hash]);
 
     const shelfCounts = useMemo(() => {
         return SHELF_TABS.reduce<Record<ReadingStatus, number>>((counts, shelf) => {

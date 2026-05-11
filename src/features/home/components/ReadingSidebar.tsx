@@ -55,34 +55,60 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
         data.challenge.target > 0
             ? Math.max(0, Math.min(100, (data.challenge.current / data.challenge.target) * 100))
             : 0;
+    const remainingBooks = Math.max(data.challenge.target - data.challenge.current, 0);
     const featuredRead = data.continueItems[0] ?? null;
 
     return (
         <aside className="col-span-12 space-y-5">
             <section className="theme-content-panel overflow-hidden rounded-[1.8rem]">
                 <div className="relative overflow-hidden px-5 py-5 sm:px-6">
-                    <div className="pointer-events-none absolute inset-x-4 top-4 h-24 rounded-full bg-[radial-gradient(circle_at_top,_rgba(241,223,177,0.18),_transparent_72%)] blur-2xl" />
+                    <div className="pointer-events-none absolute inset-x-4 top-4 h-28 rounded-full bg-[radial-gradient(circle_at_top,_rgba(241,223,177,0.24),_transparent_72%)] blur-2xl" />
+                    <div className="pointer-events-none absolute -right-8 top-12 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(159,208,255,0.14),transparent_68%)] blur-2xl" />
                     <div className="relative">
                         <div className="flex items-start justify-between gap-4">
-                            <div>
+                            <div className="max-w-[16rem]">
                                 <p className="theme-text-muted text-xs uppercase tracking-[0.24em]">Reading challenge</p>
-                                <h2 className="theme-title mt-3 text-xl font-semibold tracking-[-0.03em]">
+                                <h2 className="theme-title mt-3 text-[1.4rem] font-semibold tracking-[-0.03em] sm:text-[1.55rem]">
                                     {data.challenge.current} of {data.challenge.target} books
                                 </h2>
                                 <p className="theme-text-soft mt-2 text-sm leading-6">
                                     {data.challenge.label}
                                 </p>
                             </div>
-                            <div className="theme-content-panel-soft flex h-16 w-16 items-center justify-center rounded-[1.4rem] text-sm font-semibold uppercase tracking-[0.2em] shadow-[0_14px_30px_rgba(15,23,42,0.18)]">
-                                Goal
+                            <div className="theme-content-panel-soft flex min-h-[5.25rem] min-w-[5.25rem] flex-col items-center justify-center rounded-[1.5rem] px-3 text-center shadow-[0_14px_30px_rgba(15,23,42,0.18)]">
+                                <p className="theme-title text-xl font-semibold">
+                                    {Math.round(challengeProgress)}%
+                                </p>
+                                <p className="theme-text-muted mt-1 text-[10px] uppercase tracking-[0.2em]">
+                                    complete
+                                </p>
                             </div>
                         </div>
 
-                        <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-                            <div className="space-y-3">
+                        <div className="theme-content-panel-soft mt-5 rounded-[1.4rem] p-4 sm:p-5">
+                            <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <p className="theme-text-muted text-[11px] uppercase tracking-[0.2em]">
+                                        Progress this year
+                                    </p>
+                                    <p className="theme-text-soft mt-2 text-sm">
+                                        {remainingBooks > 0
+                                            ? `${remainingBooks} book${remainingBooks === 1 ? "" : "s"} left to reach your goal.`
+                                            : "Goal reached. Everything from here is bonus momentum."}
+                                    </p>
+                                </div>
+                                <div className="theme-content-panel-muted rounded-[1rem] px-4 py-3 text-right">
+                                    <p className="theme-title text-lg font-semibold">{data.challenge.target}</p>
+                                    <p className="theme-text-muted text-[11px] uppercase tracking-[0.18em]">
+                                        annual goal
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="mt-4 space-y-3">
                                 <div className="flex items-center justify-between gap-3 text-xs text-slate-400">
                                     <span>Progress</span>
-                                    <span>{Math.round(challengeProgress)}%</span>
+                                    <span>{data.challenge.current}/{data.challenge.target}</span>
                                 </div>
                                 <div className="h-3 overflow-hidden rounded-full bg-white/10">
                                     <div
@@ -91,18 +117,11 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
                                     />
                                 </div>
                             </div>
-
-                            <div className="theme-content-panel-soft rounded-[1rem] px-4 py-3 text-right">
-                                <p className="theme-title text-lg font-semibold">{data.challenge.current}</p>
-                                <p className="theme-text-muted text-[11px] uppercase tracking-[0.18em]">
-                                    completed
-                                </p>
-                            </div>
                         </div>
 
                         <button
                             type="button"
-                            onClick={() => navigate("/profile")}
+                            onClick={() => navigate("/library#finished_reading")}
                             className="theme-button-ghost mt-5 inline-flex h-11 items-center justify-center rounded-full px-4 text-sm font-medium"
                         >
                             See reading history

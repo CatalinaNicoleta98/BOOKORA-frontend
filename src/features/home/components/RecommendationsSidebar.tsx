@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 
 import type { HomeBookCard, HomePageData, HomeRecommendationItem } from "../types/home.types";
 
@@ -19,7 +20,7 @@ const CompactBookButton = ({
     return (
         <button
             type="button"
-            onClick={() => navigate(`/books/${book.id}`)}
+            onClick={() => navigate(buildBookDetailsRoute(book.id))}
             className="theme-content-panel-soft flex w-full items-center gap-3 rounded-[1.15rem] p-3 text-left transition-all hover:border-[var(--bookora-border-strong)]"
         >
             <div className="theme-cover-shell h-16 w-12 shrink-0 overflow-hidden rounded-[0.8rem]">
@@ -59,7 +60,7 @@ const FeaturedRecommendation = ({ item }: { item: HomeRecommendationItem }) => {
     return (
         <button
             type="button"
-            onClick={() => navigate(`/books/${item.id}`)}
+            onClick={() => navigate(buildBookDetailsRoute(item.id))}
             className="theme-content-panel-soft w-full overflow-hidden rounded-[1.45rem] text-left transition-all hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
         >
             <div className="grid grid-cols-[86px_minmax(0,1fr)] gap-4 p-4">

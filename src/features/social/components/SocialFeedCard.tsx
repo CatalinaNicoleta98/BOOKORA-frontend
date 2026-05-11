@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getAssetUrl } from "../../../shared/api/apiConfig";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 import type { FeedItem } from "../types/feed.types";
 
 interface SocialFeedCardProps {
@@ -77,7 +78,7 @@ const getBookUrl = (item: FeedItem) => {
         return null;
     }
 
-    return `/books/${encodeURIComponent(item.book.externalBookId)}`;
+    return buildBookDetailsRoute(item.book.externalBookId);
 };
 
 const SpoilerReviewPreview = ({

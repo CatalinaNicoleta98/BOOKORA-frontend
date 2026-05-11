@@ -6,6 +6,8 @@ export const APP_ROUTES = {
     readerProfile: "/readers/:handle",
     search: "/search",
     library: "/library",
+    authorDetails: "/authors/:authorKey",
+    seriesDetails: "/series/:seriesKey",
     bookDetails: "/books/:id",
     bookActivity: "/books/:bookId/activity",
 } as const;

@@ -1,11 +1,13 @@
 
-
 import { Link } from "react-router-dom";
+import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 
 interface SearchResultCardProps {
     id: string;
     title: string;
     author: string;
+    authorKey?: string;
     coverUrl?: string;
     publishYear?: string;
     averageRating?: number;
@@ -17,6 +19,7 @@ const SearchReasultsCard = ({
     id,
     title,
     author,
+    authorKey,
     coverUrl,
     publishYear,
     averageRating,
@@ -50,7 +53,19 @@ const SearchReasultsCard = ({
                         ) : null}
                     </div>
 
-                    <p className="mt-2 text-sm font-medium text-slate-300">by {author}</p>
+                    <p className="mt-2 text-sm font-medium text-slate-300">
+                        by{" "}
+                        {authorKey ? (
+                            <Link
+                                to={buildAuthorDetailsRoute(authorKey)}
+                                className="transition-colors hover:text-white"
+                            >
+                                {author}
+                            </Link>
+                        ) : (
+                            author
+                        )}
+                    </p>
 
                     <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-400">
                         {typeof averageRating === "number" ? (
@@ -72,7 +87,7 @@ const SearchReasultsCard = ({
 
                     <div className="mt-5 flex flex-wrap gap-3">
                         <Link
-                            to={`/books/${encodeURIComponent(id)}`}
+                            to={buildBookDetailsRoute(id)}
                             className="theme-button-primary inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium transition-all duration-300"
                         >
                             View book

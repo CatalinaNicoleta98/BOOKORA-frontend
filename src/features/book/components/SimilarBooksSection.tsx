@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { buildBookDetailsRoute } from "../utils/bookRouting";
 
 import type { SimilarBooksSectionProps } from "../types/book.types";
 
@@ -120,7 +121,7 @@ const SimilarBooksSection = ({ books }: SimilarBooksSectionProps) => {
                     {books.map((book) => (
                         <Link
                             key={book.id}
-                            to={`/books/${encodeURIComponent(book.id)}`}
+                            to={buildBookDetailsRoute(book.id)}
                             className="theme-content-panel w-40 shrink-0 space-y-3 rounded-[1.25rem] p-3 transition-colors hover:border-[color:var(--bookora-border-strong)]"
                         >
                             {book.coverUrl ? (

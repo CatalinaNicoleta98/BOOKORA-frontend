@@ -26,6 +26,7 @@ import {
 import SimilarBooksSection from "../components/SimilarBooksSection";
 import type { BookUserReviewEntry, BookViewModel } from "../types/book.types";
 import type { EditBookActivityLocationState } from "../../library/types/library.types";
+import { buildBookActivityRoute, getBookKeyFromRouteParam } from "../utils/bookRouting";
 import {
     applyUserRatingToCommunityRating,
     createDescriptionPreview,
@@ -34,6 +35,7 @@ import {
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
+    const bookRouteKey = getBookKeyFromRouteParam(id);
     const navigate = useNavigate();
     const { state: authState } = useAuth();
 
@@ -46,7 +48,7 @@ const BookPage = () => {
     const [isSavingReadingStatus, setIsSavingReadingStatus] = useState(false);
 
     useEffect(() => {
-        if (!id) {
+        if (!bookRouteKey) {
             setBook(null);
             setSelectedRating(null);
             setIsDescriptionExpanded(false);
@@ -65,8 +67,7 @@ const BookPage = () => {
                 setIsDescriptionExpanded(false);
                 setCurrentUserReview(null);
 
-                const normalizedId = id.replace("/works/", "").trim();
-                const responseData = await getBookDetail(normalizedId);
+                const responseData = await getBookDetail(bookRouteKey);
 
                 if (!responseData.data) {
                     throw new Error(responseData.error ?? "Book details response was empty.");
@@ -76,7 +77,7 @@ const BookPage = () => {
                 setBook(nextBook);
 
                 if (authState.isAuthenticated) {
-                    const savedReview = await getCurrentUserBookReview(normalizedId);
+                    const savedReview = await getCurrentUserBookReview(responseData.data.workKey);
 
                     if (!abortController.signal.aborted) {
                         setCurrentUserReview(savedReview);
@@ -103,7 +104,7 @@ const BookPage = () => {
         return () => {
             abortController.abort();
         };
-    }, [authState.isAuthenticated, id]);
+    }, [authState.isAuthenticated, bookRouteKey]);
 
     const description = useMemo(() => book?.description ?? "No description available yet.", [book?.description]);
     const descriptionPreview = useMemo(() => createDescriptionPreview(description), [description]);
@@ -150,7 +151,7 @@ const BookPage = () => {
             focusSection,
         };
 
-        navigate(`/books/${book.id}/activity`, { state: activityState });
+        navigate(buildBookActivityRoute(book.routeKey), { state: activityState });
     };
 
     const handleUpdateReadingStatus = async (status: string) => {
@@ -309,6 +310,7 @@ const BookPage = () => {
                         <BookHero
                             title={book.title}
                             authorLabel={authorLabel}
+                            authorCredits={book.authorCredits}
                             series={book.series}
                             seriesPositionLabel={book.seriesPositionLabel}
                             communityRating={book.communityRating}
@@ -327,6 +329,7 @@ const BookPage = () => {
                             <BookDetailsPanel
                                 authorLabel={authorLabel}
                                 publishLabel={publishLabel}
+                                selectedEdition={book.selectedEdition}
                                 pageCount={book.pageCount}
                                 editionCount={book.editionCount}
                                 languages={book.languages}
@@ -338,7 +341,10 @@ const BookPage = () => {
                                 excerpts={book.excerpts}
                             />
 
-                            <BookEditionsSection editions={book.editions} />
+                            <BookEditionsSection
+                                currentEditionKey={book.editionKey}
+                                editions={book.editions}
+                            />
                             <BookAuthorSection authorDetails={book.authorDetails} />
                             <SimilarBooksSection books={book.similarBooks} />
                             <BookReviewsSection

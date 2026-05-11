@@ -4,6 +4,7 @@ export interface SearchResultItem {
     id: string;
     title: string;
     author: string;
+    authorKey?: string;
     coverUrl?: string;
     publishYear?: string;
     description?: string;
@@ -34,6 +35,18 @@ const getBookAuthor = (rawBook: Record<string, unknown>) => {
     }
 
     return "Unknown author";
+};
+
+const getBookAuthorKey = (rawBook: Record<string, unknown>) => {
+    if (typeof rawBook.authorKey === "string" && rawBook.authorKey.trim().length > 0) {
+        return rawBook.authorKey;
+    }
+
+    if (Array.isArray(rawBook.author_key) && typeof rawBook.author_key[0] === "string") {
+        return rawBook.author_key[0];
+    }
+
+    return undefined;
 };
 
 export const getBookCoverUrl = (rawBook: Record<string, unknown>) => {
@@ -123,6 +136,7 @@ export const normalizeSearchResults = (rawResponse: unknown): SearchResultItem[]
                     ? item.title
                     : "Untitled book",
             author: getBookAuthor(item),
+            authorKey: getBookAuthorKey(item),
             coverUrl: getBookCoverUrl(item),
             publishYear:
                 typeof item.first_publish_year === "number"

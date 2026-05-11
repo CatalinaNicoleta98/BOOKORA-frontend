@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 import { searchBooks } from "../services/searchService";
 import type { SearchResult } from "../services/searchService";
 
@@ -112,7 +114,7 @@ const NavbarSearch = () => {
     }, [searchQuery]);
 
     const handleResultClick = (result: SearchResult) => {
-        navigate(`/books/${result.externalBookId}`);
+        navigate(buildBookDetailsRoute(result.externalBookId));
         clearSearch();
     };
 
@@ -174,11 +176,9 @@ const NavbarSearch = () => {
                                 const coverFallback = getBookCoverFallback(result.title);
 
                                 return (
-                                    <button
+                                    <div
                                         key={result.externalBookId}
-                                        type="button"
-                                        onClick={() => handleResultClick(result)}
-                                        className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--bookora-surface)]"
+                                        className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--bookora-surface)]"
                                     >
                                         <div className="flex h-16 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--bookora-border)] bg-[var(--bookora-surface)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--bookora-text-soft)]">
                                             {result.cover ? (
@@ -193,13 +193,33 @@ const NavbarSearch = () => {
                                         </div>
 
                                         <div className="min-w-0 flex-1">
-                                            <div className="theme-title truncate text-sm font-medium">{result.title}</div>
-                                            <div className="theme-text-muted mt-1 truncate text-xs">{result.author ?? "Unknown author"}</div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleResultClick(result)}
+                                                className="min-w-0 text-left"
+                                            >
+                                                <div className="theme-title truncate text-sm font-medium">
+                                                    {result.title}
+                                                </div>
+                                            </button>
+                                            <div className="theme-text-muted mt-1 truncate text-xs">
+                                                {result.authorKey ? (
+                                                    <Link
+                                                        to={buildAuthorDetailsRoute(result.authorKey)}
+                                                        onClick={clearSearch}
+                                                        className="transition-colors hover:text-[var(--bookora-title)]"
+                                                    >
+                                                        {result.author ?? "Unknown author"}
+                                                    </Link>
+                                                ) : (
+                                                    result.author ?? "Unknown author"
+                                                )}
+                                            </div>
                                             {metadata ? (
                                                 <div className="theme-text-muted mt-2 truncate text-[11px] opacity-80">{metadata}</div>
                                             ) : null}
                                         </div>
-                                    </button>
+                                    </div>
                                 );
                             })}
                         </div>

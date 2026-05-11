@@ -43,11 +43,13 @@ export interface BookSummary {
 }
 
 export interface EditionSummary {
-    id: string;
+    editionKey: string;
+    workKey: string;
     title: string;
     coverUrl?: string;
     format?: string; // hardcover, paperback, ebook, audiobook
     publishDate?: string;
+    publishedYear?: number;
     publisher?: string;
     language?: string;
 }
@@ -58,6 +60,11 @@ export interface AuthorDetails {
     bio?: string;
     photoUrl?: string;
     topWorks?: BookSummary[];
+}
+
+export interface BookAuthorCredit {
+    name: string;
+    key?: string;
 }
 
 export interface Review {
@@ -95,10 +102,13 @@ export interface BookUserReviewEntry {
 
 export interface BookViewModel {
     id: string;
+    routeKey: string;
+    editionKey?: string;
     title: string;
     description: string;
     coverUrl?: string;
     authors: string[];
+    authorCredits: BookAuthorCredit[];
     publishDate: string;
     subjects: string[];
     series?: BookSeries;
@@ -122,6 +132,7 @@ export interface BookViewModel {
     // future sections (Goodreads-style)
 
     seriesBooks?: BookSummary[];
+    selectedEdition?: EditionSummary;
     editions?: EditionSummary[];
     authorDetails?: AuthorDetails;
     similarBooks?: BookSummary[];
@@ -146,6 +157,9 @@ export interface BookDetailApiRating {
 }
 
 export interface BookDetailApiPayload {
+    requestedKey: string;
+    workKey: string;
+    editionKey?: string;
     externalBookId: string;
     title: string;
     description?: string;
@@ -167,6 +181,7 @@ export interface BookDetailApiPayload {
     subjectPlaces?: string[];
     subjectTimes?: string[];
     excerpts?: string[];
+    selectedEdition?: EditionSummary;
     editions?: EditionSummary[];
     authorDetails?: AuthorDetails;
     similarBooks?: BookSummary[];
@@ -195,6 +210,7 @@ export interface BookCoverPanelProps {
 export interface BookHeroProps {
     title: string;
     authorLabel: string;
+    authorCredits?: BookAuthorCredit[];
     series?: BookSeries;
     seriesPositionLabel?: string;
     communityRating: CommunityRatingSummary;
@@ -221,6 +237,7 @@ export interface BookAboutSectionProps {
 export interface BookDetailsPanelProps {
     authorLabel: string;
     publishLabel: string;
+    selectedEdition?: EditionSummary;
     pageCount?: number;
     editionCount?: number;
     languages?: string[];
@@ -233,6 +250,7 @@ export interface BookDetailsPanelProps {
 }
 
 export interface BookEditionsSectionProps {
+    currentEditionKey?: string;
     editions?: EditionSummary[];
 }
 

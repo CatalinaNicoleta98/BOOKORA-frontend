@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
 import { useAuth } from "../../auth/context/AuthContext";
 import { getLibrary } from "../../library/services/libraryService";
 import type { LibraryEntry } from "../../library/types/library.types";
@@ -259,7 +260,7 @@ const ProfilePage = () => {
     }, [coverPreviewUrl, fallbackProfile.coverImageUrl]);
 
     const openBook = (bookId: string) => {
-        navigate(`/books/${encodeURIComponent(bookId)}`);
+        navigate(buildBookDetailsRoute(bookId));
     };
 
     return (

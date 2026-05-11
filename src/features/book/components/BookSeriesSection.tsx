@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { buildSeriesDetailsRoute } from "../../series/utils/seriesRouting";
 
 interface BookSeriesSectionProps {
     series?: {
@@ -23,7 +24,7 @@ const BookSeriesSection = ({ series, seriesPositionLabel }: BookSeriesSectionPro
                 </span>
             </p>
             <Link
-                to={`/series/${encodeURIComponent(series.key)}`}
+                to={buildSeriesDetailsRoute(series.key)}
                 className="inline-flex w-fit items-center text-[1.05rem] font-medium italic text-amber-100/80 transition-colors hover:text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
                 View full series →

@@ -15,13 +15,6 @@ interface BookDataWithSeries extends BookData {
     series_position?: string | number;
 }
 
-const slugify = (value: string): string =>
-    value
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-
 // Normalize description from Open Library
 export const getBookDescription = (
     description?: string | BookDescriptionValue
@@ -72,10 +65,12 @@ const mapBookSummary = (summary: BookSummary): BookSummary => ({
 });
 
 const mapEditionSummary = (edition: EditionSummary): EditionSummary => ({
-    id: edition.id,
+    editionKey: edition.editionKey,
+    workKey: edition.workKey,
     title: edition.title,
     format: edition.format,
     publishDate: edition.publishDate,
+    publishedYear: edition.publishedYear,
     publisher: edition.publisher,
     language: edition.language,
     coverUrl: edition.coverUrl,
@@ -163,10 +158,12 @@ export const mapBookToViewModel = (
         ? rawSeries
         : undefined;
 
-    const series = seriesName
+    const normalizedSeriesName = getNormalizedText(seriesName);
+
+    const series = normalizedSeriesName
         ? {
-              key: slugify(seriesName),
-              name: seriesName,
+              key: normalizedSeriesName,
+              name: normalizedSeriesName,
           }
         : undefined;
 
@@ -176,10 +173,12 @@ export const mapBookToViewModel = (
 
     return {
         id,
+        routeKey: id,
         title: book.title,
         description: getBookDescription(book.description),
         coverUrl: getCoverUrl(book.covers?.[0]),
         authors,
+        authorCredits: authors.map((authorName) => ({ name: authorName })),
         publishDate: book.first_publish_date ?? "Unknown publication date",
         subjects: getDisplaySubjects(book.subjects),
         series,
@@ -188,6 +187,7 @@ export const mapBookToViewModel = (
 
         // prepared sections (no data yet)
         seriesBooks: undefined,
+        selectedEdition: undefined,
         editions: undefined,
         authorDetails: undefined,
         similarBooks: undefined,
@@ -196,18 +196,37 @@ export const mapBookToViewModel = (
 };
 
 export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookViewModel => {
-    const authorNames = payload.authors
+    const normalizedAuthors = Array.isArray(payload.authors) ? payload.authors : [];
+
+    const authorNames = normalizedAuthors
         .map((author) => getNormalizedText(author.name))
         .filter((authorName): authorName is string => Boolean(authorName));
+    const authorCredits = normalizedAuthors
+        .map((author) => {
+            const normalizedName = getNormalizedText(author.name);
+
+            if (!normalizedName) {
+                return undefined;
+            }
+
+            return {
+                name: normalizedName,
+                key: getNormalizedText(author.key),
+            };
+        })
+        .filter((author): author is NonNullable<typeof author> => Boolean(author));
 
     return {
-        id: payload.externalBookId,
+        id: payload.workKey,
+        routeKey: payload.requestedKey,
+        editionKey: payload.editionKey,
         title: payload.title,
         description: getNormalizedText(payload.description) ?? "No description available yet.",
         coverUrl: payload.cover ?? undefined,
         authors: authorNames,
+        authorCredits,
         publishDate: payload.firstPublishDate ?? "Unknown publication date",
-        subjects: getDisplaySubjects(payload.subjects),
+        subjects: getDisplaySubjects(payload.subjects ?? []),
         series: payload.series,
         seriesPositionLabel: payload.seriesPosition ? `#${payload.seriesPosition}` : undefined,
         averageRating: payload.rating?.average,
@@ -216,17 +235,18 @@ export const mapBookDetailToViewModel = (payload: BookDetailApiPayload): BookVie
         communityRating: mapCommunityRating(payload.communityRating),
         pageCount: payload.pageCount,
         editionCount: payload.editionCount,
-        languages: payload.languages,
-        publishers: payload.publishers,
-        publishPlaces: payload.publishPlaces,
-        subjectPeople: payload.subjectPeople,
-        subjectPlaces: payload.subjectPlaces,
-        subjectTimes: payload.subjectTimes,
-        excerpts: payload.excerpts,
-        editions: payload.editions?.map(mapEditionSummary),
+        languages: payload.languages ?? [],
+        publishers: payload.publishers ?? [],
+        publishPlaces: payload.publishPlaces ?? [],
+        subjectPeople: payload.subjectPeople ?? [],
+        subjectPlaces: payload.subjectPlaces ?? [],
+        subjectTimes: payload.subjectTimes ?? [],
+        excerpts: payload.excerpts ?? [],
+        selectedEdition: payload.selectedEdition ? mapEditionSummary(payload.selectedEdition) : undefined,
+        editions: payload.editions?.map(mapEditionSummary) ?? [],
         authorDetails: mapAuthorDetails(payload.authorDetails),
-        similarBooks: payload.similarBooks?.map(mapBookSummary),
-        reviews: payload.reviews?.map(mapReview),
+        similarBooks: payload.similarBooks?.map(mapBookSummary) ?? [],
+        reviews: payload.reviews?.map(mapReview) ?? [],
     };
 };
 

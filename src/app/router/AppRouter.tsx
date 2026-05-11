@@ -6,6 +6,8 @@ import RegisterPage from "../../features/auth/pages/RegisterPage";
 import HomePage from "../../features/home/pages/HomePage";
 import ProfilePage from "../../features/profile/pages/ProfilePage";
 import SearchPage from "../../features/search/pages/SearchPage";
+import BrowsePage from "../../features/browse/pages/BrowsePage";
+import BrowseGenrePage from "../../features/browse/pages/BrowseGenrePage";
 import AppShell from "../../shared/components/layout/AppShell";
 import BookPage from "../../features/book/pages/BookPage";
 import EditBookActivityPage from "../../features/library/pages/EditBookActivityPage";
@@ -48,6 +50,8 @@ const AppRouter = () => {
                 }
             >
                 <Route path={APP_ROUTES.home} element={<HomePage />} />
+                <Route path={APP_ROUTES.browse} element={<BrowsePage />} />
+                <Route path={APP_ROUTES.browseGenre} element={<BrowseGenrePage />} />
                 <Route path={APP_ROUTES.profile} element={<ProfilePage />} />
                 <Route path={APP_ROUTES.search} element={<SearchPage />} />
                 <Route path={APP_ROUTES.authorDetails} element={<AuthorDetailsPage />} />

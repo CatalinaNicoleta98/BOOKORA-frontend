@@ -160,8 +160,8 @@ const SearchPage = () => {
                                 Start with a title, author, or series.
                             </p>
                             <p className="theme-text-muted mt-3 text-sm leading-7">
-                                This page will become the full search experience for both mobile search
-                                and desktop “View all results”.
+                                Use this page for full search results after searching from the navbar
+                                or submitting a search here directly.
                             </p>
                         </div>
                     ) : null}

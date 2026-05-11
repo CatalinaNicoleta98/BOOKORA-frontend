@@ -1,13 +1,38 @@
 import { APP_ROUTES } from "../../../shared/navigation/navigation";
 
-export const normalizeBookRouteKey = (value: string) =>
-    value.split("/").filter(Boolean).pop()?.trim() ?? value.trim();
+export const normalizeBookRouteKey = (value?: string | null) => {
+    if (!value) {
+        return "";
+    }
 
-export const buildBookDetailsRoute = (bookKey: string) =>
-    APP_ROUTES.bookDetails.replace(":id", encodeURIComponent(normalizeBookRouteKey(bookKey)));
+    const normalizedValue = value.trim();
 
-export const buildBookActivityRoute = (bookKey: string) =>
-    APP_ROUTES.bookActivity.replace(":bookId", encodeURIComponent(normalizeBookRouteKey(bookKey)));
+    if (!normalizedValue) {
+        return "";
+    }
+
+    return normalizedValue.split("/").filter(Boolean).pop()?.trim() ?? normalizedValue;
+};
+
+export const buildBookDetailsRoute = (bookKey?: string | null) => {
+    const normalizedBookKey = normalizeBookRouteKey(bookKey);
+
+    if (!normalizedBookKey) {
+        return APP_ROUTES.home;
+    }
+
+    return APP_ROUTES.bookDetails.replace(":id", encodeURIComponent(normalizedBookKey));
+};
+
+export const buildBookActivityRoute = (bookKey?: string | null) => {
+    const normalizedBookKey = normalizeBookRouteKey(bookKey);
+
+    if (!normalizedBookKey) {
+        return APP_ROUTES.home;
+    }
+
+    return APP_ROUTES.bookActivity.replace(":bookId", encodeURIComponent(normalizedBookKey));
+};
 
 export const getBookKeyFromRouteParam = (bookKeyParam?: string) => {
     if (!bookKeyParam) {

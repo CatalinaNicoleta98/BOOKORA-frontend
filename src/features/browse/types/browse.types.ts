@@ -17,3 +17,12 @@ export interface BrowseGenreSectionViewModel {
     genre: BrowseGenreDefinition;
     books: BrowseBookCardViewModel[];
 }
+
+export interface BrowseGenreResultsViewModel {
+    genre: BrowseGenreDefinition;
+    books: BrowseBookCardViewModel[];
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+}

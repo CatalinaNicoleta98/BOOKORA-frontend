@@ -10,11 +10,15 @@ const BrowseBookCard = ({ book }: BrowseBookCardProps) => {
     return (
         <Link
             to={buildBookDetailsRoute(book.id)}
-            className="theme-content-panel-soft block rounded-[1.35rem] p-3.5"
+            className="theme-content-panel-soft group block h-full rounded-[1.35rem] p-3.5"
         >
             <div className="theme-cover-shell overflow-hidden rounded-[1rem]">
                 {book.coverUrl ? (
-                    <img src={book.coverUrl} alt={book.title} className="aspect-[3/4] w-full object-cover" />
+                    <img
+                        src={book.coverUrl}
+                        alt={book.title}
+                        className="aspect-[3/4] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
                 ) : (
                     <div className="theme-text-muted flex aspect-[3/4] w-full items-center justify-center px-4 text-center text-xs font-semibold uppercase tracking-[0.18em]">
                         No cover

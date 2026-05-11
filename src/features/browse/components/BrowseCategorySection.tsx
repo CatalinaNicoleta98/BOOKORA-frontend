@@ -1,12 +1,14 @@
+import BrowseBookCard from "./BrowseBookCard";
 import { Link } from "react-router-dom";
-import type { BrowseGenreDefinition } from "../types/browse.types";
+import type { BrowseBookCardViewModel, BrowseGenreDefinition } from "../types/browse.types";
 import { buildBrowseGenreRoute } from "../utils/browseRouting";
 
 interface BrowseCategorySectionProps {
     genre: BrowseGenreDefinition;
+    books: BrowseBookCardViewModel[];
 }
 
-const BrowseCategorySection = ({ genre }: BrowseCategorySectionProps) => {
+const BrowseCategorySection = ({ genre, books }: BrowseCategorySectionProps) => {
     return (
         <section className="theme-glass-panel rounded-[2rem] p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
@@ -20,6 +22,18 @@ const BrowseCategorySection = ({ genre }: BrowseCategorySectionProps) => {
                     See more
                 </Link>
             </div>
+
+            {books.length ? (
+                <div className="mt-5 grid grid-cols-2 gap-3.5 md:grid-cols-3 xl:grid-cols-6">
+                    {books.map((book) => (
+                        <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />
+                    ))}
+                </div>
+            ) : (
+                <div className="theme-content-panel-muted mt-5 rounded-[1.4rem] border-dashed p-4 text-sm leading-6 theme-text-muted">
+                    No preview books are available for this category right now.
+                </div>
+            )}
         </section>
     );
 };

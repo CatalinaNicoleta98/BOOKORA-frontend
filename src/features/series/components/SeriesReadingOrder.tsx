@@ -28,7 +28,7 @@ const SeriesReadingOrder = ({ books }: SeriesReadingOrderProps) => {
                 </h2>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid gap-4 min-[480px]:grid-cols-2 xl:grid-cols-3">
                 {books.map((book, index) => (
                     <SeriesBookCard key={book.key} book={book} index={index} />
                 ))}

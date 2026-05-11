@@ -60,7 +60,7 @@ const AuthorDetailsPage = () => {
 
     return (
         <div className="theme-page-shell relative min-h-screen">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+            <div className="relative mx-auto flex w-full max-w-[1400px] flex-col gap-5 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
                 {isLoading ? (
                     <AuthorPageState
                         title="Loading author profile..."

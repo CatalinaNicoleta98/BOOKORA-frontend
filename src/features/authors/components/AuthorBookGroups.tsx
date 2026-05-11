@@ -21,15 +21,6 @@ const AuthorBookGroups = ({ seriesGroups, standaloneBooks }: AuthorBookGroupsPro
 
     return (
         <section className="space-y-6">
-            <div className="space-y-2">
-                <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.18em]">
-                    Bibliography
-                </p>
-                <h2 className="theme-title text-[1.45rem] font-semibold sm:text-[1.7rem]">
-                    Books by this author
-                </h2>
-            </div>
-
             {seriesGroups.map((group) => (
                 <AuthorSeriesGroup key={group.seriesKey} group={group} />
             ))}

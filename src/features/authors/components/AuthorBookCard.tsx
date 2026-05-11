@@ -17,9 +17,9 @@ const AuthorBookCard = ({ book }: AuthorBookCardProps) => {
     return (
         <Link
             to={createBookRoute(book.key)}
-            className="theme-content-panel group flex h-full flex-col gap-4 rounded-[1.5rem] p-4 transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+            className="theme-content-panel group flex h-full flex-col gap-3 rounded-[1.35rem] p-3.5 transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
         >
-            <div className="theme-cover-shell overflow-hidden rounded-[1.1rem]">
+            <div className="theme-cover-shell overflow-hidden rounded-[1rem]">
                 {book.coverUrl ? (
                     <img
                         src={book.coverUrl}
@@ -33,7 +33,7 @@ const AuthorBookCard = ({ book }: AuthorBookCardProps) => {
                 )}
             </div>
 
-            <div className="min-w-0 space-y-2">
+            <div className="min-w-0 space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2">
                     {typeof book.firstPublishYear === "number" ? (
                         <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
@@ -41,14 +41,16 @@ const AuthorBookCard = ({ book }: AuthorBookCardProps) => {
                         </span>
                     ) : null}
                     {seriesMeta ? (
-                        <span className="theme-text-muted text-xs font-medium">{seriesMeta}</span>
+                        <span className="theme-text-muted line-clamp-1 text-xs font-medium">
+                            {seriesMeta}
+                        </span>
                     ) : null}
                 </div>
 
                 <h3 className="theme-title line-clamp-2 text-base font-semibold">{book.title}</h3>
 
                 {book.description ? (
-                    <p className="theme-text-muted line-clamp-3 text-sm leading-6">{book.description}</p>
+                    <p className="theme-text-muted line-clamp-2 text-sm leading-6">{book.description}</p>
                 ) : (
                     <p className="theme-text-muted text-sm">Open book details</p>
                 )}

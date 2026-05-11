@@ -25,7 +25,7 @@ const BrowsePage = () => {
                     return;
                 }
 
-                setSections(nextSections);
+                setSections(nextSections.filter((section) => section.books.length > 0));
             } catch (loadError) {
                 if (!isActive) {
                     return;
@@ -85,6 +85,12 @@ const BrowsePage = () => {
                               />
                           ))
                         : null}
+
+                    {!isLoading && !error && sections.length === 0 ? (
+                        <div className="theme-content-panel-muted rounded-[1.6rem] px-5 py-4 text-sm leading-6 theme-text-muted">
+                            Browse categories are temporarily quiet right now.
+                        </div>
+                    ) : null}
                     </div>
 
                     <aside className="theme-content-panel hidden rounded-[1.8rem] p-5 xl:block xl:sticky xl:top-24">

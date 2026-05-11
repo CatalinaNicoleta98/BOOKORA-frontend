@@ -9,12 +9,15 @@ interface BrowseCategorySectionProps {
 }
 
 const BrowseCategorySection = ({ genre, books }: BrowseCategorySectionProps) => {
+    if (!books.length) {
+        return null;
+    }
+
     return (
         <section className="theme-glass-panel rounded-[2rem] p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
                 <div>
-                    <p className="theme-eyebrow">Browse</p>
-                    <h2 className="theme-title mt-2 text-2xl font-semibold">{genre.title}</h2>
+                    <h2 className="theme-title text-[1.55rem] font-semibold">{genre.title}</h2>
                     <p className="theme-text-soft mt-2 text-sm leading-6">{genre.description}</p>
                 </div>
 
@@ -23,17 +26,11 @@ const BrowseCategorySection = ({ genre, books }: BrowseCategorySectionProps) => 
                 </Link>
             </div>
 
-            {books.length ? (
-                <div className="mt-5 grid grid-cols-2 gap-3.5 md:grid-cols-3 xl:grid-cols-6">
-                    {books.map((book) => (
-                        <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />
-                    ))}
-                </div>
-            ) : (
-                <div className="theme-content-panel-muted mt-5 rounded-[1.4rem] border-dashed p-4 text-sm leading-6 theme-text-muted">
-                    No preview books are available for this category right now.
-                </div>
-            )}
+            <div className="mt-5 grid grid-cols-2 gap-3.5 md:grid-cols-3 xl:grid-cols-6">
+                {books.map((book) => (
+                    <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />
+                ))}
+            </div>
         </section>
     );
 };

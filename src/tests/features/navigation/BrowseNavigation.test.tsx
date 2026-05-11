@@ -21,14 +21,33 @@ describe("browse navigation", () => {
         searchBooksMock.mockReset();
     });
 
-    it("points the Browse nav link to /browse", () => {
+    it("opens browse genres on click and includes All genres", () => {
         render(
             <MemoryRouter>
                 <DesktopNavLinks />
             </MemoryRouter>
         );
 
-        expect(screen.getByRole("link", { name: "Browse" })).toHaveAttribute("href", "/browse");
+        fireEvent.click(screen.getByRole("button", { name: /browse/i }));
+
+        expect(screen.getByRole("link", { name: /all genres/i })).toHaveAttribute("href", "/browse");
+        expect(screen.getByRole("link", { name: /fantasy/i })).toHaveAttribute("href", "/browse/fantasy");
+    });
+
+    it("closes the browse menu when clicked again", () => {
+        render(
+            <MemoryRouter>
+                <DesktopNavLinks />
+            </MemoryRouter>
+        );
+
+        const browseButton = screen.getByRole("button", { name: /browse/i });
+
+        fireEvent.click(browseButton);
+        expect(screen.getByRole("link", { name: /all genres/i })).toBeInTheDocument();
+
+        fireEvent.click(browseButton);
+        expect(screen.queryByRole("link", { name: /all genres/i })).not.toBeInTheDocument();
     });
 
     it("keeps View all results pointing to /search", async () => {

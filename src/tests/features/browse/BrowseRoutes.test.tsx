@@ -30,7 +30,7 @@ describe("browse routes", () => {
             </MemoryRouter>
         );
 
-        expect(screen.getByRole("heading", { name: /discover books by mood, genre, and vibe/i })).toBeInTheDocument();
+        expect(screen.getByRole("heading", { name: /browse by shelf/i })).toBeInTheDocument();
 
         await waitFor(() => {
             expect(getBrowseSectionsMock).toHaveBeenCalled();

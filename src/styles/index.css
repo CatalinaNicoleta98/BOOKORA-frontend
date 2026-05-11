@@ -249,6 +249,23 @@ select {
         transform 200ms ease;
 }
 
+a[href],
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+summary {
+    cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+}
+
+:is(a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"]), summary):focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--bookora-accent) 20%, transparent);
+}
+
 .font-display,
 h1,
 h2,
@@ -351,11 +368,24 @@ h3 {
     backdrop-filter: blur(22px);
 }
 
+:is(a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"])).theme-content-panel:hover {
+    border-color: var(--bookora-border-strong);
+    box-shadow: 0 24px 68px rgba(15, 23, 42, 0.24);
+    transform: translateY(-1px);
+}
+
 .theme-content-panel-soft {
     border: 1px solid var(--bookora-border);
     background: color-mix(in srgb, var(--bookora-surface) 88%, transparent);
     box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
     backdrop-filter: blur(18px);
+}
+
+:is(a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"])).theme-content-panel-soft:hover {
+    border-color: var(--bookora-border-strong);
+    background: color-mix(in srgb, var(--bookora-surface-strong) 78%, transparent);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+    transform: translateY(-1px);
 }
 
 .theme-content-panel-muted {
@@ -367,6 +397,12 @@ h3 {
 .theme-cover-shell {
     border: 1px solid var(--bookora-border);
     background: color-mix(in srgb, var(--bookora-surface-muted) 94%, transparent);
+}
+
+:is(a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"])).theme-cover-shell:hover {
+    border-color: var(--bookora-border-strong);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.2);
+    transform: translateY(-1px);
 }
 
 .theme-pill-subtle {
@@ -492,6 +528,12 @@ h3 {
 .theme-button-secondary:hover {
     border-color: var(--bookora-border-strong);
     background: color-mix(in srgb, var(--bookora-surface-strong) 76%, transparent);
+}
+
+:is(a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"])).theme-glass-panel:hover,
+:is(a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"])).theme-glass-panel-strong:hover {
+    border-color: var(--bookora-border-strong);
+    box-shadow: 0 30px 90px rgba(15, 23, 42, 0.24);
 }
 
 .theme-star-base {

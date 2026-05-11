@@ -22,7 +22,7 @@ const BookCoverPanel = ({
 
                     {coverUrl ? (
                         <div className="relative [perspective:1400px]">
-                            <div className="relative overflow-hidden rounded-[1.5rem] bg-[#0f172a] shadow-[0_18px_40px_rgba(15,23,42,0.45)] transition-all duration-500 [transform-style:preserve-3d] group-hover:-translate-y-1 group-hover:rotate-y-[-10deg] group-hover:rotate-x-[5deg] group-hover:shadow-[0_30px_80px_rgba(15,23,42,0.68)]">
+                            <div className="theme-cover-shell relative overflow-hidden rounded-[1.5rem] shadow-[0_18px_40px_rgba(15,23,42,0.28)] transition-all duration-500 [transform-style:preserve-3d] group-hover:-translate-y-1 group-hover:rotate-y-[-10deg] group-hover:rotate-x-[5deg] group-hover:shadow-[0_30px_80px_rgba(15,23,42,0.38)]">
                                 <div className="pointer-events-none absolute inset-y-0 left-0 w-[14%] bg-gradient-to-r from-white/14 via-white/6 to-transparent opacity-70" />
                                 <div className="pointer-events-none absolute inset-x-0 top-0 h-[10%] bg-gradient-to-b from-white/10 to-transparent" />
                                 <div className="pointer-events-none absolute inset-y-0 right-0 w-[10%] bg-gradient-to-l from-black/14 to-transparent opacity-60" />
@@ -35,7 +35,7 @@ const BookCoverPanel = ({
                             </div>
                         </div>
                     ) : (
-                        <div className="relative flex h-[420px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[#0f172a]/80 px-6 text-center text-sm font-medium uppercase tracking-[0.2em] text-slate-500 shadow-[0_18px_40px_rgba(15,23,42,0.35)]">
+                        <div className="theme-cover-shell theme-text-muted relative flex h-[420px] items-center justify-center overflow-hidden rounded-[1.5rem] px-6 text-center text-sm font-medium uppercase tracking-[0.2em] shadow-[0_18px_40px_rgba(15,23,42,0.24)]">
                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.12),_transparent_40%),radial-gradient(circle_at_bottom,_rgba(96,165,250,0.1),_transparent_45%)]" />
                             <span className="relative">No cover available</span>
                         </div>

@@ -30,7 +30,7 @@ const SearchFilters = ({ mode, onChange }: SearchFiltersProps) => {
                         onClick={() => onChange(option.value)}
                         className={`inline-flex h-10 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
                             isActive
-                                ? "border-amber-200/30 bg-amber-200/12 text-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.15)]"
+                                ? "theme-button-accent shadow-[0_0_20px_rgba(251,191,36,0.15)]"
                                 : "theme-button-ghost"
                         }`}
                     >

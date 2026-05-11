@@ -19,7 +19,7 @@ const LibraryShelfTabs = ({
     onChange,
 }: LibraryShelfTabsProps) => {
     return (
-        <aside className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-3 lg:sticky lg:top-24 lg:self-start">
+        <aside className="theme-content-panel rounded-[1.5rem] p-3 lg:sticky lg:top-24 lg:self-start">
             <nav className="space-y-1" aria-label="Library shelves">
                 {tabs.map((shelf) => {
                     const isActive = shelf.value === activeShelf;
@@ -31,14 +31,14 @@ const LibraryShelfTabs = ({
                             onClick={() => onChange(shelf.value)}
                             className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-sm transition ${
                                 isActive
-                                    ? "bg-amber-200 text-slate-950 shadow-[0_10px_30px_rgba(251,191,36,0.18)]"
-                                    : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
+                                    ? "theme-button-primary shadow-[0_10px_30px_rgba(251,191,36,0.18)]"
+                                    : "theme-text-soft hover:bg-white/[0.06] hover:text-white"
                             }`}
                         >
                             <span className="font-medium">{shelf.label}</span>
                             <span
                                 className={`rounded-full px-2 py-0.5 text-xs ${
-                                    isActive ? "bg-slate-950/10" : "bg-white/[0.06] text-slate-400"
+                                    isActive ? "bg-black/10" : "bg-white/[0.06] theme-text-muted"
                                 }`}
                             >
                                 {counts[shelf.value] ?? 0}

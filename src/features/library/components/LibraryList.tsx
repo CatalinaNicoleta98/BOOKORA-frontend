@@ -10,7 +10,7 @@ interface LibraryListProps {
 
 const renderFormats = (formats: LibraryEntry["formats"]) => {
     if (formats.length === 0) {
-        return <span className="text-slate-500">-</span>;
+        return <span className="theme-text-muted">-</span>;
     }
 
     return (
@@ -18,7 +18,7 @@ const renderFormats = (formats: LibraryEntry["formats"]) => {
             {formats.map((format) => (
                 <span
                     key={format}
-                    className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] capitalize text-slate-300"
+                    className="theme-pill-subtle rounded-full px-2 py-0.5 text-[10px] capitalize"
                 >
                     {format}
                 </span>
@@ -48,35 +48,35 @@ const LibraryList = ({ entries, onSelectBook, formatDate }: LibraryListProps) =>
                         tabIndex={0}
                         onClick={() => onSelectBook(entry)}
                         onKeyDown={(event) => handleRowKeyDown(event, () => onSelectBook(entry))}
-                        className="flex gap-4 rounded-2xl border border-white/10 bg-slate-950/30 p-4 text-left transition hover:border-amber-200/30 hover:bg-slate-900/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
+                        className="theme-content-panel-soft flex gap-4 rounded-2xl p-4 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
                     >
-                        <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white/[0.05]">
+                        <div className="theme-cover-shell h-24 w-16 flex-shrink-0 overflow-hidden rounded-xl">
                             {entry.cover ? (
                                 <img src={entry.cover} alt={entry.title} className="h-full w-full object-cover" />
                             ) : (
-                                <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                                <div className="theme-text-muted flex h-full w-full items-center justify-center px-2 text-center text-[10px] uppercase tracking-[0.18em]">
                                     No cover
                                 </div>
                             )}
                         </div>
 
                         <div className="min-w-0 flex-1">
-                            <h3 className="text-sm font-semibold text-white">{entry.title}</h3>
-                            <p className="mt-1 text-xs text-slate-400">{entry.author ?? "Unknown author"}</p>
-                            <div className="mt-3 space-y-2 text-xs text-slate-300">
+                            <h3 className="theme-title text-sm font-semibold">{entry.title}</h3>
+                            <p className="theme-text-muted mt-1 text-xs">{entry.author ?? "Unknown author"}</p>
+                            <div className="theme-text-soft mt-3 space-y-2 text-xs">
                                 <p>
-                                    <span className="text-slate-500">Rating:</span>{" "}
+                                    <span className="theme-text-muted">Rating:</span>{" "}
                                     {typeof entry.rating === "number" ? `${entry.rating}/5` : "-"}
                                 </p>
                                 <div>
-                                    <span className="text-slate-500">Formats:</span>
+                                    <span className="theme-text-muted">Formats:</span>
                                     <div className="mt-1">{renderFormats(entry.formats)}</div>
                                 </div>
                                 <p>
-                                    <span className="text-slate-500">Started:</span> {formatDate(entry.dateStarted)}
+                                    <span className="theme-text-muted">Started:</span> {formatDate(entry.dateStarted)}
                                 </p>
                                 <p>
-                                    <span className="text-slate-500">Finished:</span> {formatDate(entry.dateFinished)}
+                                    <span className="theme-text-muted">Finished:</span> {formatDate(entry.dateFinished)}
                                 </p>
                             </div>
                         </div>
@@ -87,7 +87,7 @@ const LibraryList = ({ entries, onSelectBook, formatDate }: LibraryListProps) =>
             <div className="hidden overflow-x-auto md:block">
                 <table className="min-w-full border-separate border-spacing-0">
                     <thead>
-                        <tr className="text-left text-xs uppercase tracking-[0.18em] text-slate-500">
+                        <tr className="theme-text-muted text-left text-xs uppercase tracking-[0.18em]">
                             <th className="px-4 py-3 font-medium">Book</th>
                             <th className="px-4 py-3 font-medium">Author</th>
                             <th className="px-4 py-3 font-medium">Rating</th>
@@ -104,43 +104,43 @@ const LibraryList = ({ entries, onSelectBook, formatDate }: LibraryListProps) =>
                                 tabIndex={0}
                                 onClick={() => onSelectBook(entry)}
                                 onKeyDown={(event) => handleRowKeyDown(event, () => onSelectBook(entry))}
-                                className="group cursor-pointer border-t border-white/10 text-sm text-slate-300 transition hover:bg-white/[0.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
+                                className="group cursor-pointer border-t border-white/10 text-sm theme-text-soft transition hover:bg-white/[0.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
                             >
                                 <td className="min-w-[280px] border-t border-white/10 px-4 py-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-16 w-12 flex-shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.05]">
+                                        <div className="theme-cover-shell h-16 w-12 flex-shrink-0 overflow-hidden rounded-lg">
                                             {entry.cover ? (
                                                 <img src={entry.cover} alt={entry.title} className="h-full w-full object-cover" />
                                             ) : (
-                                                <div className="flex h-full w-full items-center justify-center px-1 text-center text-[9px] uppercase tracking-[0.14em] text-slate-500">
+                                                <div className="theme-text-muted flex h-full w-full items-center justify-center px-1 text-center text-[9px] uppercase tracking-[0.14em]">
                                                     No cover
                                                 </div>
                                             )}
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="line-clamp-2 font-semibold text-white transition group-hover:text-amber-100">
+                                            <p className="theme-title line-clamp-2 font-semibold transition group-hover:text-amber-100">
                                                 {entry.title}
                                             </p>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="border-t border-white/10 px-4 py-4 text-slate-400">
+                                <td className="theme-text-muted border-t border-white/10 px-4 py-4">
                                     {entry.author ?? "Unknown author"}
                                 </td>
                                 <td className="border-t border-white/10 px-4 py-4">
                                     {typeof entry.rating === "number" ? (
-                                        <span className="font-medium text-amber-200">{entry.rating}/5</span>
+                                        <span className="theme-accent-text font-medium">{entry.rating}/5</span>
                                     ) : (
-                                        <span className="text-slate-500">-</span>
+                                        <span className="theme-text-muted">-</span>
                                     )}
                                 </td>
                                 <td className="border-t border-white/10 px-4 py-4">
                                     {renderFormats(entry.formats)}
                                 </td>
-                                <td className="border-t border-white/10 px-4 py-4 text-slate-400">
+                                <td className="theme-text-muted border-t border-white/10 px-4 py-4">
                                     {formatDate(entry.dateStarted)}
                                 </td>
-                                <td className="border-t border-white/10 px-4 py-4 text-slate-400">
+                                <td className="theme-text-muted border-t border-white/10 px-4 py-4">
                                     {formatDate(entry.dateFinished)}
                                 </td>
                             </tr>

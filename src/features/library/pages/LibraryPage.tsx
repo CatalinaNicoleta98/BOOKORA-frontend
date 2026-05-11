@@ -140,29 +140,29 @@ const LibraryPage = () => {
     };
 
     return (
-        <main className="mx-auto w-full max-w-7xl px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
-            <section className="mb-8 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)] sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200/80">
+        <main className="mx-auto w-full max-w-7xl px-4 py-8 theme-text sm:px-6 lg:px-8">
+            <section className="theme-glass-panel mb-8 rounded-[2rem] p-6 sm:p-8">
+                <p className="theme-accent-text text-xs font-semibold uppercase tracking-[0.3em]">
                     My library
                 </p>
                 <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                        <h1 className="theme-title text-3xl font-semibold tracking-tight sm:text-4xl">
                             Your bookshelves
                         </h1>
-                        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                        <p className="theme-text-soft mt-2 max-w-2xl text-sm leading-6">
                             Keep track of what you want to read, what you are reading, and the books you have already finished.
                         </p>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
-                        <span className="font-semibold text-white">{entries.length}</span> saved books
+                    <div className="theme-content-panel-soft rounded-2xl px-4 py-3 text-sm theme-text-soft">
+                        <span className="theme-title font-semibold">{entries.length}</span> saved books
                     </div>
                 </div>
             </section>
 
             {isLoading && (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-8 text-center text-sm text-slate-300">
+                <div className="theme-content-panel-soft rounded-2xl px-5 py-8 text-center text-sm theme-text-soft">
                     Loading your shelves...
                 </div>
             )}
@@ -182,7 +182,7 @@ const LibraryPage = () => {
                         onChange={setActiveShelf}
                     />
 
-                    <section className="min-w-0 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4 sm:p-5">
+                    <section className="theme-content-panel min-w-0 rounded-[1.5rem] p-4 sm:p-5">
                         <LibraryToolbar
                             shelfLabel={activeShelfLabel}
                             itemCount={visibleEntries.length}
@@ -193,9 +193,9 @@ const LibraryPage = () => {
                         />
 
                         {visibleEntries.length === 0 ? (
-                            <div className="rounded-2xl border border-dashed border-white/15 bg-slate-950/30 px-5 py-12 text-center">
-                                <p className="text-base font-medium text-white">No books here yet.</p>
-                                <p className="mt-2 text-sm text-slate-400">
+                            <div className="theme-content-panel-muted rounded-2xl border-dashed px-5 py-12 text-center">
+                                <p className="theme-title text-base font-medium">No books here yet.</p>
+                                <p className="theme-text-muted mt-2 text-sm">
                                     Add books from the book page and they will appear on this shelf.
                                 </p>
                             </div>

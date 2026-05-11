@@ -177,18 +177,85 @@
 :root[data-theme="light"] .bg-slate-950\/30,
 :root[data-theme="light"] .bg-slate-950\/35,
 :root[data-theme="light"] .bg-slate-950\/40,
-:root[data-theme="light"] .bg-slate-950\/45 {
+:root[data-theme="light"] .bg-slate-950\/45,
+:root[data-theme="light"] .bg-slate-950\/70,
+:root[data-theme="light"] .bg-slate-950\/80,
+:root[data-theme="light"] .bg-slate-900\/70 {
     background-color: color-mix(in srgb, var(--bookora-surface-muted) 94%, transparent) !important;
+}
+
+:root[data-theme="light"] .bg-red-950\/20,
+:root[data-theme="light"] .bg-red-950\/30 {
+    background-color: var(--bookora-status-error-bg) !important;
+}
+
+:root[data-theme="light"] .bg-emerald-950\/20,
+:root[data-theme="light"] .bg-emerald-950\/30,
+:root[data-theme="light"] .bg-emerald-300\/10 {
+    background-color: var(--bookora-status-success-bg) !important;
+}
+
+:root[data-theme="light"] .border-red-400\/20,
+:root[data-theme="light"] .border-red-400\/30 {
+    border-color: var(--bookora-status-error-border) !important;
+}
+
+:root[data-theme="light"] .border-emerald-300\/20,
+:root[data-theme="light"] .border-emerald-300\/30,
+:root[data-theme="light"] .border-emerald-400\/30 {
+    border-color: var(--bookora-status-success-border) !important;
+}
+
+:root[data-theme="light"] .text-red-100,
+:root[data-theme="light"] .text-red-200,
+:root[data-theme="light"] .text-red-300,
+:root[data-theme="light"] .text-red-400 {
+    color: var(--bookora-status-error-text) !important;
+}
+
+:root[data-theme="light"] .text-emerald-100,
+:root[data-theme="light"] .text-emerald-200,
+:root[data-theme="light"] .text-emerald-300 {
+    color: var(--bookora-status-success-text) !important;
+}
+
+:root[data-theme="light"] .bg-amber-200,
+:root[data-theme="light"] .bg-amber-200\/12 {
+    background-color: color-mix(in srgb, var(--bookora-accent) 16%, transparent) !important;
+}
+
+:root[data-theme="light"] .border-amber-200\/30 {
+    border-color: color-mix(in srgb, var(--bookora-accent) 26%, transparent) !important;
+}
+
+:root[data-theme="light"] .text-slate-950 {
+    color: var(--bookora-title) !important;
 }
 
 :root[data-theme="light"] .hover\:bg-white\/10:hover,
 :root[data-theme="light"] .hover\:bg-white\/12:hover,
-:root[data-theme="light"] .hover\:bg-white\/\[0\.05\]:hover {
+:root[data-theme="light"] .hover\:bg-white\/\[0\.05\]:hover,
+:root[data-theme="light"] .hover\:bg-slate-900\/70:hover {
     background-color: color-mix(in srgb, var(--bookora-surface-strong) 88%, transparent) !important;
 }
 
-:root[data-theme="light"] .hover\:text-white:hover {
+:root[data-theme="light"] .hover\:text-white:hover,
+:root[data-theme="light"] .group:hover .group-hover\:text-amber-100 {
     color: var(--bookora-title) !important;
+}
+
+:root[data-theme="light"] .hover\:border-amber-200\/30:hover {
+    border-color: color-mix(in srgb, var(--bookora-accent) 26%, transparent) !important;
+}
+
+:root[data-theme="light"] .focus-visible\:ring-amber-200\/70:focus-visible,
+:root[data-theme="light"] .focus-visible\:ring-amber-200\/40:focus-visible,
+:root[data-theme="light"] .focus\:ring-amber-200\/30:focus {
+    --tw-ring-color: color-mix(in srgb, var(--bookora-accent) 22%, transparent) !important;
+}
+
+:root[data-theme="light"] .focus-visible\:ring-offset-slate-950:focus-visible {
+    --tw-ring-offset-color: var(--bookora-bg) !important;
 }
 
 :root[data-theme="light"] .bg-\[linear-gradient\(180deg\,rgba\(15\,21\,38\,0\.82\)_0\%\,rgba\(11\,16\,30\,0\.76\)_100\%\)\],

@@ -19,12 +19,6 @@ type ReadingSpotlightConfig = {
 
 const spotlightSections: ReadingSpotlightConfig[] = [
     {
-        id: "currently-reading",
-        label: "Currently reading",
-        emptyLabel: "No active physical read yet",
-        statuses: ["currently_reading"],
-    },
-    {
         id: "currently-listening",
         label: "Currently listening",
         emptyLabel: "No audiobook in progress yet",
@@ -49,6 +43,42 @@ const getProgressPercentage = (item: HomeContinueItem): number => {
     return Math.max(0, Math.min(100, percentage));
 };
 
+const CurrentReadListItem = ({
+    item,
+    onOpen,
+}: {
+    item: HomeContinueItem;
+    onOpen: (bookId: string) => void;
+}) => {
+    return (
+        <button
+            type="button"
+            onClick={() => onOpen(item.id)}
+            className="theme-content-panel-soft flex w-full items-center gap-3 rounded-[1.15rem] p-3 text-left"
+        >
+            <div className="theme-cover-shell h-16 w-12 shrink-0 overflow-hidden rounded-[0.85rem]">
+                {item.coverUrl ? (
+                    <img
+                        src={item.coverUrl}
+                        alt={`${item.title} cover`}
+                        className="h-full w-full object-cover"
+                    />
+                ) : (
+                    <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-slate-400">
+                        No cover
+                    </div>
+                )}
+            </div>
+
+            <div className="min-w-0 flex-1">
+                <p className="theme-title line-clamp-2 text-sm font-semibold">{item.title}</p>
+                <p className="theme-text-soft mt-1 text-sm">{item.author}</p>
+                <p className="mt-2 text-xs text-slate-400">{item.progressLabel}</p>
+            </div>
+        </button>
+    );
+};
+
 const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
     const navigate = useNavigate();
     const challengeProgress =
@@ -56,7 +86,9 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
             ? Math.max(0, Math.min(100, (data.challenge.current / data.challenge.target) * 100))
             : 0;
     const remainingBooks = Math.max(data.challenge.target - data.challenge.current, 0);
-    const featuredRead = data.continueItems[0] ?? null;
+    const currentReads = data.continueItems.filter((item) => item.status === "currently_reading");
+    const featuredRead = currentReads[0] ?? null;
+    const remainingCurrentReads = currentReads.slice(1);
 
     return (
         <aside className="col-span-12 space-y-5">
@@ -140,60 +172,82 @@ const ReadingSidebar = ({ data }: ReadingSidebarProps) => {
 
                 <div className="space-y-4 p-5 sm:p-6">
                     {featuredRead ? (
-                        <button
-                            type="button"
-                            onClick={() => navigate(buildBookDetailsRoute(featuredRead.id))}
-                            className="theme-content-panel-soft group w-full rounded-[1.35rem] p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
-                        >
-                            <div className="flex gap-4">
-                                <div className="theme-cover-shell h-28 w-[4.9rem] shrink-0 overflow-hidden rounded-[1rem] shadow-md transition group-hover:shadow-[0_10px_26px_rgba(0,0,0,0.18)]">
-                                    {featuredRead.coverUrl ? (
-                                        <img
-                                            src={featuredRead.coverUrl}
-                                            alt={`${featuredRead.title} cover`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    ) : (
-                                        <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-slate-400">
-                                            No cover
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <span className="theme-status-pill rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                            {featuredRead.format ?? "Book"}
-                                        </span>
-                                        {featuredRead.status ? (
-                                            <span className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                                                {featuredRead.status.replace(/_/g, " ")}
-                                            </span>
-                                        ) : null}
-                                    </div>
-                                    <h3 className="theme-title mt-3 line-clamp-2 text-base font-semibold leading-6">
-                                        {featuredRead.title}
-                                    </h3>
-                                    <p className="theme-text-soft mt-1 text-sm">{featuredRead.author}</p>
-
-                                    <div className="mt-4 space-y-2">
-                                        <div className="flex items-center justify-between gap-3 text-xs text-slate-400">
-                                            <span>{featuredRead.progressLabel}</span>
-                                            <span>{Math.round(getProgressPercentage(featuredRead))}%</span>
-                                        </div>
-                                        <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
-                                            <div
-                                                className="h-full rounded-full bg-[linear-gradient(135deg,#f1dfb1_0%,#d8c494_48%,#9fd0ff_100%)]"
-                                                style={{ width: `${getProgressPercentage(featuredRead)}%` }}
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => navigate(buildBookDetailsRoute(featuredRead.id))}
+                                className="theme-content-panel-soft group w-full rounded-[1.35rem] p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
+                            >
+                                <div className="flex gap-4">
+                                    <div className="theme-cover-shell h-28 w-[4.9rem] shrink-0 overflow-hidden rounded-[1rem] shadow-md transition group-hover:shadow-[0_10px_26px_rgba(0,0,0,0.18)]">
+                                        {featuredRead.coverUrl ? (
+                                            <img
+                                                src={featuredRead.coverUrl}
+                                                alt={`${featuredRead.title} cover`}
+                                                className="h-full w-full object-cover"
                                             />
+                                        ) : (
+                                            <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-slate-400">
+                                                No cover
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="theme-status-pill rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                                {featuredRead.format ?? "Book"}
+                                            </span>
                                         </div>
-                                        {featuredRead.secondaryLabel ? (
-                                            <p className="text-xs text-slate-500">{featuredRead.secondaryLabel}</p>
-                                        ) : null}
+                                        <h3 className="theme-title mt-3 line-clamp-2 text-base font-semibold leading-6">
+                                            {featuredRead.title}
+                                        </h3>
+                                        <p className="theme-text-soft mt-1 text-sm">{featuredRead.author}</p>
+
+                                        <div className="mt-4 space-y-2">
+                                            <div className="flex items-center justify-between gap-3 text-xs text-slate-400">
+                                                <span>{featuredRead.progressLabel}</span>
+                                                <span>{Math.round(getProgressPercentage(featuredRead))}%</span>
+                                            </div>
+                                            <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
+                                                <div
+                                                    className="h-full rounded-full bg-[linear-gradient(135deg,#f1dfb1_0%,#d8c494_48%,#9fd0ff_100%)]"
+                                                    style={{ width: `${getProgressPercentage(featuredRead)}%` }}
+                                                />
+                                            </div>
+                                            {featuredRead.secondaryLabel ? (
+                                                <p className="text-xs text-slate-500">{featuredRead.secondaryLabel}</p>
+                                            ) : null}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </button>
+                            </button>
+
+                            {remainingCurrentReads.length === 1 ? (
+                                <CurrentReadListItem
+                                    item={remainingCurrentReads[0]}
+                                    onOpen={(bookId) => navigate(buildBookDetailsRoute(bookId))}
+                                />
+                            ) : null}
+
+                            {remainingCurrentReads.length > 1 ? (
+                                <div className="space-y-3">
+                                    <p className="theme-text-muted px-1 text-[11px] uppercase tracking-[0.18em]">
+                                        More currently reading
+                                    </p>
+                                    <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                                        {remainingCurrentReads.map((item) => (
+                                            <div key={item.id} className="w-[15rem] shrink-0">
+                                                <CurrentReadListItem
+                                                    item={item}
+                                                    onOpen={(bookId) => navigate(buildBookDetailsRoute(bookId))}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : null}
+                        </>
                     ) : (
                         <div className="theme-content-panel-muted rounded-[1.2rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             No book is in progress right now. Mark a book as currently reading or listening and it will land here.

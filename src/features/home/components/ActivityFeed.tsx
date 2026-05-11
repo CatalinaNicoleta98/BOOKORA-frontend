@@ -12,8 +12,6 @@ type ActivityFeedProps = {
 
 const ActivityFeed = ({ data, feed, feedError }: ActivityFeedProps) => {
     const navigate = useNavigate();
-    const feedItemCount = feed?.items.length ?? 0;
-    const followingCount = feed?.meta.followingCount ?? 0;
 
     return (
         <section className="space-y-6">
@@ -28,29 +26,15 @@ const ActivityFeed = ({ data, feed, feedError }: ActivityFeedProps) => {
                                 Your social reading feed
                             </h2>
                             <p className="theme-text-soft text-sm leading-7">
-                                Reviews, ratings, started books, and finished reads from the people in your reading circle.
+                                Reviews, ratings, started books, and finished reads from the accounts you follow.
                             </p>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                {followingCount} following
-                            </span>
-                            <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                {feedItemCount} updates
-                            </span>
-                            {feed?.meta.includeSelf ? (
-                                <span className="theme-pill-subtle rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                    Self included
-                                </span>
-                            ) : null}
                         </div>
                     </div>
 
                     <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
                         <p className="theme-text-soft text-sm leading-7">
                             {data.continueItems.length > 0
-                                ? "Keep your own stack moving on the left while this center stream stays focused on what readers around you are doing."
+                                ? "Keep your own stack moving on the left while this feed stays focused on what other readers around you are doing."
                                 : "Start following readers or tracking books to make this dashboard feel more alive over time."}
                         </p>
 

@@ -21,9 +21,9 @@ const CompactBookButton = ({
         <button
             type="button"
             onClick={() => navigate(buildBookDetailsRoute(book.id))}
-            className="theme-content-panel-soft flex w-full items-center gap-3 rounded-[1.15rem] p-3 text-left transition-all hover:border-[var(--bookora-border-strong)]"
+            className="theme-content-panel-soft flex w-full items-center gap-4 rounded-[1.25rem] p-3.5 text-left transition-all hover:border-[var(--bookora-border-strong)]"
         >
-            <div className="theme-cover-shell h-16 w-12 shrink-0 overflow-hidden rounded-[0.8rem]">
+            <div className="theme-cover-shell h-[4.6rem] w-[3.3rem] shrink-0 overflow-hidden rounded-[0.95rem] shadow-[0_12px_24px_rgba(15,23,42,0.16)]">
                 {book.coverUrl ? (
                     <img
                         src={book.coverUrl}
@@ -38,7 +38,7 @@ const CompactBookButton = ({
             </div>
 
             <div className="min-w-0 flex-1">
-                <p className="theme-title line-clamp-2 text-sm font-semibold leading-6">
+                <p className="theme-title line-clamp-2 text-sm font-semibold leading-5">
                     {book.title}
                 </p>
                 <p className="mt-1 line-clamp-1 text-xs text-slate-400">
@@ -61,34 +61,31 @@ const FeaturedRecommendation = ({ item }: { item: HomeRecommendationItem }) => {
         <button
             type="button"
             onClick={() => navigate(buildBookDetailsRoute(item.id))}
-            className="theme-content-panel-soft w-full overflow-hidden rounded-[1.45rem] text-left transition-all hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
+            className="theme-content-panel-soft w-full overflow-hidden rounded-[1.55rem] text-left transition-all hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
         >
-            <div className="grid grid-cols-[86px_minmax(0,1fr)] gap-4 p-4">
-                <div className="theme-cover-shell overflow-hidden rounded-[0.95rem]">
+            <div className="grid grid-cols-[98px_minmax(0,1fr)] gap-5 p-4 sm:grid-cols-[112px_minmax(0,1fr)] sm:p-5">
+                <div className="theme-cover-shell overflow-hidden rounded-[1.1rem] shadow-[0_18px_36px_rgba(15,23,42,0.18)]">
                     {item.coverUrl ? (
                         <img
                             src={item.coverUrl}
                             alt={item.title}
-                            className="h-full w-full object-cover"
+                            className="aspect-[3/4] h-full w-full object-cover"
                         />
                     ) : (
-                        <div className="flex h-full min-h-[126px] items-center justify-center text-[10px] text-slate-400">
+                        <div className="flex aspect-[3/4] h-full min-h-[132px] items-center justify-center text-[10px] text-slate-400">
                             No cover
                         </div>
                     )}
                 </div>
 
                 <div className="min-w-0">
-                    <p className="theme-accent-text text-[11px] font-semibold uppercase tracking-[0.18em]">
-                        Recommended for you
-                    </p>
-                    <h3 className="theme-title mt-2 line-clamp-2 text-base font-semibold leading-6">
+                    <h3 className="theme-title line-clamp-2 text-lg font-semibold leading-7">
                         {item.title}
                     </h3>
                     <p className="theme-text-soft mt-1 line-clamp-1 text-sm">
                         {item.author}
                     </p>
-                    <p className="mt-3 line-clamp-3 text-xs leading-6 text-slate-400">
+                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">
                         {item.reason}
                     </p>
                     <p className="theme-text-muted mt-4 text-[11px] font-semibold uppercase tracking-[0.16em]">
@@ -154,14 +151,9 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
                 actionLabel="Search"
                 onAction={() => navigate("/search")}
             >
-                <div className="space-y-4">
+                <div className="space-y-5">
                     {featuredRecommendation ? (
-                        <>
-                            <FeaturedRecommendation item={featuredRecommendation} />
-                            <div className="theme-content-panel-muted rounded-[1.15rem] px-4 py-3 text-sm leading-6 text-slate-400">
-                                Similar authors and reading patterns are used first, so this list stays closer to books you have not already finished.
-                            </div>
-                        </> 
+                        <FeaturedRecommendation item={featuredRecommendation} />
                     ) : (
                         <div className="theme-content-panel-muted rounded-[1.3rem] border-dashed p-4 text-sm leading-6 text-slate-400">
                             Rate or finish a few books and Bookora will have stronger recommendations to surface here.
@@ -169,10 +161,7 @@ const RecommendationsSidebar = ({ data }: RecommendationsSidebarProps) => {
                     )}
 
                     {remainingRecommendations.length > 0 ? (
-                        <div className="space-y-2">
-                            <p className="theme-text-muted px-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                                More to explore
-                            </p>
+                        <div className="space-y-3">
                             {remainingRecommendations.map((book) => (
                                 <CompactBookButton
                                     key={book.id}

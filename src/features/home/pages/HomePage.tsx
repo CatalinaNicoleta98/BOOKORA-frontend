@@ -18,7 +18,7 @@ const HomePage = () => {
         const load = async () => {
             const [homeResult, feedResult] = await Promise.allSettled([
                 getHomePageData(),
-                getHomeFeed()
+                getHomeFeed({ includeSelf: false })
             ]);
 
             try {
@@ -33,7 +33,17 @@ const HomePage = () => {
                 }
 
                 if (feedResult.status === "fulfilled") {
-                    setFeed(feedResult.value);
+                    const filteredFeed =
+                        authState.user?.id
+                            ? {
+                                  ...feedResult.value,
+                                  items: feedResult.value.items.filter(
+                                      (item) => item.actor.id !== authState.user?.id
+                                  ),
+                              }
+                            : feedResult.value;
+
+                    setFeed(filteredFeed);
                     setFeedError(null);
                 } else {
                     setFeed(null);
@@ -45,7 +55,7 @@ const HomePage = () => {
         };
 
         void load();
-    }, [authState.user?.name]);
+    }, [authState.user?.id, authState.user?.name]);
 
     if (error) {
         return <div className="p-8 text-red-300">{error}</div>;

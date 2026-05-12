@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { searchBooks } from "../services/searchService";
+import { searchAll } from "../services/searchService";
 import {
     normalizeSearchPagination,
     normalizeSearchResults,
     type SearchPagination,
     type SearchResultItem
 } from "../utils/searchMappers";
+import type { ReaderSearchResult } from "../types/search.types";
 
 interface UseSearchParams {
     query: string;
@@ -15,14 +16,16 @@ interface UseSearchParams {
 }
 
 interface UseSearchResult {
-    results: SearchResultItem[];
+    bookResults: SearchResultItem[];
+    readerResults: ReaderSearchResult[];
     pagination: SearchPagination;
     isLoading: boolean;
     error: string | null;
 }
 
 export const useSearch = ({ query, page, mode, limit }: UseSearchParams): UseSearchResult => {
-    const [results, setResults] = useState<SearchResultItem[]>([]);
+    const [bookResults, setBookResults] = useState<SearchResultItem[]>([]);
+    const [readerResults, setReaderResults] = useState<ReaderSearchResult[]>([]);
     const [pagination, setPagination] = useState<SearchPagination>({
         page,
         limit,
@@ -36,7 +39,17 @@ export const useSearch = ({ query, page, mode, limit }: UseSearchParams): UseSea
         const trimmedQuery = query.trim();
 
         if (!trimmedQuery) {
-            setResults([]);
+            setBookResults([]);
+            setReaderResults([]);
+            setPagination({ page: 1, limit, total: 0, totalPages: 0 });
+            setIsLoading(false);
+            setError(null);
+            return;
+        }
+
+        if (trimmedQuery.length < 3) {
+            setBookResults([]);
+            setReaderResults([]);
             setPagination({ page: 1, limit, total: 0, totalPages: 0 });
             setIsLoading(false);
             setError(null);
@@ -48,27 +61,29 @@ export const useSearch = ({ query, page, mode, limit }: UseSearchParams): UseSea
                 setIsLoading(true);
                 setError(null);
 
-                const rawResponse = await searchBooks({
+                const response = await searchAll({
                     q: mode === "author" ? undefined : trimmedQuery,
                     author: mode === "author" ? trimmedQuery : undefined,
                     page,
                     limit
                 });
 
-                const normalizedResults = normalizeSearchResults(rawResponse);
+                const normalizedResults = normalizeSearchResults(response.books);
                 const normalizedPagination = normalizeSearchPagination(
-                    rawResponse,
+                    response.books,
                     page,
                     limit,
                     normalizedResults.length
                 );
 
-                setResults(normalizedResults);
+                setBookResults(normalizedResults);
+                setReaderResults(response.readers);
                 setPagination(normalizedPagination);
             } catch (err) {
                 const message = err instanceof Error ? err.message : "Search failed";
                 setError(message);
-                setResults([]);
+                setBookResults([]);
+                setReaderResults([]);
                 setPagination({ page, limit, total: 0, totalPages: 0 });
             } finally {
                 setIsLoading(false);
@@ -79,7 +94,8 @@ export const useSearch = ({ query, page, mode, limit }: UseSearchParams): UseSea
     }, [query, page, mode, limit]);
 
     return {
-        results,
+        bookResults,
+        readerResults,
         pagination,
         isLoading,
         error

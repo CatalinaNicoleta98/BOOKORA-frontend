@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { buildAuthorDetailsRoute } from "../../authors/utils/authorRouting";
 import { buildBookDetailsRoute } from "../../book/utils/bookRouting";
-import { searchBooks } from "../services/searchService";
-import type { SearchResult } from "../services/searchService";
+import ReaderSearchResultsList from "./ReaderSearchResultsList";
+import { searchAll } from "../services/searchService";
+import type { ReaderSearchResult, SearchBookResult } from "../types/search.types";
 
 const SEARCH_RESULT_LIMIT = 6;
 const SEARCH_DEBOUNCE_MS = 300;
@@ -21,7 +22,7 @@ const getBookCoverFallback = (title?: string) => {
         .join("") || "BK";
 };
 
-const getBookMetadata = (result: SearchResult) => {
+const getBookMetadata = (result: SearchBookResult) => {
     const metadata: string[] = [];
 
     if (result.publishedYear) {
@@ -38,7 +39,8 @@ const getBookMetadata = (result: SearchResult) => {
 const NavbarSearch = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+    const [bookResults, setBookResults] = useState<SearchBookResult[]>([]);
+    const [readerResults, setReaderResults] = useState<ReaderSearchResult[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const [searchError, setSearchError] = useState<string | null>(null);
     const latestSearchRequestRef = useRef(0);
@@ -46,7 +48,8 @@ const NavbarSearch = () => {
     const clearSearch = () => {
         latestSearchRequestRef.current += 1;
         setSearchQuery("");
-        setSearchResults([]);
+        setBookResults([]);
+        setReaderResults([]);
         setSearchError(null);
         setIsSearching(false);
     };
@@ -70,7 +73,17 @@ const NavbarSearch = () => {
 
         if (!normalizedQuery) {
             latestSearchRequestRef.current += 1;
-            setSearchResults([]);
+            setBookResults([]);
+            setReaderResults([]);
+            setSearchError(null);
+            setIsSearching(false);
+            return;
+        }
+
+        if (normalizedQuery.length < 3) {
+            latestSearchRequestRef.current += 1;
+            setBookResults([]);
+            setReaderResults([]);
             setSearchError(null);
             setIsSearching(false);
             return;
@@ -84,7 +97,7 @@ const NavbarSearch = () => {
                 setIsSearching(true);
                 setSearchError(null);
 
-                const response = await searchBooks({
+                const response = await searchAll({
                     q: normalizedQuery,
                     limit: SEARCH_RESULT_LIMIT,
                 });
@@ -93,13 +106,15 @@ const NavbarSearch = () => {
                     return;
                 }
 
-                setSearchResults(response.results);
+                setBookResults(response.books.results);
+                setReaderResults(response.readers);
             } catch (_error) {
                 if (latestSearchRequestRef.current !== requestId) {
                     return;
                 }
 
-                setSearchResults([]);
+                setBookResults([]);
+                setReaderResults([]);
                 setSearchError("Search failed");
             } finally {
                 if (latestSearchRequestRef.current === requestId) {
@@ -113,7 +128,7 @@ const NavbarSearch = () => {
         };
     }, [searchQuery]);
 
-    const handleResultClick = (result: SearchResult) => {
+    const handleResultClick = (result: SearchBookResult) => {
         navigate(buildBookDetailsRoute(result.externalBookId));
         clearSearch();
     };
@@ -135,7 +150,7 @@ const NavbarSearch = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder="Search books, authors, series..."
+                placeholder="Search books, authors, series, or readers..."
                 className="theme-input h-12 w-full rounded-2xl pl-4 pr-10 text-sm transition-all duration-200"
             />
             {searchQuery && (
@@ -161,7 +176,11 @@ const NavbarSearch = () => {
                         <div className="px-4 py-4 text-sm text-red-300">{searchError}</div>
                     )}
 
-                    {!isSearching && !searchError && searchQuery.trim().length >= 3 && searchResults.length === 0 && (
+                    {!isSearching &&
+                    !searchError &&
+                    searchQuery.trim().length >= 3 &&
+                    bookResults.length === 0 &&
+                    readerResults.length === 0 && (
                         <div className="theme-text-soft px-4 py-4 text-sm">No results found</div>
                     )}
 
@@ -169,9 +188,30 @@ const NavbarSearch = () => {
                         <div className="theme-text-soft px-4 py-4 text-sm">Type at least 3 characters to search</div>
                     )}
 
-                    {!isSearching && searchResults.length > 0 && (
+                    {!isSearching && (bookResults.length > 0 || readerResults.length > 0) && (
                         <div className="max-h-[min(28rem,calc(100dvh-11rem))] overflow-y-auto py-2">
-                            {searchResults.map((result) => {
+                            {readerResults.length > 0 ? (
+                                <div>
+                                    <div className="theme-text-soft px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                        Readers
+                                    </div>
+                                    <ReaderSearchResultsList
+                                        results={readerResults}
+                                        compact
+                                        onResultClick={clearSearch}
+                                    />
+                                </div>
+                            ) : null}
+
+                            {bookResults.length > 0 ? (
+                                <div>
+                                    <div className="theme-text-soft px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                        Books
+                                    </div>
+                                </div>
+                            ) : null}
+
+                            {bookResults.map((result) => {
                                 const metadata = getBookMetadata(result);
                                 const coverFallback = getBookCoverFallback(result.title);
 
@@ -225,7 +265,7 @@ const NavbarSearch = () => {
                         </div>
                     )}
 
-                    {!isSearching && !searchError && searchResults.length > 0 && (
+                    {!isSearching && !searchError && (bookResults.length > 0 || readerResults.length > 0) && (
                         <div className="border-t border-[var(--bookora-border)] px-4 py-3">
                             <button
                                 type="button"

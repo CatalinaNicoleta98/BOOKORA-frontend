@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import ReaderSearchResultsList from "../components/ReaderSearchResultsList";
 import SearchFilters, { type SearchMode } from "../components/SearchFilters";
 import SearchResultsList from "../components/SearchResultsList";
 import SearchPagination from "../components/SearchPagination";
@@ -23,7 +24,7 @@ const SearchPage = () => {
     const mode: SearchMode =
         modeParam === "author" || modeParam === "title" ? modeParam : "all";
 
-    const { results, pagination, isLoading, error } = useSearch({
+    const { bookResults, readerResults, pagination, isLoading, error } = useSearch({
         query: initialQuery,
         page: initialPage,
         mode,
@@ -40,7 +41,11 @@ const SearchPage = () => {
         const trimmedQuery = initialQuery.trim();
 
         if (!trimmedQuery) {
-            return "Search for a book title, author, or series.";
+            return "Search for a book title, author, series, or reader.";
+        }
+
+        if (trimmedQuery.length < 3) {
+            return "Type at least 3 characters to search.";
         }
 
         if (isLoading) {
@@ -51,16 +56,28 @@ const SearchPage = () => {
             return error;
         }
 
-        if (results.length === 0) {
+        if (bookResults.length === 0 && readerResults.length === 0) {
             return `No results found for "${trimmedQuery}".`;
         }
 
-        const startIndex = (pagination.page - 1) * pagination.limit + 1;
-        const endIndex = startIndex + results.length - 1;
-        const totalLabel = pagination.total > 0 ? pagination.total : results.length;
+        const parts: string[] = [];
 
-        return `Showing ${startIndex}-${endIndex} of ${totalLabel} result${totalLabel === 1 ? "" : "s"} for "${trimmedQuery}"`;
-    }, [error, initialQuery, isLoading, pagination.limit, pagination.page, pagination.total, results.length]);
+        if (readerResults.length > 0) {
+            parts.push(`${readerResults.length} reader${readerResults.length === 1 ? "" : "s"}`);
+        }
+
+        if (bookResults.length > 0) {
+            const startIndex = (pagination.page - 1) * pagination.limit + 1;
+            const endIndex = startIndex + bookResults.length - 1;
+            const totalLabel = pagination.total > 0 ? pagination.total : bookResults.length;
+
+            parts.push(
+                `${startIndex}-${endIndex} of ${totalLabel} book result${totalLabel === 1 ? "" : "s"}`
+            );
+        }
+
+        return `Showing ${parts.join(" and ")} for "${trimmedQuery}"`;
+    }, [bookResults.length, error, initialQuery, isLoading, pagination.limit, pagination.page, pagination.total, readerResults.length]);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -122,8 +139,7 @@ const SearchPage = () => {
                                 Find your next book obsession
                             </h1>
                             <p className="theme-text-soft mt-4 max-w-2xl text-sm leading-7 sm:text-[15px]">
-                                Search titles, authors, or series and explore books in a full results
-                                view.
+                                Search titles, authors, series, and public readers in one place.
                             </p>
                         </div>
 
@@ -135,14 +151,14 @@ const SearchPage = () => {
                                 type="search"
                                 value={searchInput}
                                 onChange={(event) => setSearchInput(event.target.value)}
-                                placeholder="Search books, authors, or series"
+                                placeholder="Search books, authors, series, or readers"
                                 className="theme-input w-full rounded-2xl px-5 py-3 text-sm transition-colors duration-300"
                             />
                             <button
                                 type="submit"
                                 className="theme-button-primary inline-flex min-h-12 items-center justify-center rounded-2xl px-5 py-3 text-sm font-medium transition-all duration-300 sm:min-w-[10rem]"
                             >
-                                Search books
+                                Search Bookora
                             </button>
                         </form>
 
@@ -157,7 +173,7 @@ const SearchPage = () => {
                     {!initialQuery.trim() ? (
                         <div className="theme-glass-panel rounded-[2rem] p-8 text-center">
                             <p className="theme-title text-base font-medium">
-                                Start with a title, author, or series.
+                                Start with a title, author, series, or reader handle.
                             </p>
                             <p className="theme-text-muted mt-3 text-sm leading-7">
                                 Use this page for full search results after searching from the navbar
@@ -175,19 +191,50 @@ const SearchPage = () => {
                         </div>
                     ) : null}
 
-                    {!isLoading && initialQuery.trim() && !error && results.length === 0 ? (
+                    {!isLoading && initialQuery.trim() && !error && bookResults.length === 0 && readerResults.length === 0 ? (
                         <div className="theme-glass-panel rounded-[2rem] p-8 text-center">
-                            <p className="theme-title text-base font-medium">No books found.</p>
-                            <p className="theme-text-muted mt-3 text-sm leading-7">
-                                Try a different title, author name, or a shorter search phrase.
-                            </p>
+                            {initialQuery.trim().length < 3 ? (
+                                <>
+                                    <p className="theme-title text-base font-medium">Keep typing.</p>
+                                    <p className="theme-text-muted mt-3 text-sm leading-7">
+                                        Enter at least 3 characters before we search books and readers.
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="theme-title text-base font-medium">No matches found.</p>
+                                    <p className="theme-text-muted mt-3 text-sm leading-7">
+                                        Try a different title, author name, reader handle, or a shorter search phrase.
+                                    </p>
+                                </>
+                            )}
                         </div>
                     ) : null}
 
-                    {!isLoading && results.length > 0 ? (
-                        <SearchResultsList results={results} />
+                    {!isLoading && readerResults.length > 0 ? (
+                        <section className="grid gap-4">
+                            <div className="px-1">
+                                <h2 className="theme-title text-xl font-semibold">Readers</h2>
+                                <p className="theme-text-muted mt-2 text-sm">
+                                    Public reader profiles matching your search.
+                                </p>
+                            </div>
+                            <ReaderSearchResultsList results={readerResults} />
+                        </section>
                     ) : null}
-                    {!isLoading ? (
+
+                    {!isLoading && bookResults.length > 0 ? (
+                        <section className="grid gap-4">
+                            <div className="px-1">
+                                <h2 className="theme-title text-xl font-semibold">Books</h2>
+                                <p className="theme-text-muted mt-2 text-sm">
+                                    Book results based on your current search filters.
+                                </p>
+                            </div>
+                            <SearchResultsList results={bookResults} />
+                        </section>
+                    ) : null}
+                    {!isLoading && bookResults.length > 0 ? (
                         <SearchPagination
                             currentPage={pagination.page}
                             totalPages={pagination.totalPages}

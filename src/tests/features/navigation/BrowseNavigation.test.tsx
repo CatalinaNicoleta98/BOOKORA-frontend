@@ -5,9 +5,11 @@ import DesktopNavLinks from "../../../shared/components/navigation/DesktopNavLin
 import NavbarSearch from "../../../features/search/components/NavbarSearch";
 
 const searchBooksMock = vi.fn();
+const searchAllMock = vi.fn();
 
 vi.mock("../../../features/search/services/searchService", () => ({
     searchBooks: (...args: unknown[]) => searchBooksMock(...args),
+    searchAll: (...args: unknown[]) => searchAllMock(...args),
 }));
 
 const LocationProbe = () => {
@@ -19,6 +21,7 @@ const LocationProbe = () => {
 describe("browse navigation", () => {
     beforeEach(() => {
         searchBooksMock.mockReset();
+        searchAllMock.mockReset();
     });
 
     it("opens browse genres on click and includes All genres", () => {
@@ -51,20 +54,23 @@ describe("browse navigation", () => {
     });
 
     it("keeps View all results pointing to /search", async () => {
-        searchBooksMock.mockResolvedValue({
-            results: [
-                {
-                    source: "open_library",
-                    externalBookId: "/works/OL1W",
-                    title: "Dune",
-                    author: "Frank Herbert",
+        searchAllMock.mockResolvedValue({
+            books: {
+                results: [
+                    {
+                        source: "open_library",
+                        externalBookId: "/works/OL1W",
+                        title: "Dune",
+                        author: "Frank Herbert",
+                    },
+                ],
+                pagination: {
+                    page: 1,
+                    limit: 6,
+                    numFound: 1,
                 },
-            ],
-            pagination: {
-                page: 1,
-                limit: 6,
-                numFound: 1,
             },
+            readers: []
         });
 
         render(
@@ -79,7 +85,7 @@ describe("browse navigation", () => {
         });
 
         await waitFor(() => {
-            expect(searchBooksMock).toHaveBeenCalled();
+            expect(searchAllMock).toHaveBeenCalled();
         });
 
         await waitFor(

@@ -167,7 +167,7 @@ const BookActions = ({
 
     const manageModal = isManageOpen ? (
         <div
-            className="fixed inset-0 z-[200] flex items-start justify-center p-4 sm:items-center sm:p-6"
+            className="fixed inset-0 z-[200] overflow-y-auto"
             onClick={() => setIsManageOpen(false)}
             role="dialog"
             aria-modal="true"
@@ -175,10 +175,10 @@ const BookActions = ({
         >
             <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" />
             <div
-                className="relative z-10 flex w-full max-w-xl justify-center py-2 sm:py-0"
+                className="relative z-10 flex min-h-full w-full items-end justify-center p-3 sm:items-center sm:p-6"
                 onClick={(event) => event.stopPropagation()}
             >
-                <div className="theme-glass-panel-strong flex max-h-[calc(100vh-3rem)] w-full flex-col overflow-hidden rounded-[2rem] text-white">
+                <div className="theme-glass-panel-strong flex max-h-[calc(100dvh-1.5rem)] w-full max-w-xl flex-col overflow-hidden rounded-[2rem] text-white sm:max-h-[min(calc(100dvh-3rem),48rem)]">
                     <div className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-6">
                         <div>
                             <p className="theme-text-muted text-xs font-semibold uppercase tracking-[0.22em]">
@@ -199,7 +199,7 @@ const BookActions = ({
                         </button>
                     </div>
 
-                    <div className="bookora-modal-scroll overflow-y-auto px-6 py-6">
+                    <div className="bookora-modal-scroll min-h-0 flex-1 overflow-y-auto px-6 py-6">
                         <div className="space-y-6">
                             <section>
                                 <p className="theme-text-muted text-sm font-semibold uppercase tracking-[0.18em]">
@@ -281,33 +281,35 @@ const BookActions = ({
                                     ))}
                                 </div>
                             </section>
+                        </div>
+                    </div>
 
-                            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
+                    <div className="border-t border-white/10 bg-[color:color-mix(in_srgb,var(--bookora-bg-strong)_92%,transparent)] px-6 py-4 [padding-bottom:calc(1rem+env(safe-area-inset-bottom))]">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <button
+                                type="button"
+                                onClick={handleRemoveFromShelf}
+                                className="theme-text-muted text-left text-sm font-semibold transition-colors hover:text-[var(--bookora-title)]"
+                            >
+                                Remove from shelf
+                            </button>
+
+                            <div className="flex flex-col gap-3 sm:flex-row">
                                 <button
                                     type="button"
-                                    onClick={handleRemoveFromShelf}
-                                    className="theme-text-muted text-sm font-semibold transition-colors hover:text-[var(--bookora-title)]"
+                                    onClick={() => setIsManageOpen(false)}
+                                    className="theme-button-ghost inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-medium"
                                 >
-                                    Remove from shelf
+                                    Cancel
                                 </button>
-
-                                <div className="flex flex-wrap gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsManageOpen(false)}
-                                        className="theme-button-ghost inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-medium"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={handleSaveChanges}
-                                        disabled={isSaving}
-                                        className="theme-button-primary inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60"
-                                    >
-                                        {isSaving ? "Saving..." : "Save changes"}
-                                    </button>
-                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveChanges}
+                                    disabled={isSaving}
+                                    className="theme-button-primary inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    {isSaving ? "Saving..." : "Save changes"}
+                                </button>
                             </div>
                         </div>
                     </div>

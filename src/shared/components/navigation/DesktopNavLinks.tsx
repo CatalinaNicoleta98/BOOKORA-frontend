@@ -86,45 +86,45 @@ const DesktopNavLinks = () => {
                             </button>
 
                             {isBrowseMenuOpen ? (
-                                <div className="absolute left-0 top-[calc(100%+0.9rem)] z-30 w-[26rem]">
-                                    <div className="theme-glass-panel rounded-[1.8rem] p-3 shadow-[0_24px_70px_rgba(15,23,42,0.2)]">
-                                    <div className="px-3 py-2">
-                                        <p className="theme-eyebrow">Browse</p>
-                                        <p className="theme-title mt-2 text-lg font-semibold">
-                                            Explore by genre
-                                        </p>
-                                        <p className="theme-text-soft mt-2 text-sm leading-6">
-                                            Jump into a few popular shelves from the new browse experience.
-                                        </p>
-                                    </div>
-
-                                    <div className="mt-3">
-                                        <Link
-                                            to={APP_ROUTES.browse}
-                                            className="theme-content-panel-soft block rounded-[1.2rem] px-4 py-3 text-sm transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
-                                        >
-                                            <p className="theme-title font-semibold">All genres</p>
-                                            <p className="theme-text-muted mt-1 text-xs leading-5">
-                                                Open the full browse page and explore every category.
+                                <div className="absolute left-0 top-[calc(100%+0.9rem)] z-50 w-[26rem]">
+                                    <div className="theme-glass-panel-strong rounded-[1.8rem] border-[var(--bookora-border-strong)] bg-[color:color-mix(in_srgb,var(--bookora-bg-strong)_96%,black_4%)] p-3 shadow-[0_24px_70px_rgba(15,23,42,0.28)]">
+                                        <div className="px-3 py-2">
+                                            <p className="theme-eyebrow">Browse</p>
+                                            <p className="theme-title mt-2 text-lg font-semibold">
+                                                Explore by genre
                                             </p>
-                                        </Link>
-                                    </div>
+                                            <p className="theme-text-soft mt-2 text-sm leading-6">
+                                                Jump into a few popular shelves from the new browse experience.
+                                            </p>
+                                        </div>
 
-                                    <div className="mt-2 grid grid-cols-2 gap-2">
-                                        {browseGenresPreview.map((genre) => (
+                                        <div className="mt-3">
                                             <Link
-                                                key={genre.slug}
-                                                to={buildBrowseGenreRoute(genre.slug)}
-                                                className="theme-content-panel-soft rounded-[1.2rem] px-4 py-3 text-sm transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+                                                to={APP_ROUTES.browse}
+                                                className="theme-content-panel-soft block rounded-[1.2rem] px-4 py-3 text-sm transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
                                             >
-                                                <p className="theme-title font-semibold">{genre.title}</p>
-                                                <p className="theme-text-muted mt-1 line-clamp-2 text-xs leading-5">
-                                                    {genre.description}
+                                                <p className="theme-title font-semibold">All genres</p>
+                                                <p className="theme-text-muted mt-1 text-xs leading-5">
+                                                    Open the full browse page and explore every category.
                                                 </p>
                                             </Link>
-                                        ))}
+                                        </div>
+
+                                        <div className="mt-2 grid grid-cols-2 gap-2">
+                                            {browseGenresPreview.map((genre) => (
+                                                <Link
+                                                    key={genre.slug}
+                                                    to={buildBrowseGenreRoute(genre.slug)}
+                                                    className="theme-content-panel-soft rounded-[1.2rem] px-4 py-3 text-sm transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+                                                >
+                                                    <p className="theme-title font-semibold">{genre.title}</p>
+                                                    <p className="theme-text-muted mt-1 line-clamp-2 text-xs leading-5">
+                                                        {genre.description}
+                                                    </p>
+                                                </Link>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             ) : null}
                         </div>

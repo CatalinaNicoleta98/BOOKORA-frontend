@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { NavLink, useNavigate } from "react-router-dom";
 import { APP_ROUTES, type NavigationItem } from "../../navigation/navigation";
 import { getAssetUrl } from "../../api/apiConfig";
@@ -35,6 +36,13 @@ const MobileNavMenu = ({
 }: MobileNavMenuProps) => {
     const navigate = useNavigate();
     const avatarSource = getAssetUrl(avatarUrl);
+    const portalRoot = useMemo(() => {
+        if (typeof document === "undefined") {
+            return null;
+        }
+
+        return document.body;
+    }, []);
 
     useEffect(() => {
         if (!isOpen) {
@@ -42,8 +50,10 @@ const MobileNavMenu = ({
         }
 
         const previousOverflow = document.body.style.overflow;
+        const previousHtmlOverflow = document.documentElement.style.overflow;
 
         document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
 
         const handleEscape = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
@@ -55,11 +65,12 @@ const MobileNavMenu = ({
 
         return () => {
             document.body.style.overflow = previousOverflow;
+            document.documentElement.style.overflow = previousHtmlOverflow;
             document.removeEventListener("keydown", handleEscape);
         };
     }, [isOpen, onClose]);
 
-    return (
+    const menu = (
         <div
             className={`fixed inset-0 z-[70] lg:hidden ${
                 isOpen ? "pointer-events-auto" : "pointer-events-none"
@@ -201,6 +212,8 @@ const MobileNavMenu = ({
             </aside>
         </div>
     );
+
+    return portalRoot ? createPortal(menu, portalRoot) : menu;
 };
 
 export default MobileNavMenu;

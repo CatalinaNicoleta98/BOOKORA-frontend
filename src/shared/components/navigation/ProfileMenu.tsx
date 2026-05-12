@@ -41,7 +41,7 @@ const ProfileMenu = ({
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-52 overflow-hidden rounded-2xl border border-[var(--bookora-border)] bg-[var(--bookora-surface-strong)] shadow-[0_20px_40px_rgba(0,0,0,0.18)] backdrop-blur-lg">
+                <div className="absolute right-0 z-40 mt-2 w-52 overflow-hidden rounded-2xl border border-[var(--bookora-border-strong)] bg-[color:color-mix(in_srgb,var(--bookora-bg-strong)_94%,black_6%)] shadow-[0_24px_48px_rgba(0,0,0,0.24)] backdrop-blur-xl">
                     <button
                         type="button"
                         onClick={() => {

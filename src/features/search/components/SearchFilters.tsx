@@ -19,7 +19,7 @@ const SearchFilters = ({ mode, onChange }: SearchFiltersProps) => {
     const options = useMemo(() => FILTER_OPTIONS, []);
 
     return (
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="bookora-mobile-rail flex items-center gap-2 sm:flex-wrap">
             {options.map((option) => {
                 const isActive = option.value === mode;
 
@@ -28,7 +28,7 @@ const SearchFilters = ({ mode, onChange }: SearchFiltersProps) => {
                         key={option.value}
                         type="button"
                         onClick={() => onChange(option.value)}
-                        className={`inline-flex h-10 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
+                        className={`inline-flex h-10 shrink-0 items-center justify-center rounded-2xl border px-4 text-sm font-medium transition-all duration-300 ${
                             isActive
                                 ? "theme-button-accent shadow-[0_0_20px_rgba(251,191,36,0.15)]"
                                 : "theme-button-ghost"

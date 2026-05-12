@@ -130,7 +130,7 @@ const NavbarSearch = () => {
     };
 
     return (
-        <div className="relative w-full max-w-lg">
+        <div className="relative w-full max-w-lg min-w-0">
             <input
                 type="text"
                 value={searchQuery}
@@ -152,7 +152,7 @@ const NavbarSearch = () => {
             )}
 
             {(searchQuery.trim().length > 0 || isSearching) && (
-                <div className="theme-glass-panel-strong absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl shadow-2xl shadow-black/20">
+                <div className="theme-glass-panel-strong absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 overflow-hidden rounded-2xl shadow-2xl shadow-black/20 max-sm:left-1/2 max-sm:w-[min(100vw-1.5rem,36rem)] max-sm:-translate-x-1/2">
                     {isSearching && (
                         <div className="theme-text-soft px-4 py-4 text-sm">Searching...</div>
                     )}
@@ -170,7 +170,7 @@ const NavbarSearch = () => {
                     )}
 
                     {!isSearching && searchResults.length > 0 && (
-                        <div className="max-h-[28rem] overflow-y-auto py-2">
+                        <div className="max-h-[min(28rem,calc(100dvh-11rem))] overflow-y-auto py-2">
                             {searchResults.map((result) => {
                                 const metadata = getBookMetadata(result);
                                 const coverFallback = getBookCoverFallback(result.title);

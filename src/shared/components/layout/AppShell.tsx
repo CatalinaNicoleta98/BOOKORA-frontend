@@ -25,7 +25,7 @@ const AppShell = () => {
                 <Navbar />
 
                 <main className="flex-1 pt-16">
-                    <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
+                    <div className="mx-auto w-full max-w-[1440px] px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pb-10 lg:px-8">
                         <Outlet />
                     </div>
                 </main>

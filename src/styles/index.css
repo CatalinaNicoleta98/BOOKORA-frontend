@@ -296,6 +296,7 @@ body {
     color: var(--bookora-text);
     font-family: var(--bookora-font-sans);
     scrollbar-gutter: stable;
+    -webkit-tap-highlight-color: transparent;
     transition: background-color 280ms ease, color 280ms ease;
 }
 
@@ -691,6 +692,22 @@ h3 {
     gap: 1.5rem;
 }
 
+.bookora-mobile-rail {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+}
+
+.bookora-mobile-rail > * {
+    scroll-snap-align: start;
+}
+
+.bookora-mobile-rail::-webkit-scrollbar {
+    display: none;
+}
+
 .bookora-modal-scroll {
     scrollbar-width: thin;
     scrollbar-color: rgba(251, 191, 36, 0.52) rgba(255, 255, 255, 0.06);
@@ -724,6 +741,27 @@ h3 {
 }
 
 @media (max-width: 640px) {
+    html {
+        scroll-padding-top: 5.5rem;
+    }
+
+    .theme-app-shell {
+        background: var(--bookora-shell-gradient);
+    }
+
+    .theme-content-panel,
+    .theme-content-panel-soft,
+    .theme-content-panel-muted,
+    .theme-glass-panel,
+    .theme-glass-panel-strong,
+    .theme-soft-panel {
+        box-shadow: 0 16px 42px rgba(15, 23, 42, 0.16);
+    }
+
+    .theme-card-grid {
+        gap: 1rem;
+    }
+
     .theme-toggle span:last-child {
         display: none;
     }

@@ -28,11 +28,11 @@ const LibraryToolbar = ({
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <div className="theme-content-panel-soft inline-flex rounded-2xl p-1">
+                <div className="theme-content-panel-soft grid grid-cols-2 rounded-2xl p-1 sm:inline-flex">
                     <button
                         type="button"
                         onClick={() => onViewModeChange("grid")}
-                        className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                        className={`rounded-xl px-4 py-2 text-sm font-medium transition sm:min-w-[5rem] ${
                             viewMode === "grid"
                                 ? "theme-button-primary"
                                 : "theme-text-soft hover:text-white"
@@ -43,7 +43,7 @@ const LibraryToolbar = ({
                     <button
                         type="button"
                         onClick={() => onViewModeChange("list")}
-                        className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                        className={`rounded-xl px-4 py-2 text-sm font-medium transition sm:min-w-[5rem] ${
                             viewMode === "list"
                                 ? "theme-button-primary"
                                 : "theme-text-soft hover:text-white"
@@ -53,12 +53,12 @@ const LibraryToolbar = ({
                     </button>
                 </div>
 
-                <label className="theme-input flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm theme-text-soft">
+                <label className="theme-input flex w-full items-center gap-3 rounded-2xl px-4 py-2.5 text-sm theme-text-soft sm:w-auto">
                     <span className="whitespace-nowrap">Sort by</span>
                     <select
                         value={sortBy}
                         onChange={(event) => onSortChange(event.target.value as LibrarySortOption)}
-                        className="bg-transparent text-sm theme-text outline-none"
+                        className="min-w-0 flex-1 bg-transparent text-sm theme-text outline-none"
                     >
                         <option value="recent">
                             Recently added

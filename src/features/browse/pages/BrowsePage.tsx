@@ -48,7 +48,7 @@ const BrowsePage = () => {
 
     return (
         <div className="theme-page-shell relative min-h-screen">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-0 pb-16 pt-4 sm:gap-6 sm:px-0 sm:pt-6">
                 <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
                     <div className="space-y-5">
                         <div className="flex flex-wrap items-end justify-between gap-4 px-1">
@@ -59,6 +59,18 @@ const BrowsePage = () => {
                                 </h1>
                             </div>
                         </div>
+
+                    <div className="theme-content-panel bookora-mobile-rail rounded-[1.6rem] p-3 xl:hidden">
+                        {BROWSE_GENRES.map((genre) => (
+                            <Link
+                                key={genre.slug}
+                                to={buildBrowseGenreRoute(genre.slug)}
+                                className="theme-content-panel-soft inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+                            >
+                                {genre.title}
+                            </Link>
+                        ))}
+                    </div>
 
                     {isLoading ? (
                         <div className="theme-glass-panel rounded-[2rem] p-8 text-center">

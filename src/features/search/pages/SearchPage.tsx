@@ -111,9 +111,9 @@ const SearchPage = () => {
 
     return (
         <div className="theme-page-shell relative min-h-screen">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-0 pb-16 pt-4 sm:gap-6 sm:px-0 sm:pt-6">
                 <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
-                    <div className="relative px-6 py-8 sm:px-8 lg:px-10">
+                    <div className="relative px-5 py-6 sm:px-8 sm:py-8 lg:px-10">
                         <div className="max-w-4xl">
                             <p className="theme-eyebrow">
                                 Search
@@ -129,7 +129,7 @@ const SearchPage = () => {
 
                         <form
                             onSubmit={handleSubmit}
-                            className="mt-8 flex flex-col gap-3 sm:flex-row"
+                            className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row"
                         >
                             <input
                                 type="search"
@@ -140,7 +140,7 @@ const SearchPage = () => {
                             />
                             <button
                                 type="submit"
-                                className="theme-button-primary inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-medium transition-all duration-300"
+                                className="theme-button-primary inline-flex min-h-12 items-center justify-center rounded-2xl px-5 py-3 text-sm font-medium transition-all duration-300 sm:min-w-[10rem]"
                             >
                                 Search books
                             </button>

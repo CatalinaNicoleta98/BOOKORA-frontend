@@ -14,7 +14,7 @@ const BookCoverPanel = ({
     isSavingReadingStatus = false,
 }: BookCoverPanelProps) => {
     return (
-        <aside className="space-y-5">
+        <aside className="mx-auto w-full max-w-[15rem] space-y-5 sm:max-w-[17rem] md:max-w-[19rem] xl:max-w-none">
             <div className="group relative isolate">
                 <div className="pointer-events-none absolute -inset-5 rounded-[2rem] bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.16),_transparent_40%),radial-gradient(circle_at_bottom,_rgba(96,165,250,0.14),_transparent_44%)] opacity-70 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
 
@@ -35,7 +35,7 @@ const BookCoverPanel = ({
                             </div>
                         </div>
                     ) : (
-                        <div className="theme-cover-shell theme-text-muted relative flex h-[420px] items-center justify-center overflow-hidden rounded-[1.5rem] px-6 text-center text-sm font-medium uppercase tracking-[0.2em] shadow-[0_18px_40px_rgba(15,23,42,0.24)]">
+                        <div className="theme-cover-shell theme-text-muted relative flex aspect-[3/4] min-h-[19rem] items-center justify-center overflow-hidden rounded-[1.5rem] px-6 text-center text-sm font-medium uppercase tracking-[0.2em] shadow-[0_18px_40px_rgba(15,23,42,0.24)] sm:min-h-[21rem] md:min-h-[23rem] xl:min-h-[26.25rem]">
                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.12),_transparent_40%),radial-gradient(circle_at_bottom,_rgba(96,165,250,0.1),_transparent_45%)]" />
                             <span className="relative">No cover available</span>
                         </div>

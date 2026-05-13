@@ -60,16 +60,24 @@ const BrowsePage = () => {
                             </div>
                         </div>
 
-                    <div className="theme-content-panel bookora-mobile-rail w-full min-w-0 max-w-full rounded-[1.6rem] p-3 xl:hidden">
-                        {BROWSE_GENRES.map((genre) => (
-                            <Link
-                                key={genre.slug}
-                                to={buildBrowseGenreRoute(genre.slug)}
-                                className="theme-content-panel-soft inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
-                            >
-                                {genre.title}
-                            </Link>
-                        ))}
+                    <div className="theme-content-panel relative min-w-0 max-w-full rounded-[1.6rem] p-3 xl:hidden">
+                        <div className="bookora-rail-hint mb-3">
+                            <span aria-hidden="true">←</span>
+                            <span>Swipe to explore genres</span>
+                            <span aria-hidden="true">→</span>
+                        </div>
+
+                        <div className="bookora-mobile-rail w-full min-w-0 max-w-full">
+                            {BROWSE_GENRES.map((genre) => (
+                                <Link
+                                    key={genre.slug}
+                                    to={buildBrowseGenreRoute(genre.slug)}
+                                    className="theme-content-panel-soft inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+                                >
+                                    {genre.title}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
 
                     {isLoading ? (

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { ReadingStatus } from "../types/library.types";
 
 type ShelfTab = {
@@ -18,14 +19,34 @@ const LibraryShelfTabs = ({
     counts,
     onChange,
 }: LibraryShelfTabsProps) => {
+    const railRef = useRef<HTMLElement | null>(null);
+
+    const scrollRail = (direction: "left" | "right") => {
+        const rail = railRef.current;
+
+        if (!rail) {
+            return;
+        }
+
+        const offset = Math.max(rail.clientWidth * 0.82, 180);
+        rail.scrollBy({
+            left: direction === "left" ? -offset : offset,
+            behavior: "smooth",
+        });
+    };
+
     return (
         <aside className="theme-content-panel min-w-0 max-w-full overflow-hidden rounded-[1.5rem] p-2.5 sm:p-3 lg:sticky lg:top-24 lg:self-start">
-            <div className="bookora-rail-arrows mb-3 lg:hidden" aria-hidden="true">
-                <span>‹</span>
-                <span>›</span>
+            <div className="bookora-rail-arrows mb-3 lg:hidden">
+                <button type="button" onClick={() => scrollRail("left")} aria-label="Scroll shelves left">
+                    ‹
+                </button>
+                <button type="button" onClick={() => scrollRail("right")} aria-label="Scroll shelves right">
+                    ›
+                </button>
             </div>
 
-            <nav className="bookora-mobile-rail flex w-full min-w-0 max-w-full gap-2 lg:block lg:space-y-1" aria-label="Library shelves">
+            <nav ref={railRef} className="bookora-mobile-rail flex w-full min-w-0 max-w-full gap-2 lg:block lg:space-y-1" aria-label="Library shelves">
                 {tabs.map((shelf) => {
                     const isActive = shelf.value === activeShelf;
 

@@ -762,7 +762,7 @@ h3 {
     gap: 0.35rem;
 }
 
-.bookora-rail-arrows span {
+.bookora-rail-arrows button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -774,6 +774,14 @@ h3 {
     color: color-mix(in srgb, var(--bookora-accent) 72%, var(--bookora-text-muted));
     font-size: 0.95rem;
     line-height: 1;
+    transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.bookora-rail-arrows button:hover {
+    border-color: var(--bookora-border-strong);
+    background: color-mix(in srgb, var(--bookora-surface-strong) 88%, transparent);
+    color: var(--bookora-accent-strong);
+    transform: translateY(-1px);
 }
 
 .bookora-modal-scroll {

@@ -12,6 +12,8 @@ export const APP_ROUTES = {
     seriesDetails: "/series/:seriesKey",
     bookDetails: "/books/:id",
     bookActivity: "/books/:bookId/activity",
+    privacy: "/privacy",
+    terms: "/terms",
 } as const;
 
 export interface NavigationItem {

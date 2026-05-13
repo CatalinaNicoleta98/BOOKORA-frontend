@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import BookoraBrand from "../branding/BookoraBrand";
-import { PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
+import { APP_ROUTES, PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -50,12 +50,18 @@ const Footer = () => {
                     <p>© {currentYear} Bookora. All rights reserved.</p>
 
                     <div className="flex items-center gap-4">
-                        <span className="cursor-pointer transition-colors duration-200 hover:text-[var(--bookora-title)]">
+                        <Link
+                            to={APP_ROUTES.privacy}
+                            className="transition-colors duration-200 hover:text-[var(--bookora-title)]"
+                        >
                             Privacy
-                        </span>
-                        <span className="cursor-pointer transition-colors duration-200 hover:text-[var(--bookora-title)]">
+                        </Link>
+                        <Link
+                            to={APP_ROUTES.terms}
+                            className="transition-colors duration-200 hover:text-[var(--bookora-title)]"
+                        >
                             Terms
-                        </span>
+                        </Link>
                     </div>
                 </div>
             </div>

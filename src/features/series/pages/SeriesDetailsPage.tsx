@@ -6,6 +6,7 @@ import SeriesReadingOrder from "../components/SeriesReadingOrder";
 import { getSeriesDetails } from "../services/seriesService";
 import type { SeriesDetailsViewModel } from "../types/series.types";
 import { getSeriesKeyFromRouteParam } from "../utils/seriesRouting";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const SeriesDetailsPage = () => {
     const { seriesKey: seriesKeyParam } = useParams<{ seriesKey: string }>();
@@ -14,6 +15,8 @@ const SeriesDetailsPage = () => {
     const [series, setSeries] = useState<SeriesDetailsViewModel | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useDocumentTitle(series ? `Bookora | ${series.title}` : "Bookora | Series");
 
     useEffect(() => {
         if (!seriesKey) {

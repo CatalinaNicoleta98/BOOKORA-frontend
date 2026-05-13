@@ -13,6 +13,7 @@ import LibraryToolbar, {
 } from "../components/LibraryToolbar";
 import { getLibrary } from "../services/libraryService";
 import type { LibraryEntry, ReadingStatus } from "../types/library.types";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const SHELF_TABS: { label: string; value: ReadingStatus }[] = [
     { label: "Want to Read", value: "want_to_read" },
@@ -53,6 +54,7 @@ const formatLibraryDate = (value?: string) => {
 };
 
 const LibraryPage = () => {
+    useDocumentTitle("Bookora | Library");
     const navigate = useNavigate();
     const location = useLocation();
 

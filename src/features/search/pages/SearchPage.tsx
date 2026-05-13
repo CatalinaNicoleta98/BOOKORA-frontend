@@ -6,9 +6,11 @@ import SearchFilters, { type SearchMode } from "../components/SearchFilters";
 import SearchResultsList from "../components/SearchResultsList";
 import SearchPagination from "../components/SearchPagination";
 import { useSearch } from "../hooks/useSearch";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 
 const SearchPage = () => {
+    useDocumentTitle("Bookora | Search");
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const initialQuery = searchParams.get("q") ?? "";

@@ -5,6 +5,7 @@ import HomeLayout from "../components/HomeLayout";
 import { useAuth } from "../../auth/context/AuthContext";
 import { getHomeFeed } from "../../social/services/feedService";
 import type { HomeFeedData } from "../../social/types/feed.types";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -19,6 +20,7 @@ const isWithinLastWeek = (value: string) => {
 };
 
 const HomePage = () => {
+    useDocumentTitle("Bookora | Home");
     const { state: authState } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<null | import("../types/home.types").HomePageData>(null);

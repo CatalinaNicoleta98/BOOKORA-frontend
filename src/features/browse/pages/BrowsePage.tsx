@@ -5,8 +5,10 @@ import { getBrowseSections } from "../services/browseService";
 import type { BrowseGenreSectionViewModel } from "../types/browse.types";
 import { BROWSE_GENRES } from "../utils/browseGenres";
 import { buildBrowseGenreRoute } from "../utils/browseRouting";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const BrowsePage = () => {
+    useDocumentTitle("Bookora | Browse");
     const [sections, setSections] = useState<BrowseGenreSectionViewModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

@@ -20,8 +20,10 @@ import {
     getInitials,
     getProfileBio
 } from "../utils/profilePage.utils";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const ProfilePage = () => {
+    useDocumentTitle("Bookora | Profile");
     const navigate = useNavigate();
     const { state, updateUser } = useAuth();
     const avatarInputRef = useRef<HTMLInputElement | null>(null);

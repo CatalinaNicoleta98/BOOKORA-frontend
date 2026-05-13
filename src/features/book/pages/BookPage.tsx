@@ -32,6 +32,7 @@ import {
     createDescriptionPreview,
     mapBookDetailToViewModel,
 } from "../utils/bookPage.utils";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const BookPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -46,6 +47,8 @@ const BookPage = () => {
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const [currentUserReview, setCurrentUserReview] = useState<BookUserReviewEntry | null>(null);
     const [isSavingReadingStatus, setIsSavingReadingStatus] = useState(false);
+
+    useDocumentTitle(book ? `Bookora | ${book.title}` : "Bookora | Book");
 
     useEffect(() => {
         if (!bookRouteKey) {

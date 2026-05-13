@@ -6,6 +6,7 @@ import AuthorPageState from "../components/AuthorPageState";
 import { getAuthorDetails } from "../services/authorService";
 import type { AuthorDetailsViewModel } from "../types/author.types";
 import { getAuthorKeyFromRouteParam } from "../utils/authorRouting";
+import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
 
 const AuthorDetailsPage = () => {
     const { authorKey: authorKeyParam } = useParams<{ authorKey: string }>();
@@ -14,6 +15,8 @@ const AuthorDetailsPage = () => {
     const [author, setAuthor] = useState<AuthorDetailsViewModel | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useDocumentTitle(author ? `Bookora | ${author.name}` : "Bookora | Author");
 
     useEffect(() => {
         if (!authorKey) {

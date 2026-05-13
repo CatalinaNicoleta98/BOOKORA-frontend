@@ -20,10 +20,9 @@ const LibraryShelfTabs = ({
 }: LibraryShelfTabsProps) => {
     return (
         <aside className="theme-content-panel min-w-0 max-w-full overflow-hidden rounded-[1.5rem] p-2.5 sm:p-3 lg:sticky lg:top-24 lg:self-start">
-            <div className="bookora-rail-hint mb-3 lg:hidden">
-                <span aria-hidden="true">←</span>
-                <span>Swipe through shelves</span>
-                <span aria-hidden="true">→</span>
+            <div className="bookora-rail-arrows mb-3 lg:hidden" aria-hidden="true">
+                <span>‹</span>
+                <span>›</span>
             </div>
 
             <nav className="bookora-mobile-rail flex w-full min-w-0 max-w-full gap-2 lg:block lg:space-y-1" aria-label="Library shelves">

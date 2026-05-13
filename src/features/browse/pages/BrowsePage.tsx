@@ -61,12 +61,6 @@ const BrowsePage = () => {
                         </div>
 
                     <div className="theme-content-panel relative min-w-0 max-w-full rounded-[1.6rem] p-3 xl:hidden">
-                        <div className="bookora-rail-hint mb-3">
-                            <span aria-hidden="true">←</span>
-                            <span>Swipe to explore genres</span>
-                            <span aria-hidden="true">→</span>
-                        </div>
-
                         <div className="bookora-mobile-rail w-full min-w-0 max-w-full">
                             {BROWSE_GENRES.map((genre) => (
                                 <Link

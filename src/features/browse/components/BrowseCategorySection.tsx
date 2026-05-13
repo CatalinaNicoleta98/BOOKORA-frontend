@@ -29,6 +29,11 @@ const BrowseCategorySection = ({ genre, books }: BrowseCategorySectionProps) => 
                 </Link>
             </div>
 
+            <div className="bookora-rail-arrows mt-4 md:hidden" aria-hidden="true">
+                <span>‹</span>
+                <span>›</span>
+            </div>
+
             <div className="bookora-mobile-rail mt-5 w-full min-w-0 max-w-full grid grid-flow-col auto-cols-[minmax(10.5rem,72vw)] gap-3.5 md:grid-flow-row md:auto-cols-auto md:grid-cols-3 md:overflow-visible xl:grid-cols-6">
                 {books.map((book) => (
                     <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />

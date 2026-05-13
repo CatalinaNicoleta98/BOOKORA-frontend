@@ -44,6 +44,11 @@ const AppRouter = () => {
 
     return (
         <Routes>
+            <Route element={<AppShell />}>
+                <Route path={APP_ROUTES.privacy} element={<PrivacyPage />} />
+                <Route path={APP_ROUTES.terms} element={<TermsPage />} />
+            </Route>
+
             <Route
                 element={
                     <ProtectedRoute isAuthenticated={state.isAuthenticated}>
@@ -62,8 +67,6 @@ const AppRouter = () => {
                 <Route path={APP_ROUTES.bookActivity} element={<EditBookActivityPage />} />
                 <Route path={APP_ROUTES.library} element={<LibraryPage />} />
                 <Route path={APP_ROUTES.readerProfile} element={<PublicReaderProfilePage />} />
-                <Route path={APP_ROUTES.privacy} element={<PrivacyPage />} />
-                <Route path={APP_ROUTES.terms} element={<TermsPage />} />
             </Route>
 
             <Route

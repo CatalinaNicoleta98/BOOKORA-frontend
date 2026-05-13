@@ -6,6 +6,18 @@ import { useAuth } from "../../auth/context/AuthContext";
 import { getHomeFeed } from "../../social/services/feedService";
 import type { HomeFeedData } from "../../social/types/feed.types";
 
+const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
+
+const isWithinLastWeek = (value: string) => {
+    const timestamp = Date.parse(value);
+
+    if (Number.isNaN(timestamp)) {
+        return false;
+    }
+
+    return Date.now() - timestamp <= ONE_WEEK_IN_MS;
+};
+
 const HomePage = () => {
     const { state: authState } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
@@ -33,17 +45,17 @@ const HomePage = () => {
                 }
 
                 if (feedResult.status === "fulfilled") {
-                    const filteredFeed =
+                    const filteredFeedItems =
                         authState.user?.id
-                            ? {
-                                  ...feedResult.value,
-                                  items: feedResult.value.items.filter(
-                                      (item) => item.actor.id !== authState.user?.id
-                                  ),
-                              }
-                            : feedResult.value;
+                            ? feedResult.value.items.filter((item) => item.actor.id !== authState.user?.id)
+                            : feedResult.value.items;
 
-                    setFeed(filteredFeed);
+                    const recentFeed: HomeFeedData = {
+                        ...feedResult.value,
+                        items: filteredFeedItems.filter((item) => isWithinLastWeek(item.createdAt)),
+                    };
+
+                    setFeed(recentFeed);
                     setFeedError(null);
                 } else {
                     setFeed(null);

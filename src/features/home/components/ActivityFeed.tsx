@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { HomePageData } from "../types/home.types";
@@ -10,8 +11,32 @@ type ActivityFeedProps = {
     feedError?: string | null;
 };
 
+const INITIAL_FEED_LIMIT = 5;
+
 const ActivityFeed = ({ data, feed, feedError }: ActivityFeedProps) => {
     const navigate = useNavigate();
+    const [showAllUpdates, setShowAllUpdates] = useState(false);
+
+    useEffect(() => {
+        setShowAllUpdates(false);
+    }, [feed]);
+
+    const visibleFeed = useMemo(() => {
+        if (!feed) {
+            return null;
+        }
+
+        if (showAllUpdates || feed.items.length <= INITIAL_FEED_LIMIT) {
+            return feed;
+        }
+
+        return {
+            ...feed,
+            items: feed.items.slice(0, INITIAL_FEED_LIMIT),
+        };
+    }, [feed, showAllUpdates]);
+
+    const hiddenUpdateCount = feed ? Math.max(feed.items.length - INITIAL_FEED_LIMIT, 0) : 0;
 
     return (
         <section className="space-y-6">
@@ -48,7 +73,19 @@ const ActivityFeed = ({ data, feed, feedError }: ActivityFeedProps) => {
                     </div>
                 </div>
 
-                <SocialFeed feed={feed} error={feedError} />
+                <SocialFeed feed={visibleFeed} error={feedError} />
+
+                {feed && hiddenUpdateCount > 0 ? (
+                    <div className="mt-5 flex justify-center">
+                        <button
+                            type="button"
+                            onClick={() => setShowAllUpdates((currentValue) => !currentValue)}
+                            className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-medium"
+                        >
+                            {showAllUpdates ? "Show less" : `See more (${hiddenUpdateCount})`}
+                        </button>
+                    </div>
+                ) : null}
             </div>
         </section>
     );

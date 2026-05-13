@@ -7,15 +7,15 @@ interface LibraryGridProps {
 
 const LibraryGrid = ({ entries, onSelectBook }: LibraryGridProps) => {
     return (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
             {entries.map((entry) => (
                 <button
                     key={entry.id}
                     type="button"
                     onClick={() => onSelectBook(entry)}
-                    className="theme-content-panel-soft group flex gap-4 rounded-2xl p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70"
+                    className="theme-content-panel-soft group flex items-start gap-3 rounded-2xl p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70 sm:gap-4"
                 >
-                    <div className="theme-cover-shell h-28 w-20 flex-shrink-0 overflow-hidden rounded-xl">
+                    <div className="theme-cover-shell h-24 w-[4.25rem] flex-shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-20">
                         {entry.cover ? (
                             <img
                                 src={entry.cover}
@@ -29,7 +29,7 @@ const LibraryGrid = ({ entries, onSelectBook }: LibraryGridProps) => {
                         )}
                     </div>
 
-                    <div className="min-w-0 flex-1 py-1">
+                    <div className="min-w-0 flex-1 py-0.5 sm:py-1">
                         <h3 className="theme-title line-clamp-2 text-sm font-semibold leading-5">
                             {entry.title}
                         </h3>
@@ -38,13 +38,13 @@ const LibraryGrid = ({ entries, onSelectBook }: LibraryGridProps) => {
                         </p>
 
                         {typeof entry.rating === "number" && (
-                            <p className="theme-accent-text mt-3 text-xs font-medium">
+                            <p className="theme-accent-text mt-2.5 text-xs font-medium">
                                 Rated {entry.rating}/5
                             </p>
                         )}
 
                         {entry.formats.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-1.5">
+                            <div className="mt-2.5 flex flex-wrap gap-1.5">
                                 {entry.formats.map((format) => (
                                     <span
                                         key={format}

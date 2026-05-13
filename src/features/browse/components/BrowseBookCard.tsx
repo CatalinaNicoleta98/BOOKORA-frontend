@@ -10,7 +10,7 @@ const BrowseBookCard = ({ book }: BrowseBookCardProps) => {
     return (
         <Link
             to={buildBookDetailsRoute(book.id)}
-            className="theme-content-panel-soft group block h-full rounded-[1.35rem] p-3.5"
+            className="theme-content-panel-soft group block h-full rounded-[1.35rem] p-3 sm:p-3.5"
         >
             <div className="theme-cover-shell overflow-hidden rounded-[1rem]">
                 {book.coverUrl ? (
@@ -27,7 +27,7 @@ const BrowseBookCard = ({ book }: BrowseBookCardProps) => {
             </div>
 
             <div className="mt-3 space-y-1.5">
-                <h3 className="theme-title line-clamp-2 text-sm font-semibold">{book.title}</h3>
+                <h3 className="theme-title line-clamp-2 text-sm font-semibold leading-5">{book.title}</h3>
                 <p className="theme-text-muted line-clamp-1 text-xs">{book.author}</p>
                 {book.publishedYear ? (
                     <p className="theme-text-muted text-xs">{book.publishedYear}</p>

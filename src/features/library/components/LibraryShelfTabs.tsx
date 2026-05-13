@@ -19,7 +19,7 @@ const LibraryShelfTabs = ({
     onChange,
 }: LibraryShelfTabsProps) => {
     return (
-        <aside className="theme-content-panel rounded-[1.5rem] p-3 lg:sticky lg:top-24 lg:self-start">
+        <aside className="theme-content-panel rounded-[1.5rem] p-2.5 sm:p-3 lg:sticky lg:top-24 lg:self-start">
             <nav className="bookora-mobile-rail flex gap-2 lg:block lg:space-y-1" aria-label="Library shelves">
                 {tabs.map((shelf) => {
                     const isActive = shelf.value === activeShelf;
@@ -29,7 +29,7 @@ const LibraryShelfTabs = ({
                             key={shelf.value}
                             type="button"
                             onClick={() => onChange(shelf.value)}
-                            className={`flex shrink-0 items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left text-sm transition lg:w-full ${
+                            className={`flex min-w-[12rem] shrink-0 items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left text-sm transition lg:w-full lg:min-w-0 ${
                                 isActive
                                     ? "theme-button-primary shadow-[0_10px_30px_rgba(251,191,36,0.18)]"
                                     : "theme-text-soft hover:bg-white/[0.06] hover:text-white"

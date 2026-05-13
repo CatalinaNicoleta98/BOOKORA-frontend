@@ -21,12 +21,15 @@ const BrowseCategorySection = ({ genre, books }: BrowseCategorySectionProps) => 
                     <p className="theme-text-soft mt-2 text-sm leading-6">{genre.description}</p>
                 </div>
 
-                <Link to={buildBrowseGenreRoute(genre.slug)} className="theme-button-ghost inline-flex h-11 items-center justify-center rounded-full px-4 text-sm font-medium max-sm:w-full">
+                <Link
+                    to={buildBrowseGenreRoute(genre.slug)}
+                    className="theme-button-ghost inline-flex h-11 items-center justify-center self-start rounded-full px-4 text-sm font-medium"
+                >
                     See more
                 </Link>
             </div>
 
-            <div className="bookora-mobile-rail mt-5 grid grid-flow-col auto-cols-[72%] gap-3.5 md:grid-flow-row md:auto-cols-auto md:grid-cols-3 md:overflow-visible xl:grid-cols-6">
+            <div className="bookora-mobile-rail mt-5 grid grid-flow-col auto-cols-[11.5rem] gap-3.5 md:grid-flow-row md:auto-cols-auto md:grid-cols-3 md:overflow-visible xl:grid-cols-6">
                 {books.map((book) => (
                     <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />
                 ))}

@@ -10,12 +10,12 @@ interface ProfileRecentActivityProps {
 const ProfileRecentActivity = ({ items, onOpenBook, onBrowseBooks }: ProfileRecentActivityProps) => {
     return (
         <section className="theme-content-panel rounded-[2rem] p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="theme-title text-lg font-semibold">Recent activity</h2>
                 <button
                     type="button"
                     onClick={onBrowseBooks}
-                    className="theme-accent-text text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
+                    className="theme-accent-text self-start text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
                 >
                     Find another book
                 </button>

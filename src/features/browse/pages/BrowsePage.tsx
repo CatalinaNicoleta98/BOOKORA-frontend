@@ -48,10 +48,10 @@ const BrowsePage = () => {
 
     return (
         <div className="theme-page-shell relative min-h-screen">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-0 pb-16 pt-4 sm:gap-6 sm:px-0 sm:pt-6">
+            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-4 pb-16 pt-4 sm:gap-6 sm:px-6 sm:pt-6 lg:px-8">
                 <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
                     <div className="space-y-5">
-                        <div className="flex flex-wrap items-end justify-between gap-4 px-1">
+                        <div className="flex flex-wrap items-end justify-between gap-4">
                             <div>
                                 <p className="theme-eyebrow">Genres</p>
                                 <h1 className="theme-title mt-2 text-[1.85rem] font-semibold sm:text-[2.1rem]">
@@ -65,7 +65,7 @@ const BrowsePage = () => {
                             <Link
                                 key={genre.slug}
                                 to={buildBrowseGenreRoute(genre.slug)}
-                                className="theme-content-panel-soft inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
+                                className="theme-content-panel-soft inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-all duration-300 hover:border-[var(--bookora-border-strong)]"
                             >
                                 {genre.title}
                             </Link>

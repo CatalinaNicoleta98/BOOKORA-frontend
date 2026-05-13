@@ -135,7 +135,7 @@ const BrowseGenrePage = () => {
 
                 {genre && !isLoading && !error && books.length > 0 ? (
                     <section className="space-y-5">
-                        <div className="flex items-end justify-between gap-4">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                             <div>
                                 <p className="theme-eyebrow">All Books</p>
                                 <h2 className="theme-title mt-2 text-2xl font-semibold">
@@ -147,7 +147,7 @@ const BrowseGenrePage = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3.5 md:grid-cols-3 xl:grid-cols-6">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-3.5 md:grid-cols-3 xl:grid-cols-6">
                             {books.map((book) => (
                                 <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />
                             ))}

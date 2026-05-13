@@ -14,7 +14,7 @@ const ProfileShelvesSection = ({
 }: ProfileShelvesSectionProps) => {
     return (
         <section className="theme-glass-panel rounded-[2rem] p-6 sm:p-8">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <p className="theme-eyebrow">
                         Featured shelves
@@ -24,7 +24,7 @@ const ProfileShelvesSection = ({
                 <button
                     type="button"
                     onClick={onManageShelves}
-                    className="theme-accent-text text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
+                    className="theme-accent-text self-start text-sm font-medium transition-colors duration-300 hover:text-[var(--bookora-title)]"
                 >
                     Browse library
                 </button>
@@ -39,10 +39,10 @@ const ProfileShelvesSection = ({
                     >
                         <div className="flex flex-wrap items-start justify-between gap-4">
                             <div className="min-w-0 flex-1">
-                                <h3 className="theme-title max-w-[14rem] text-[1.55rem] font-semibold leading-tight">
+                                <h3 className="theme-title max-w-[14rem] text-[1.4rem] font-semibold leading-tight sm:text-[1.55rem]">
                                     {shelf.name}
                                 </h3>
-                                <p className="theme-text-muted mt-3 max-w-md text-sm leading-7">{shelf.description}</p>
+                                <p className="theme-text-muted mt-3 max-w-md text-sm leading-6 sm:leading-7">{shelf.description}</p>
                             </div>
                             <span className="theme-pill-subtle shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
                                 {shelf.count} books
@@ -51,13 +51,13 @@ const ProfileShelvesSection = ({
 
                         {shelf.previewBooks.length > 0 ? (
                             <div className="mt-auto pt-6">
-                                <div className="flex flex-wrap gap-3">
+                                <div className="bookora-mobile-rail flex gap-3 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
                                 {shelf.previewBooks.map((book) => (
                                     <button
                                         key={book.id}
                                         type="button"
                                         onClick={() => onOpenBook(book.id)}
-                                        className="theme-cover-shell group h-24 w-16 overflow-hidden rounded-[0.9rem] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
+                                        className="theme-cover-shell group h-24 w-16 shrink-0 overflow-hidden rounded-[0.9rem] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
                                         aria-label={`Open ${book.title}`}
                                         title={book.title}
                                     >

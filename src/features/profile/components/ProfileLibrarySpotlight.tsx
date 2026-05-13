@@ -24,7 +24,7 @@ const ProfileLibrarySpotlight = ({
                             Jump back into your active stack or pull something forward from Want to Read.
                         </p>
                     </div>
-                    <button type="button" onClick={onBrowseBooks} className="theme-button-primary inline-flex h-11 items-center justify-center rounded-2xl px-4 text-sm font-medium">
+                    <button type="button" onClick={onBrowseBooks} className="theme-button-primary inline-flex h-11 w-full items-center justify-center rounded-2xl px-4 text-sm font-medium sm:w-auto">
                         Browse books
                     </button>
                 </div>
@@ -38,7 +38,7 @@ const ProfileLibrarySpotlight = ({
                     </div>
                 </div>
             ) : (
-                <div className="grid gap-4 px-6 py-6 md:grid-cols-2 xl:grid-cols-3 sm:px-8">
+                <div className="grid gap-4 px-4 py-4 sm:px-8 sm:py-6 md:grid-cols-2 xl:grid-cols-3">
                     {items.map((item) => (
                         <button
                             key={item.id}
@@ -46,8 +46,8 @@ const ProfileLibrarySpotlight = ({
                             onClick={() => onOpenBook(item.id)}
                             className="theme-content-panel-soft group flex h-full flex-col rounded-[1.8rem] p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
                         >
-                            <div className="flex gap-4">
-                                <div className="theme-cover-shell h-28 w-20 shrink-0 overflow-hidden rounded-[1rem]">
+                            <div className="flex items-start gap-3 sm:gap-4">
+                                <div className="theme-cover-shell h-24 w-[4.25rem] shrink-0 overflow-hidden rounded-[1rem] sm:h-28 sm:w-20">
                                     {item.coverUrl ? (
                                         <img
                                             src={item.coverUrl}
@@ -65,7 +65,7 @@ const ProfileLibrarySpotlight = ({
                                     <span className="theme-status-pill inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
                                         {item.statusLabel}
                                     </span>
-                                    <h3 className="theme-title mt-3 line-clamp-2 text-lg font-semibold">
+                                    <h3 className="theme-title mt-3 line-clamp-2 text-base font-semibold sm:text-lg">
                                         {item.title}
                                     </h3>
                                     <p className="theme-text-muted mt-1 text-sm">{item.author}</p>
@@ -77,7 +77,7 @@ const ProfileLibrarySpotlight = ({
                                 </div>
                             </div>
 
-                            <p className="mt-4 text-sm leading-7 text-slate-400">{item.detail}</p>
+                            <p className="mt-4 text-sm leading-6 text-slate-400 sm:leading-7">{item.detail}</p>
                             <span className="theme-text mt-4 text-sm font-medium transition-colors duration-300 group-hover:text-[var(--bookora-title)]">
                                 Open book page
                             </span>

@@ -88,7 +88,7 @@ const BrowseGenrePage = () => {
 
     return (
         <div className="theme-page-shell relative min-h-screen">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+            <div className="relative flex w-full min-w-0 max-w-full flex-col gap-6 pb-16 pt-6">
                 <section className="theme-glass-panel rounded-[2.25rem] p-6 text-center sm:p-8 lg:p-10">
                     <p className="theme-eyebrow">Browse Genre</p>
                     <h1 className="theme-title mt-3 text-3xl font-semibold sm:text-4xl">
@@ -134,7 +134,7 @@ const BrowseGenrePage = () => {
                 ) : null}
 
                 {genre && !isLoading && !error && books.length > 0 ? (
-                    <section className="space-y-5">
+                    <section className="min-w-0 space-y-5">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                             <div>
                                 <p className="theme-eyebrow">All Books</p>
@@ -147,7 +147,7 @@ const BrowseGenrePage = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3 sm:gap-3.5 md:grid-cols-3 xl:grid-cols-6">
+                        <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-3.5 md:grid-cols-3 xl:grid-cols-6">
                             {books.map((book) => (
                                 <BrowseBookCard key={`${genre.slug}-${book.id}`} book={book} />
                             ))}

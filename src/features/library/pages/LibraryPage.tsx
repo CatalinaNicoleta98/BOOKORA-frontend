@@ -140,7 +140,7 @@ const LibraryPage = () => {
     };
 
     return (
-        <main className="mx-auto w-full max-w-7xl px-0 py-4 theme-text sm:px-0 sm:py-8">
+        <main className="mx-auto w-full min-w-0 max-w-full px-0 py-4 theme-text sm:py-8">
             <section className="theme-glass-panel mb-6 rounded-[2rem] p-5 sm:mb-8 sm:p-8">
                 <p className="theme-accent-text text-xs font-semibold uppercase tracking-[0.3em]">
                     My library
@@ -174,7 +174,7 @@ const LibraryPage = () => {
             )}
 
             {!isLoading && !error && (
-                <div className="grid gap-4 sm:gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+                <div className="grid min-w-0 gap-4 sm:gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
                     <LibraryShelfTabs
                         tabs={SHELF_TABS}
                         activeShelf={activeShelf}

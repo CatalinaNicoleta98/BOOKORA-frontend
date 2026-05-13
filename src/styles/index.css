@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+html,
+body,
+#root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 :root {
     color-scheme: dark;
     --bookora-font-sans: "Inter", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
@@ -373,6 +381,10 @@ h3 {
 .theme-page-shell {
     background: transparent;
     color: var(--bookora-text);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
 }
 
 .theme-glass-panel {
@@ -693,6 +705,8 @@ h3 {
 }
 
 .bookora-mobile-rail {
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
@@ -702,6 +716,14 @@ h3 {
 
 .bookora-mobile-rail > * {
     scroll-snap-align: start;
+}
+
+.bookora-mobile-rail > :first-child {
+    margin-left: 0;
+}
+
+.bookora-mobile-rail > :last-child {
+    margin-right: 0;
 }
 
 .bookora-mobile-rail::-webkit-scrollbar {

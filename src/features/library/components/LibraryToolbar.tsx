@@ -19,15 +19,15 @@ const LibraryToolbar = ({
     onSortChange,
 }: LibraryToolbarProps) => {
     return (
-        <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
+        <div className="mb-5 flex min-w-0 flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="min-w-0">
                 <h2 className="theme-title text-xl font-semibold">{shelfLabel}</h2>
                 <p className="theme-text-muted text-sm">
                     {itemCount} {itemCount === 1 ? "book" : "books"} on this shelf
                 </p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="theme-content-panel-soft grid w-full grid-cols-2 rounded-2xl p-1 sm:w-auto sm:inline-flex">
                     <button
                         type="button"
@@ -53,8 +53,8 @@ const LibraryToolbar = ({
                     </button>
                 </div>
 
-                <label className="theme-input flex w-full flex-col items-start gap-2 rounded-2xl px-4 py-3 text-sm theme-text-soft sm:w-auto sm:flex-row sm:items-center sm:gap-3 sm:py-2.5">
-                    <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] sm:text-sm sm:font-normal sm:normal-case sm:tracking-normal">Sort by</span>
+                <label className="theme-input flex w-full min-w-0 flex-col items-start gap-2 rounded-2xl px-4 py-3 text-sm theme-text-soft sm:w-auto sm:flex-row sm:items-center sm:gap-3 sm:py-2.5">
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] sm:whitespace-nowrap sm:text-sm sm:font-normal sm:normal-case sm:tracking-normal">Sort by</span>
                     <select
                         value={sortBy}
                         onChange={(event) => onSortChange(event.target.value as LibrarySortOption)}

@@ -4,7 +4,7 @@ import Footer from "../navigation/Footer";
 
 const AppShell = () => {
     return (
-        <div className="theme-app-shell relative min-h-screen overflow-hidden">
+        <div className="theme-app-shell relative min-h-screen overflow-x-hidden">
             <div className="pointer-events-none absolute inset-0">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.22),_transparent_25%)] opacity-80" />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_rgba(244,208,140,0.16),_transparent_25%)] opacity-80" />
@@ -24,8 +24,8 @@ const AppShell = () => {
             <div className="relative z-10 flex min-h-screen flex-col">
                 <Navbar />
 
-                <main className="flex-1 pt-16">
-                    <div className="mx-auto w-full max-w-[1440px] px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pb-10 lg:px-8">
+                <main className="flex-1 min-w-0 overflow-x-hidden pt-16">
+                    <div className="mx-auto w-full min-w-0 max-w-[1440px] px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pb-10 lg:px-8">
                         <Outlet />
                     </div>
                 </main>

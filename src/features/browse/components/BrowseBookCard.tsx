@@ -10,7 +10,7 @@ const BrowseBookCard = ({ book }: BrowseBookCardProps) => {
     return (
         <Link
             to={buildBookDetailsRoute(book.id)}
-            className="theme-content-panel-soft group block h-full rounded-[1.35rem] p-3 sm:p-3.5"
+            className="theme-content-panel-soft group block h-full w-full min-w-0 max-w-full rounded-[1.35rem] p-3 sm:p-3.5"
         >
             <div className="theme-cover-shell overflow-hidden rounded-[1rem]">
                 {book.coverUrl ? (

@@ -7,13 +7,13 @@ interface LibraryGridProps {
 
 const LibraryGrid = ({ entries, onSelectBook }: LibraryGridProps) => {
     return (
-        <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
+        <div className="grid min-w-0 gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
             {entries.map((entry) => (
                 <button
                     key={entry.id}
                     type="button"
                     onClick={() => onSelectBook(entry)}
-                    className="theme-content-panel-soft group flex items-start gap-3 rounded-2xl p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70 sm:gap-4"
+                    className="theme-content-panel-soft group flex w-full min-w-0 items-start gap-3 rounded-2xl p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70 sm:gap-4"
                 >
                     <div className="theme-cover-shell h-24 w-[4.25rem] flex-shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-20">
                         {entry.cover ? (

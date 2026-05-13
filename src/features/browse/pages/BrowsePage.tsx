@@ -48,9 +48,9 @@ const BrowsePage = () => {
 
     return (
         <div className="theme-page-shell relative min-h-screen">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-4 pb-16 pt-4 sm:gap-6 sm:px-6 sm:pt-6 lg:px-8">
-                <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
-                    <div className="space-y-5">
+            <div className="relative flex w-full min-w-0 max-w-full flex-col gap-5 pb-16 pt-4 sm:gap-6 sm:pt-6">
+                <section className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
+                    <div className="min-w-0 space-y-5">
                         <div className="flex flex-wrap items-end justify-between gap-4">
                             <div>
                                 <p className="theme-eyebrow">Genres</p>
@@ -60,7 +60,7 @@ const BrowsePage = () => {
                             </div>
                         </div>
 
-                    <div className="theme-content-panel bookora-mobile-rail rounded-[1.6rem] p-3 xl:hidden">
+                    <div className="theme-content-panel bookora-mobile-rail w-full min-w-0 max-w-full rounded-[1.6rem] p-3 xl:hidden">
                         {BROWSE_GENRES.map((genre) => (
                             <Link
                                 key={genre.slug}
@@ -105,7 +105,7 @@ const BrowsePage = () => {
                     ) : null}
                     </div>
 
-                    <aside className="theme-content-panel hidden rounded-[1.8rem] p-5 xl:block xl:sticky xl:top-24">
+                    <aside className="theme-content-panel hidden min-w-0 rounded-[1.8rem] p-5 xl:block xl:sticky xl:top-24">
                         <p className="theme-eyebrow">All genres</p>
                         <div className="mt-4 space-y-2">
                             {BROWSE_GENRES.map((genre) => (

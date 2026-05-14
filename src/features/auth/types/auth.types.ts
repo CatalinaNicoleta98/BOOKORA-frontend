@@ -1,17 +1,6 @@
-export type AuthUser = {
-    id: string;
-    name: string;
-    email: string;
+import type { SharedUserProfile } from "../../../shared/types/user.types";
 
-    // Profile visuals
-    avatarUrl?: string;
-    coverImageUrl?: string;
-
-
-    bio?: string;
-    isProfilePublic?: boolean;
-    role?: string;
-};
+export type AuthUser = SharedUserProfile;
 
 export type AuthState = {
     isAuthenticated: boolean;

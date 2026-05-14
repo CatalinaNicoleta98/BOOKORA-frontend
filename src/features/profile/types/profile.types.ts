@@ -1,15 +1,7 @@
 
+import type { SharedUserProfile } from "../../../shared/types/user.types";
 
-export interface ProfileUser {
-    id: string;
-    name: string;
-    email: string;
-    avatarUrl?: string;
-    coverImageUrl?: string;
-    bio?: string;
-    isProfilePublic?: boolean;
-    role?: string;
-}
+export type ProfileUser = SharedUserProfile;
 
 export interface ProfileStatItem {
     value: string;

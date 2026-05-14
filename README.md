@@ -76,32 +76,62 @@ Swagger Documentation: https://bookora-backend-592x.onrender.com/docs/
 
 # Project Structure
 
+```txt
+
 src/
+
 ├── app/
+
 │   └── router/
+
 │
+
 ├── features/
+
 │   ├── auth/
+
 │   ├── authors/
+
 │   ├── book/
+
 │   ├── browse/
+
 │   ├── home/
+
 │   ├── legal/
+
 │   ├── library/
+
 │   ├── profile/
+
 │   ├── search/
+
 │   ├── series/
+
 │   └── social/
+
 │
+
 ├── shared/
+
 │   ├── api/
+
 │   ├── components/
+
 │   ├── hooks/
+
 │   ├── navigation/
+
 │   ├── theme/
+
 │   └── types/
+
 │
+
 ├── styles/
+
 ├── tests/
+
 ├── App.tsx
+
 └── main.tsx

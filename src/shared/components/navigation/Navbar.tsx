@@ -9,17 +9,6 @@ import MobileNavMenu from "./MobileNavMenu";
 import ThemeToggle from "./ThemeToggle";
 import { APP_ROUTES, PRIMARY_NAV_ITEMS } from "../../navigation/navigation";
 
-interface NavbarUser {
-    id?: string;
-    name?: string;
-    email?: string;
-    avatarUrl?: string | null;
-}
-
-interface NavbarProps {
-    user?: NavbarUser | null;
-}
-
 const getInitials = (name?: string) => {
     if (!name) {
         return "BK";
@@ -35,7 +24,7 @@ const getInitials = (name?: string) => {
     return initials || "BK";
 };
 
-const Navbar = (_props: NavbarProps) => {
+const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const { state, logout } = useAuth();
@@ -87,7 +76,7 @@ const Navbar = (_props: NavbarProps) => {
                     <ProfileMenu
                         userDisplayName={userDisplayName}
                         userInitials={userInitials}
-                        avatarUrl={(state.user as any)?.avatarUrl ?? null}
+                        avatarUrl={state.user?.avatarUrl ?? null}
                         onLogout={handleLogout}
                     />
                 </div>
@@ -139,7 +128,7 @@ const Navbar = (_props: NavbarProps) => {
                 onLogout={handleLogout}
                 userDisplayName={userDisplayName}
                 userInitials={userInitials}
-                avatarUrl={(state.user as any)?.avatarUrl ?? null}
+                avatarUrl={state.user?.avatarUrl ?? null}
             />
         </header>
     );

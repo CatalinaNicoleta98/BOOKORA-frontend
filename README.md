@@ -8,7 +8,7 @@ This repository contains the frontend application for Bookora.
 ## Live Application
 
 Frontend: https://bookora.catalinavrinceanu.com/login
-Backend API: https://bookora-backend-592x.onrender.com  
+Backend API: https://bookora-backend-592x.onrender.com/api  
 Swagger Documentation: https://bookora-backend-592x.onrender.com/docs/
 
 ## Features

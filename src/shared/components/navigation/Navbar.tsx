@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavbarSearch from "../../../features/search/components/NavbarSearch";
 import { useAuth } from "../../../features/auth/context/AuthContext";
-import { authStorage } from "../../../features/auth/services/authStorage";
 import NavLogo from "./NavLogo";
 import DesktopNavLinks from "./DesktopNavLinks";
 import ProfileMenu from "./ProfileMenu";
@@ -60,7 +59,6 @@ const Navbar = (_props: NavbarProps) => {
     };
 
     const handleLogout = () => {
-        authStorage.removeToken();
         logout();
         navigate(APP_ROUTES.login);
     };

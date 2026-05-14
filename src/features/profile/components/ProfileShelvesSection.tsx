@@ -35,14 +35,16 @@ const ProfileShelvesSection = ({
                     <article
                         key={shelf.id}
                         id={shelf.id}
-                        className="theme-content-panel-soft flex h-full min-h-[18rem] flex-col rounded-[1.6rem] p-5"
+                        className="theme-content-panel-soft flex h-full min-h-[20rem] flex-col rounded-[1.6rem] p-5 sm:p-6"
                     >
                         <div className="flex flex-wrap items-start justify-between gap-4">
                             <div className="min-w-0 flex-1">
-                                <h3 className="theme-title max-w-[14rem] text-[1.4rem] font-semibold leading-tight sm:text-[1.55rem]">
+                                <h3 className="theme-title max-w-[12rem] text-[1.4rem] font-semibold leading-tight sm:text-[1.55rem]">
                                     {shelf.name}
                                 </h3>
-                                <p className="theme-text-muted mt-3 max-w-md text-sm leading-6 sm:leading-7">{shelf.description}</p>
+                                <p className="theme-text-muted mt-3 max-w-[28rem] text-sm leading-6 sm:leading-7">
+                                    {shelf.description}
+                                </p>
                             </div>
                             <span className="theme-pill-subtle shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
                                 {shelf.count} books
@@ -50,34 +52,39 @@ const ProfileShelvesSection = ({
                         </div>
 
                         {shelf.previewBooks.length > 0 ? (
-                            <div className="mt-auto pt-6">
-                                <div className="bookora-mobile-rail flex gap-3 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
-                                {shelf.previewBooks.map((book) => (
-                                    <button
-                                        key={book.id}
-                                        type="button"
-                                        onClick={() => onOpenBook(book.id)}
-                                        className="theme-cover-shell group h-24 w-16 shrink-0 overflow-hidden rounded-[0.9rem] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--bookora-border-strong)]"
-                                        aria-label={`Open ${book.title}`}
-                                        title={book.title}
-                                    >
-                                        {book.coverUrl ? (
-                                            <img
-                                                src={book.coverUrl}
-                                                alt={book.title}
-                                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                                                {book.title}
+                            <div className="mt-6">
+                                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                    {shelf.previewBooks.map((book) => (
+                                        <button
+                                            key={book.id}
+                                            type="button"
+                                            onClick={() => onOpenBook(book.id)}
+                                            className="group flex min-w-0 flex-col gap-2 text-left"
+                                            aria-label={`Open ${book.title}`}
+                                            title={book.title}
+                                        >
+                                            <div className="theme-cover-shell aspect-[2/3] w-full overflow-hidden rounded-[1rem] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-[var(--bookora-border-strong)]">
+                                                {book.coverUrl ? (
+                                                    <img
+                                                        src={book.coverUrl}
+                                                        alt={book.title}
+                                                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-full w-full items-center justify-center px-2 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                                        {book.title}
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                    </button>
-                                ))}
+                                            <span className="theme-text-muted line-clamp-2 text-xs leading-5">
+                                                {book.title}
+                                            </span>
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                         ) : (
-                            <div className="theme-content-panel-muted mt-auto rounded-[1rem] border-dashed px-4 py-3 text-sm text-slate-500">
+                            <div className="theme-content-panel-muted mt-6 rounded-[1rem] border-dashed px-4 py-3 text-sm text-slate-500">
                                 Nothing shelved here yet.
                             </div>
                         )}

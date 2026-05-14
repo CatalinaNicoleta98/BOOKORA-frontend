@@ -26,7 +26,6 @@ interface ProfileHeaderProps {
     onStartEditing: () => void;
     onCancelEditing: () => void;
     onSaveProfile: () => void;
-    onShareProfile: () => void;
 }
 
 const ProfileHeader = ({
@@ -52,8 +51,7 @@ const ProfileHeader = ({
     onCoverFileChange,
     onStartEditing,
     onCancelEditing,
-    onSaveProfile,
-    onShareProfile
+    onSaveProfile
 }: ProfileHeaderProps) => {
     return (
         <section className="theme-glass-panel overflow-hidden rounded-[2.25rem]">
@@ -206,13 +204,6 @@ const ProfileHeader = ({
                                 Edit profile
                             </button>
                         )}
-                        <button
-                            type="button"
-                            onClick={onShareProfile}
-                            className="theme-button-accent inline-flex h-11 w-full items-center justify-center rounded-2xl px-4 text-sm font-medium transition-all duration-300 sm:w-auto"
-                        >
-                            Share profile
-                        </button>
                     </div>
                 </div>
                 </div>

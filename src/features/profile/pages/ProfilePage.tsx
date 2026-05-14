@@ -207,22 +207,6 @@ const ProfilePage = () => {
         }
     };
 
-    const handleShareProfile = async () => {
-        const profileUrl = `${window.location.origin}/profile`;
-
-        try {
-            if (navigator.clipboard?.writeText) {
-                await navigator.clipboard.writeText(profileUrl);
-                setSaveSuccessMessage("Profile link copied to clipboard.");
-                return;
-            }
-        } catch {
-            // Fall through to the manual copy message.
-        }
-
-        setSaveSuccessMessage(`Share this profile link: ${profileUrl}`);
-    };
-
     const profileName = useMemo(() => {
         if (isEditingProfile) {
             return editName.trim() || "Bookora Reader";
@@ -292,7 +276,6 @@ const ProfilePage = () => {
                     onStartEditing={handleStartEditing}
                     onCancelEditing={handleCancelEditing}
                     onSaveProfile={handleSaveProfile}
-                    onShareProfile={handleShareProfile}
                 />
 
                 <ProfileLibrarySpotlight

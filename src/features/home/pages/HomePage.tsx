@@ -6,6 +6,10 @@ import { useAuth } from "../../auth/context/AuthContext";
 import { getHomeFeed } from "../../social/services/feedService";
 import type { HomeFeedData } from "../../social/types/feed.types";
 import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
+import {
+    getReadingGoalLabel,
+    getStoredReadingGoal
+} from "../../../shared/utils/readingGoalStorage";
 
 const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -37,9 +41,18 @@ const HomePage = () => {
 
             try {
                 if (homeResult.status === "fulfilled") {
+                    const readingGoalTarget = getStoredReadingGoal(
+                        authState.user?.id ?? authState.user?.email
+                    );
+
                     setData({
                         ...homeResult.value,
                         userName: authState.user?.name ?? homeResult.value.userName,
+                        challenge: {
+                            ...homeResult.value.challenge,
+                            target: readingGoalTarget,
+                            label: getReadingGoalLabel(),
+                        },
                     });
                     setError(null);
                 } else {

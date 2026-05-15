@@ -21,6 +21,11 @@ import {
     getProfileBio
 } from "../utils/profilePage.utils";
 import { useDocumentTitle } from "../../../shared/hooks/useDocumentTitle";
+import {
+    DEFAULT_READING_GOAL,
+    getStoredReadingGoal,
+    saveStoredReadingGoal
+} from "../../../shared/utils/readingGoalStorage";
 
 const ProfilePage = () => {
     useDocumentTitle("Bookora | Profile");
@@ -42,6 +47,11 @@ const ProfilePage = () => {
     const [coverFile, setCoverFile] = useState<File | null>(null);
     const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
     const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+    const [readingGoalTarget, setReadingGoalTarget] = useState(DEFAULT_READING_GOAL);
+    const [readingGoalInput, setReadingGoalInput] = useState(String(DEFAULT_READING_GOAL));
+    const [isEditingReadingGoal, setIsEditingReadingGoal] = useState(false);
+    const [readingGoalError, setReadingGoalError] = useState<string | null>(null);
+    const [readingGoalSuccessMessage, setReadingGoalSuccessMessage] = useState<string | null>(null);
 
     useEffect(() => {
         const loadProfilePage = async () => {
@@ -93,8 +103,19 @@ const ProfilePage = () => {
         };
     }, [avatarPreviewUrl, coverPreviewUrl]);
 
+    const readingGoalOwnerKey = profile?.id ?? state.user?.id ?? profile?.email ?? state.user?.email ?? null;
+
+    useEffect(() => {
+        const storedGoal = getStoredReadingGoal(readingGoalOwnerKey);
+        setReadingGoalTarget(storedGoal);
+        setReadingGoalInput(String(storedGoal));
+    }, [readingGoalOwnerKey]);
+
     const fallbackProfile = buildProfileFallback(profile, state.user ?? null);
-    const dashboardData = useMemo(() => buildProfileDashboardData(libraryEntries), [libraryEntries]);
+    const dashboardData = useMemo(
+        () => buildProfileDashboardData(libraryEntries, readingGoalTarget),
+        [libraryEntries, readingGoalTarget]
+    );
 
     const handleAvatarFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0] ?? null;
@@ -249,6 +270,38 @@ const ProfilePage = () => {
         navigate(buildBookDetailsRoute(bookId));
     };
 
+    const handleStartReadingGoalEdit = () => {
+        setIsEditingReadingGoal(true);
+        setReadingGoalError(null);
+        setReadingGoalSuccessMessage(null);
+        setReadingGoalInput(String(readingGoalTarget));
+    };
+
+    const handleCancelReadingGoalEdit = () => {
+        setIsEditingReadingGoal(false);
+        setReadingGoalError(null);
+        setReadingGoalSuccessMessage(null);
+        setReadingGoalInput(String(readingGoalTarget));
+    };
+
+    const handleSaveReadingGoal = () => {
+        const parsedGoal = Number.parseInt(readingGoalInput, 10);
+
+        if (!Number.isFinite(parsedGoal) || parsedGoal < 1) {
+            setReadingGoalError("Enter a whole number greater than 0.");
+            setReadingGoalSuccessMessage(null);
+            return;
+        }
+
+        const savedGoal = saveStoredReadingGoal(readingGoalOwnerKey, parsedGoal);
+
+        setReadingGoalTarget(savedGoal);
+        setReadingGoalInput(String(savedGoal));
+        setIsEditingReadingGoal(false);
+        setReadingGoalError(null);
+        setReadingGoalSuccessMessage("Reading goal updated.");
+    };
+
     return (
         <div className="theme-page-shell relative min-h-screen">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-4 pb-16 pt-4 sm:gap-6 sm:px-6 sm:pt-6 lg:px-8">
@@ -303,6 +356,14 @@ const ProfilePage = () => {
                         <ProfileReadingGoals
                             target={dashboardData.goal.target}
                             current={dashboardData.goal.current}
+                            isEditing={isEditingReadingGoal}
+                            editValue={readingGoalInput}
+                            errorMessage={readingGoalError}
+                            successMessage={readingGoalSuccessMessage}
+                            onEditValueChange={setReadingGoalInput}
+                            onStartEditing={handleStartReadingGoalEdit}
+                            onCancelEditing={handleCancelReadingGoalEdit}
+                            onSaveEditing={handleSaveReadingGoal}
                         />
 
                         <ProfileRecentActivity

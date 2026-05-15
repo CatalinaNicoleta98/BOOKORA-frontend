@@ -287,7 +287,10 @@ export const getProfileBio = (profileBio?: string) => {
     return profileBio?.trim() || PROFILE_DEFAULT_BIO;
 };
 
-export const buildProfileDashboardData = (entries: LibraryEntry[]): ProfileDashboardData => {
+export const buildProfileDashboardData = (
+    entries: LibraryEntry[],
+    goalTarget: number
+): ProfileDashboardData => {
     const sortedEntries = [...entries].sort((left, right) => {
         const leftTime = Date.parse(left.updatedAt ?? left.createdAt);
         const rightTime = Date.parse(right.updatedAt ?? right.createdAt);
@@ -301,7 +304,7 @@ export const buildProfileDashboardData = (entries: LibraryEntry[]): ProfileDashb
         activity: buildActivity(sortedEntries),
         spotlight: buildSpotlight(sortedEntries),
         goal: {
-            target: 20,
+            target: goalTarget,
             current: sortedEntries.filter((entry) => FINISHED_STATUSES.includes(entry.status)).length
         }
     };
